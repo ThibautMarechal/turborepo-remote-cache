@@ -1,0 +1,29 @@
+FROM node:16-alpine
+WORKDIR /usr/server/app
+COPY ./package.json ./
+RUN yarn install
+COPY ./ .
+RUN yarn build
+ENV NODE_ENV=production
+ENV TURBO_TOKEN=
+# Storage configuration
+ENV STORAGE_TYPE=
+# fs (File Storage)
+ENV STORAGE_FS_PATH=
+# s3 (Amazon S3)
+ENV STORAGE_S3_ACCESS_KEY_ID=
+ENV STORAGE_S3_SECRET_ACCESS_KEY=
+ENV STORAGE_S3_FORCE_PATH_STYLE=
+ENV STORAGE_S3_ENDPOINT=
+ENV STORAGE_S3_REGION=
+ENV STORAGE_S3_SSL_ENABLED=
+ENV STORAGE_S3_BUCKET=
+# azure (Azure blob storage)
+ENV STORAGE_AZURE_STORAGE_ACCOUNT=
+ENV STORAGE_AZURE_STORAGE_ACCESS_KEY=
+ENV STORAGE_AZURE_STORAGE_CONTAINER=
+# Mongo DB configuration (used for storing analytics events)
+ENV MONGODB_URL=
+ENV MONGODB_DB=
+
+CMD ["yarn" ,"start"]

@@ -1,0 +1,67 @@
+version: '3.1'
+
+services:
+
+  turborepo-remote-cache:
+    build:
+      context: .
+    ports:
+      - 8080:8080
+    environment:
+      PORT: 8080
+      TURBO_TOKEN: my-token
+      STORAGE_TYPE: s3
+      STORAGE_S3_ENDPOINT: http://minio:9000
+      STORAGE_S3_FORCE_PATH_STYLE: 'true'
+      STORAGE_S3_ACCESS_KEY_ID: minio
+      STORAGE_S3_SECRET_ACCESS_KEY: miniosecretkey
+      STORAGE_S3_SSL_ENABLED: 'false'
+      STORAGE_S3_BUCKET: turborepo-remote-cache
+      MONGODB_URL: mongodb://root:example@mongo:27017/
+      MONGODB_DB: turborepo-remote-cache
+
+  mongo:
+    image: mongo
+    restart: always
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
+
+  minio:
+    image: minio/minio
+    ports:
+      - 9000:9000
+      - 9001:9001
+    environment:
+      MINIO_ROOT_USER: ${AWS_ACCESS_KEY_ID:-minio}
+      MINIO_ROOT_PASSWORD: ${AWS_SECRET_ACCESS_KEY:-miniosecretkey}
+    command: server /data --console-address ":9001"
+    volumes:
+      - ./data/minio:/data
+
+  # Create the bucket needed by the service
+  createbuckets:
+    image: minio/mc
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+        sleep 5;
+        /usr/bin/mc alias set minio http://minio:9000 minio miniosecretkey;
+        /usr/bin/mc rm -r --force minio/turborepo-remote-cache || true;
+        /usr/bin/mc mb minio/turborepo-remote-cache;
+        /usr/bin/mc policy set none minio/turborepo-remote-cache;
+        exit 0;
+      "

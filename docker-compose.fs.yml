@@ -1,0 +1,37 @@
+version: '3.1'
+
+services:
+
+  turborepo-remote-cache:
+    build:
+      context: .
+    ports:
+      - 8080:8080
+    environment:
+      PORT: 8080
+      TURBO_TOKEN: my-token
+      STORAGE_TYPE: fs
+      MONGODB_URL: mongodb://root:example@mongo:27017/
+      MONGODB_DB: turborepo-remote-cache
+      STORAGE_FS_PATH: /data
+    volumes:
+      - ./data/fs:/data
+
+  mongo:
+    image: mongo
+    restart: always
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/

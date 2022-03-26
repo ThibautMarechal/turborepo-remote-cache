@@ -1,0 +1,3 @@
+{
+  "extends": ["@thimar", "@remix-run/eslint-config", "@remix-run/eslint-config/node"],
+}
