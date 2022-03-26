@@ -1,26 +1,22 @@
 import type { DataFunctionArgs } from '@remix-run/server-runtime';
 import type { TurboContext, ArtifactMeta } from '~/types/turborepo';
+import { User } from '~/types/User';
 
-export function getTurboContext({ request, params }: DataFunctionArgs): TurboContext {
+export function getTurboContext({ request, params }: DataFunctionArgs, user: User): TurboContext {
   const url = new URL(request.url);
 
   const { artifactId, apiVersion } = params;
-  const token = request.headers.get('authorization')?.replace(/^Bearer\s/, '') ?? undefined;
-  const teamId = url.searchParams.get('teamId');
-  const teamSlug = url.searchParams.get('teamSlug');
+  const teamId = url.searchParams.get('teamId') ?? undefined;
+  const teamSlug = url.searchParams.get('teamSlug') ?? undefined;
   const duration = request.headers.get(DURATION_HEADER);
-
-  const resolveTeamSlug = teamId ?? teamSlug;
-  if (!resolveTeamSlug) {
-    throw new Response('Missing TeamId or TeamSlug', { status: 422 });
-  }
 
   return {
     apiVersion: apiVersion as string,
-    token,
     artifactId,
-    teamSlug: resolveTeamSlug,
+    teamId,
+    teamSlug,
     duration,
+    user,
   };
 }
 
@@ -34,13 +30,4 @@ export function turboContextToMeta(turboCtx: TurboContext): ArtifactMeta {
   };
 }
 
-export function validateToken(turboCtx: TurboContext): void {
-  if (!turboCtx.token) {
-    throw new Response('Missing TURBO_TOKEN', { status: 422 });
-  }
-  if (turboCtx.token !== process.env.TURBO_TOKEN) {
-    console.log('wrong token', turboCtx.token);
-    throw new Response(null, { status: 403 });
-  }
-}
 export const DURATION_HEADER = 'x-artifact-duration';

@@ -1,8 +1,10 @@
 import { json, Link, type LoaderFunction, useLoaderData } from 'remix';
 import { formatDuration } from '~/helpers/intl';
-import { getTimeSaved } from '~/mongo/events';
+import { getTimeSaved } from '~/services/events.server';
+import { requireCookieAuth } from '~/services/authentication.server';
 
-export const loader: LoaderFunction = async () => {
+export const loader: LoaderFunction = async ({ request, params, context }) => {
+  await requireCookieAuth(request);
   const timeSsaved = await getTimeSaved();
   return json(timeSsaved);
 };

@@ -17,11 +17,12 @@ export type TurboEvent = {
 };
 
 export type TurboContext = {
-  teamSlug: string;
-  token?: string;
+  teamId?: string;
+  teamSlug?: string;
   artifactId?: string;
   apiVersion: string;
   duration?: string | null;
+  user: User;
 };
 
 export type ArtifactMeta = {

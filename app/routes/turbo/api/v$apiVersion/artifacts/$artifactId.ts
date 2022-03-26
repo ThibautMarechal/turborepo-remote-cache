@@ -1,12 +1,13 @@
-import { type LoaderFunction, type ActionFunction } from 'remix';
+import { type LoaderFunction, type ActionFunction, json } from 'remix';
 import type { PassThrough } from 'stream';
-import { CacheStorage } from '~/storage';
-import { DURATION_HEADER, getTurboContext, turboContextToMeta, validateToken } from '~/helpers/turboContext';
+import { CacheStorage } from '~/services/storage.server';
+import { DURATION_HEADER, getTurboContext, turboContextToMeta } from '~/helpers/turboContext';
 import { streamToString, stringToStream } from '~/helpers/stream';
+import { requireTokenAuth } from '~/services/authentication.server';
 
 export const loader: LoaderFunction = async ({ request, params, context }) => {
-  const turboCtx = getTurboContext({ request, params, context });
-  validateToken(turboCtx);
+  const user = await requireTokenAuth(request);
+  const turboCtx = getTurboContext({ request, params, context }, user);
 
   const storage = new CacheStorage();
   if (await storage.existArtifact(turboCtx)) {
@@ -22,15 +23,15 @@ export const loader: LoaderFunction = async ({ request, params, context }) => {
       headers,
     });
   }
-  throw new Response(null, { status: 404 });
+  throw json(undefined, 404);
 };
 
 export const action: ActionFunction = async ({ request, params, context }) => {
-  const turboCtx = getTurboContext({ request, params, context });
-  validateToken(turboCtx);
+  const user = await requireTokenAuth(request);
+  const turboCtx = getTurboContext({ request, params, context }, user);
 
   if (!request.body) {
-    throw new Response(null, { status: 422 });
+    throw json(undefined, 422);
   }
 
   const storage = new CacheStorage();
@@ -41,8 +42,8 @@ export const action: ActionFunction = async ({ request, params, context }) => {
       storage.writeMeta(turboCtx, stringToStream(JSON.stringify(turboContextToMeta(turboCtx)))),
     ]);
   } catch (err) {
-    console.log(err);
-    return new Response(null, { status: 500 });
+    console.error(err);
+    return json(undefined, 500);
   }
-  return new Response(null, { status: 201 });
+  return json(undefined);
 };

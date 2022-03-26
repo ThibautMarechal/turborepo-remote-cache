@@ -4,8 +4,18 @@ COPY ./package.json ./
 RUN yarn install
 COPY ./ .
 RUN yarn build
+
 ENV NODE_ENV=production
 ENV TURBO_TOKEN=
+
+# MongoDB configuration
+ENV MONGODB_URL=
+ENV MONGODB_DB=
+
+# USER configuration
+ENV ADMIN_USERNAME=
+ENV ADMIN_PASSWORD=
+
 # Storage configuration
 ENV STORAGE_TYPE=
 # fs (File Storage)
@@ -22,8 +32,7 @@ ENV STORAGE_S3_BUCKET=
 ENV STORAGE_AZURE_STORAGE_ACCOUNT=
 ENV STORAGE_AZURE_STORAGE_ACCESS_KEY=
 ENV STORAGE_AZURE_STORAGE_CONTAINER=
-# Mongo DB configuration (used for storing analytics events)
-ENV MONGODB_URL=
-ENV MONGODB_DB=
+
+
 
 CMD ["yarn" ,"start"]

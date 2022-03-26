@@ -14,6 +14,10 @@ Support the the analytics API:
 
 ## Configuration
 
+### USER configuration
+- ADMIN_USERNAME : admin
+- ADMIN_PASWWORD : admin
+
 ### TURBO configuration
 - TURBO_TOKEN : The authentication token
 
@@ -37,6 +41,17 @@ Support the the analytics API:
 ### Mongo DB configuration (used for storing analytics events)
 - MONGODB_URL : If provided, save the events commin from the analytics API
 - MONGODB_DB : The name of the mongodb database (default: "turborepo-remote-cache")
+
+## Repository configuration
+
+```json
+//.turbo/config.json
+{
+  "teamId": "team_my-team",
+  "apiUrl": "http://localhost:8080/turbo/api",
+  "loginUrl": "http://localhost:8080/turbo/login"
+}
+```
 
 ## Development
 

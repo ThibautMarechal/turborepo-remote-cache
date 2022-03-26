@@ -1,9 +1,11 @@
 import { type LoaderFunction, useLoaderData, json } from 'remix';
 import invariant from 'tiny-invariant';
 import { formatDate, formatDuration } from '~/helpers/intl';
-import { getSessions, getTimeSaved } from '~/mongo/events';
+import { requireCookieAuth } from '~/services/authentication.server';
+import { getSessions, getTimeSaved } from '~/services/events.server';
 
-export const loader: LoaderFunction = async ({ params }) => {
+export const loader: LoaderFunction = async ({ request, params }) => {
+  await requireCookieAuth(request);
   invariant(params.teamSlug);
   const timeSaved = await getTimeSaved(params.teamSlug);
   if (timeSaved.length === 0) {
@@ -13,7 +15,7 @@ export const loader: LoaderFunction = async ({ params }) => {
   return json({ sessions, timeSaved: timeSaved[0] });
 };
 
-export default function Index() {
+export default function Team() {
   const { sessions, timeSaved } = useLoaderData();
 
   return (

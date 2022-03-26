@@ -1,13 +1,19 @@
 {
   "name": "turborepo-remote-cache-remix",
   "description": "Self hosted Turborepo remote cache",
-  "keywords": ["turborepo", "remote-cache", "monorepo", "remix"],
+  "keywords": [
+    "turborepo",
+    "remote-cache",
+    "monorepo",
+    "remix"
+  ],
   "license": "MIT",
   "scripts": {
     "build": "remix build",
     "dev": "remix dev",
     "postinstall": "remix setup node",
     "lint": "eslint ./app --color",
+    "prestart": "remix-serve build",
     "start": "remix-serve build"
   },
   "dependencies": {
@@ -21,6 +27,8 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "remix": "^1.3.2",
+    "remix-auth": "^3.2.1",
+    "remix-auth-form": "^1.1.1",
     "s3-blob-store": "^4.1.1",
     "tiny-invariant": "^1.2.0"
   },
