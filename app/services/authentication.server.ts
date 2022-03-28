@@ -4,7 +4,7 @@ import { FormStrategy } from 'remix-auth-form';
 import invariant from 'tiny-invariant';
 import { sessionStorage } from '~/services/cookieSession';
 import { User } from '~/types/User';
-import { getUserId } from './token.server';
+import { getToken } from './tokens.server';
 import { getUser } from './users.server';
 
 export const authenticator = new Authenticator<User>(sessionStorage);
@@ -22,16 +22,17 @@ export async function requireTokenAuth(request: Request) {
     throw json(undefined, 403);
   }
   try {
-    const userId = await getUserId(token);
+    const { userId } = await getToken(token);
     return await getUser(userId);
   } catch (error) {
+    console.log(error);
     throw json(undefined, 403);
   }
 }
 
 function login(username: string, _password: string): User {
   // TODO handle login
-  return { username, id: username };
+  return { username, name: username, id: username, email: username };
 }
 
 authenticator.use(

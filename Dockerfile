@@ -9,8 +9,7 @@ ENV NODE_ENV=production
 ENV TURBO_TOKEN=
 
 # MongoDB configuration
-ENV MONGODB_URL=
-ENV MONGODB_DB=
+ENV DATABASE_URL=
 
 # USER configuration
 ENV ADMIN_USERNAME=

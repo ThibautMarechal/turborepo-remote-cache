@@ -1,0 +1,58 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["mongoDb"]
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Event {
+  id         String  @id @default(auto()) @map("_id") @db.ObjectId
+  sessionId  String
+  session    Session @relation(fields: [sessionId], references: [id])
+  duration   Int
+  eventType  String
+  hash       String
+  sourceType String
+}
+
+model Session {
+  id     String  @id @map("_id")
+  teamId String
+  team   Team    @relation(fields: [teamId], references: [id])
+  userId String  @db.ObjectId
+  user   User    @relation(fields: [userId], references: [id])
+  events Event[]
+}
+
+model User {
+  id           String    @id @default(auto()) @map("_id") @db.ObjectId
+  username     String
+  name         String
+  email        String
+  sessions     Session[]
+  tokens       Token[]
+  passwordHash String
+}
+
+model Team {
+  id      String    @id @default(auto()) @map("_id") @db.ObjectId
+  name    String
+  slug    String
+  Session Session[]
+}
+
+model Token {
+  id           String    @id @default(auto()) @map("_id") @db.ObjectId
+  hash         String    @unique
+  name         String
+  creationDate DateTime
+  lastUseDate  DateTime?
+  userId       String
+  user         User      @relation(fields: [userId], references: [id])
+}

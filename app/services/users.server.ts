@@ -1,34 +1,26 @@
+import { PrismaClient } from '@prisma/client';
 import type { User } from '~/types/User';
-import { client, DB_NAME } from './mongoClient.server';
 
-const USERS_COLLECTION = 'users';
+const prisma = new PrismaClient();
 
 export async function getUsers(): Promise<User[]> {
   try {
-    await client.connect();
-    return (await client.db(DB_NAME).collection(USERS_COLLECTION).aggregate().toArray()).map((userDoc) => ({
-      id: userDoc._id.toString(),
-      username: userDoc.username,
-      email: userDoc.email,
-    }));
+    await prisma.$connect();
+    return await prisma.user.findMany();
   } finally {
-    await client.close();
+    await prisma.$disconnect();
   }
 }
 
 export async function getUser(id: string): Promise<User> {
   try {
-    await client.connect();
-    const [userDoc] = await client.db(DB_NAME).collection(USERS_COLLECTION).find({ _id: id }).toArray();
-    if (!userDoc) {
+    await prisma.$connect();
+    const user = await prisma.user.findUnique({ where: { id } });
+    if (!user) {
       throw new Error('Not found');
     }
-    return {
-      id: userDoc._id.toString(),
-      username: userDoc.username,
-      email: userDoc.email,
-    };
+    return user;
   } finally {
-    await client.close();
+    await prisma.$disconnect();
   }
 }

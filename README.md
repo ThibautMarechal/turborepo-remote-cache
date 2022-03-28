@@ -38,9 +38,8 @@ Support the the analytics API:
 - STORAGE_AZURE_STORAGE_ACCESS_KEY
 - STORAGE_AZURE_STORAGE_CONTAINER
 
-### Mongo DB configuration (used for storing analytics events)
-- MONGODB_URL : If provided, save the events commin from the analytics API
-- MONGODB_DB : The name of the mongodb database (default: "turborepo-remote-cache")
+### Mongo DB configuration
+- DATABASE_URL
 
 ## Repository configuration
 

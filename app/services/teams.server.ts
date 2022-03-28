@@ -1,34 +1,26 @@
+import { PrismaClient } from '@prisma/client';
 import type { Team } from '~/types/Team';
-import { client, DB_NAME } from './mongoClient.server';
 
-const TEAMS_COLLECTION = 'teams';
+const prisma = new PrismaClient();
 
 export async function getTeams(): Promise<Team[]> {
   try {
-    await client.connect();
-    return (await client.db(DB_NAME).collection(TEAMS_COLLECTION).aggregate().toArray()).map((teamDoc) => ({
-      id: teamDoc._id.toString(),
-      teamSlug: teamDoc.teamSlug,
-      name: teamDoc.name,
-    }));
+    await prisma.$connect();
+    return await prisma.team.findMany();
   } finally {
-    await client.close();
+    await prisma.$disconnect();
   }
 }
 
 export async function getTeam(id: string): Promise<Team> {
   try {
-    await client.connect();
-    const [teamDoc] = await client.db(DB_NAME).collection(TEAMS_COLLECTION).find({ _id: id }).toArray();
-    if (!teamDoc) {
+    await prisma.$connect();
+    const team = await prisma.team.findUnique({ where: { id } });
+    if (!team) {
       throw new Error('Not found');
     }
-    return {
-      id: teamDoc._id.toString(),
-      teamSlug: teamDoc.teamSlug,
-      name: teamDoc.name,
-    };
+    return team;
   } finally {
-    await client.close();
+    await prisma.$disconnect();
   }
 }
