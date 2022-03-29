@@ -1,26 +1,48 @@
-import { PrismaClient } from '@prisma/client';
 import type { Team } from '~/types/Team';
-
-const prisma = new PrismaClient();
+import { client } from './prismaClient.Server';
 
 export async function getTeams(): Promise<Team[]> {
   try {
-    await prisma.$connect();
-    return await prisma.team.findMany();
+    await client.$connect();
+    return await client.team.findMany();
   } finally {
-    await prisma.$disconnect();
+    await client.$disconnect();
+  }
+}
+
+export async function getUserTeams(userId: string, limit: number = 100, since = new Date(Date.UTC(0, 0, 0)), until = new Date(Date.UTC(3000, 0, 0))): Promise<Team[]> {
+  try {
+    await client.$connect();
+    return await client.team.findMany({
+      where: {
+        users: {
+          some: {
+            id: userId,
+          },
+        },
+        AND: {
+          createdAt: {
+            gt: since,
+          },
+          AND: {
+            createdAt: {
+              lt: until,
+            },
+          },
+        },
+      },
+      take: limit,
+    });
+  } finally {
+    await client.$disconnect();
   }
 }
 
 export async function getTeam(id: string): Promise<Team> {
   try {
-    await prisma.$connect();
-    const team = await prisma.team.findUnique({ where: { id } });
-    if (!team) {
-      throw new Error('Not found');
-    }
-    return team;
+    await client.$connect();
+    return await client.team.findUnique({ where: { id } });
   } finally {
-    await prisma.$disconnect();
+    await client.$disconnect();
   }
 }

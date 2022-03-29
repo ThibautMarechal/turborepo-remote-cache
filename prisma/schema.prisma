@@ -38,13 +38,19 @@ model User {
   sessions     Session[]
   tokens       Token[]
   passwordHash String
+  roles        String[]
+  team         Team      @relation(fields: [teamId], references: [id])
+  teamId       String    @db.ObjectId
 }
 
 model Team {
-  id      String    @id @default(auto()) @map("_id") @db.ObjectId
-  name    String
-  slug    String
-  Session Session[]
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  avatar    String
+  createdAt DateTime
+  slug      String
+  sessions  Session[]
+  users     User[]
 }
 
 model Token {

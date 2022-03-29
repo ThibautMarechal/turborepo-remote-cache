@@ -1,5 +1,5 @@
 import { json, Link, type LoaderFunction, useLoaderData } from 'remix';
-import { formatDuration } from '~/helpers/intl';
+import { formatDuration } from '~/utils/intl';
 import { getTimeSaved } from '~/services/events.server';
 import { requireCookieAuth } from '~/services/authentication.server';
 

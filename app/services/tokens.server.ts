@@ -1,17 +1,12 @@
-import { PrismaClient, Token } from '@prisma/client';
-import { hash } from '~/helpers/hash';
-
-const prisma = new PrismaClient();
+import type { Token } from '@prisma/client';
+import { hash } from '~/utils/hash';
+import { client } from './prismaClient.Server';
 
 export async function getToken(token: string): Promise<Token> {
   try {
-    await prisma.$connect();
-    const tokenDb = await prisma.token.findUnique({ where: { hash: hash(token) } });
-    if (!tokenDb) {
-      throw new Error('Not found');
-    }
-    return tokenDb;
+    await client.$connect();
+    return await client.token.findUnique({ where: { hash: hash(token) } });
   } finally {
-    await prisma.$disconnect();
+    await client.$disconnect();
   }
 }

@@ -5125,7 +5125,7 @@ remix-auth@^3.1.0, remix-auth@^3.2.1:
     remix-utils "^2.2.0"
     uuid "^8.3.2"
 
-remix-utils@^2.2.0:
+remix-utils@^2.11.1, remix-utils@^2.2.0:
   version "2.11.1"
   resolved "https://registry.yarnpkg.com/remix-utils/-/remix-utils-2.11.1.tgz#a4e6d61c594f166e8bdc78ba089a2e1b55802654"
   integrity sha512-6Nvb2v/vL4UjHeMO/KbJ73t4jr48qdH1nKAWAuGqCly+3Dcrj8Gt8ITOQ0Di7IL4R5o3kgWchdx520Hcr9ICKg==

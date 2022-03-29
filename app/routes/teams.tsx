@@ -17,7 +17,7 @@ export default function Teams() {
       <ul>
         {teams.map((team) => (
           <li key={team.id}>
-            {team.name} ({team.teamSlug})
+            {team.name} ({team.slug})
           </li>
         ))}
       </ul>

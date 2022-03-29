@@ -1,26 +1,20 @@
-import { PrismaClient } from '@prisma/client';
 import type { User } from '~/types/User';
-
-const prisma = new PrismaClient();
+import { client } from './prismaClient.Server';
 
 export async function getUsers(): Promise<User[]> {
   try {
-    await prisma.$connect();
-    return await prisma.user.findMany();
+    await client.$connect();
+    return await client.user.findMany();
   } finally {
-    await prisma.$disconnect();
+    await client.$disconnect();
   }
 }
 
 export async function getUser(id: string): Promise<User> {
   try {
-    await prisma.$connect();
-    const user = await prisma.user.findUnique({ where: { id } });
-    if (!user) {
-      throw new Error('Not found');
-    }
-    return user;
+    await client.$connect();
+    return await client.user.findUnique({ where: { id } });
   } finally {
-    await prisma.$disconnect();
+    await client.$disconnect();
   }
 }

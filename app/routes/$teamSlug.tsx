@@ -1,6 +1,6 @@
 import { type LoaderFunction, useLoaderData, json } from 'remix';
 import invariant from 'tiny-invariant';
-import { formatDate, formatDuration } from '~/helpers/intl';
+import { formatDate, formatDuration } from '~/utils/intl';
 import { requireCookieAuth } from '~/services/authentication.server';
 import { getSessions, getTimeSaved } from '~/services/events.server';
 
