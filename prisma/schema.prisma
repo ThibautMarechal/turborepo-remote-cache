@@ -3,7 +3,6 @@
 
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["mongoDb"]
 }
 
 datasource db {
@@ -39,8 +38,8 @@ model User {
   tokens       Token[]
   passwordHash String
   roles        String[]
-  team         Team      @relation(fields: [teamId], references: [id])
-  teamId       String    @db.ObjectId
+  teams        Team[]    @relation(fields: [teamIds], references: [id])
+  teamIds      String[]  @db.ObjectId
 }
 
 model Team {
@@ -50,7 +49,8 @@ model Team {
   createdAt DateTime
   slug      String
   sessions  Session[]
-  users     User[]
+  users     User[]    @relation(fields: [userIds], references: [id])
+  userIds   String[]  @db.ObjectId
 }
 
 model Token {

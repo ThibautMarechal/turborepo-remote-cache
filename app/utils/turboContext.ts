@@ -1,4 +1,5 @@
 import type { DataFunctionArgs } from '@remix-run/server-runtime';
+import { unauthorized } from 'remix-utils';
 import type { TurboContext, ArtifactMeta } from '~/types/turborepo';
 import { User } from '~/types/User';
 
@@ -9,6 +10,10 @@ export function getTurboContext({ request, params }: DataFunctionArgs, user: Use
   const teamId = url.searchParams.get('teamId') ?? undefined;
   const teamSlug = url.searchParams.get('teamSlug') ?? undefined;
   const duration = request.headers.get(DURATION_HEADER);
+
+  if (!teamId || teamSlug) {
+    throw unauthorized('no TeamId or TeamSlug');
+  }
 
   return {
     apiVersion: apiVersion as string,

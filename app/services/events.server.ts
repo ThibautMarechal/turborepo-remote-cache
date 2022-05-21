@@ -1,125 +1,90 @@
-import { EventType, SourceType, type TurboContext, type TurboEvent } from '~/types/turborepo';
-import { PrismaClient } from '@prisma/client';
+import { Event } from '@prisma/client';
+import { EventType, SourceType } from '~/types/turborepo';
+import { client } from './prismaClient.Server';
 
-const prisma = new PrismaClient();
-
-export async function saveEvents(turboCtx: TurboContext, events: TurboEvent[]) {
+export async function insertEvents(events: Omit<Event, 'id'>[]) {
   try {
-    await prisma.$connect();
-    await prisma.event.createMany({
-      data: events.map((event) => ({
-        duration: event.duration,
-        eventType: event.event,
-        hash: event.hash,
-        sessionId: event.sessionId,
-        sourceType: event.source,
-      })),
+    await client.$connect();
+    await client.event.createMany({ data: events });
+  } finally {
+    await client.$disconnect();
+  }
+}
+
+export async function getSessions(teamId?: string) {
+  try {
+    await client.$connect();
+    return await client.session.aggregateRaw({
+      pipeline: [
+        ...(teamId
+          ? [
+              {
+                $match: { teamId },
+              },
+            ]
+          : []),
+        {
+          $group: {
+            _id: '$sessionId',
+            sessionId: { $first: '$sessionId' },
+            duration: { $sum: '$duration' },
+            date: { $min: '$date' },
+            remoteHits: getHitsByLocationFromEvents(SourceType.REMOTE),
+            remoteDuration: getDurationByLocationFromEvents(SourceType.REMOTE),
+            localHits: getHitsByLocationFromEvents(SourceType.LOCAL),
+            localDuration: getDurationByLocationFromEvents(SourceType.LOCAL),
+            teamSlug: { $first: '$teamSlug' },
+            events: {
+              $push: {
+                duration: '$duration',
+                event: '$event',
+                hash: '$hash',
+                sessionId: '$sessionId',
+                source: '$source',
+                teamSlug: '$teamSlug',
+                date: '$date',
+              },
+            },
+          },
+        },
+        {
+          $sort: {
+            date: -1, // Sort by descending date
+          },
+        },
+      ],
     });
   } finally {
-    await prisma.$disconnect();
+    await client.$disconnect();
   }
 }
 
-export async function getSessions(teamSlug?: string) {
+export async function getTimeSaved(teamId?: string) {
   try {
-    await prisma.$connect();
-    // return (
-    //   await client
-    //     .db(DB_NAME)
-    //     .collection(EVENTS_COLLECTION)
-    //     .aggregate([
-    //       ...(teamSlug
-    //         ? [
-    //             {
-    //               $match: { teamSlug },
-    //             },
-    //           ]
-    //         : []),
-    //       {
-    //         $group: {
-    //           _id: '$sessionId',
-    //           sessionId: { $first: '$sessionId' },
-    //           duration: { $sum: '$duration' },
-    //           date: { $min: '$date' },
-    //           remoteHits: getHitsByLocationFromEvents(SourceType.REMOTE),
-    //           remoteDuration: getDurationByLocationFromEvents(SourceType.REMOTE),
-    //           localHits: getHitsByLocationFromEvents(SourceType.LOCAL),
-    //           localDuration: getDurationByLocationFromEvents(SourceType.LOCAL),
-    //           teamSlug: { $first: '$teamSlug' },
-    //           events: {
-    //             $push: {
-    //               duration: '$duration',
-    //               event: '$event',
-    //               hash: '$hash',
-    //               sessionId: '$sessionId',
-    //               source: '$source',
-    //               teamSlug: '$teamSlug',
-    //               date: '$date',
-    //             },
-    //           },
-    //         },
-    //       },
-    //       {
-    //         $sort: {
-    //           date: -1, // Sort by descending date
-    //         },
-    //       },
-    //     ])
-    //     .toArray()
-    // ).map((stats) => ({
-    //   sessionId: stats.sessionId,
-    //   duration: stats.duration,
-    //   date: stats.date,
-    //   remoteHits: stats.remoteHits,
-    //   remoteDuration: stats.remoteDuration,
-    //   localHits: stats.localHits,
-    //   localDuration: stats.localDuration,
-    //   teamSlug: stats.teamSlug,
-    //   events: stats.events,
-    // }));
+    await client.$connect();
+    return await client.session.aggregateRaw({
+      pipeline: [
+        ...(teamId
+          ? [
+              {
+                $match: { teamId },
+              },
+            ]
+          : []),
+        {
+          $group: {
+            _id: null,
+            remoteHits: getHitsByLocationFromEvents(SourceType.REMOTE),
+            remoteDuration: getDurationByLocationFromEvents(SourceType.REMOTE),
+            localHits: getHitsByLocationFromEvents(SourceType.LOCAL),
+            localDuration: getDurationByLocationFromEvents(SourceType.LOCAL),
+            teamSlug: { $first: '$teamSlug' },
+          },
+        },
+      ].filter(Boolean),
+    });
   } finally {
-    await prisma.$disconnect();
-  }
-}
-
-export async function getTimeSaved(teamSlug?: string) {
-  try {
-    await prisma.$connect();
-    // return (
-    //   await client
-    //     .db(DB_NAME)
-    //     .collection(EVENTS_COLLECTION)
-    //     .aggregate(
-    //       [
-    //         ...(teamSlug
-    //           ? [
-    //               {
-    //                 $match: { teamSlug },
-    //               },
-    //             ]
-    //           : []),
-    //         {
-    //           $group: {
-    //             _id: null,
-    //             remoteHits: getHitsByLocationFromEvents(SourceType.REMOTE),
-    //             remoteDuration: getDurationByLocationFromEvents(SourceType.REMOTE),
-    //             localHits: getHitsByLocationFromEvents(SourceType.LOCAL),
-    //             localDuration: getDurationByLocationFromEvents(SourceType.LOCAL),
-    //             teamSlug: { $first: '$teamSlug' },
-    //           },
-    //         },
-    //       ].filter(Boolean),
-    //     )
-    //     .toArray()
-    // ).map((stats) => ({
-    //   remoteHits: stats.remoteHits,
-    //   remoteDuration: stats.remoteDuration,
-    //   localHits: stats.localHits,
-    //   localDuration: stats.localDuration,
-    //   teamSlug: stats.teamSlug,
-    // }));
-  } finally {
-    await prisma.$disconnect();
+    await client.$disconnect();
   }
 }
 

@@ -13,3 +13,7 @@ export function accepted(body?: BodyInit | null, init?: ResponseInit) {
 export function noContent(body?: BodyInit | null, init?: ResponseInit) {
   return createResponse(204, body, init);
 }
+
+export function NotAcceptable(body?: BodyInit | null, init?: ResponseInit): Response {
+  return createResponse(405, body, init);
+}

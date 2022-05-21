@@ -18,13 +18,18 @@ services:
   #     - ./data/fs:/data
 
   mongo:
-    image: mongo
+    image : mongo:4
     restart: always
+    hostname: mongodb
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=example
+      - MONGO_INITDB_DATABASE=turborepo
+      - MONGO_REPLICA_SET_NAME=rs0
     ports:
       - 27017:27017
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
 
   mongo-express:
     image: mongo-express
