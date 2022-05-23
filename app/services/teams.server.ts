@@ -1,5 +1,6 @@
-import type { Team } from '~/types/Team';
-import { client } from './prismaClient.Server';
+import type { Team } from '@prisma/client';
+import { notFound } from 'remix-utils';
+import { client } from './prismaClient.server';
 
 export async function getTeams(): Promise<Team[]> {
   try {
@@ -21,11 +22,11 @@ export async function getUserTeams(userId: string, limit: number = 100, since = 
           },
         },
         AND: {
-          createdAt: {
+          creationDate: {
             gt: since,
           },
           AND: {
-            createdAt: {
+            creationDate: {
               lt: until,
             },
           },
@@ -38,10 +39,60 @@ export async function getUserTeams(userId: string, limit: number = 100, since = 
   }
 }
 
+export async function requireTeamParameter(request: Request): Promise<Team> {
+  const url = new URL(request.url);
+  const teamSlug = url.searchParams.get('teamSlug');
+  if (teamSlug) {
+    return getTeamBySlug(teamSlug);
+  }
+  const teamId = url.searchParams.get('teamId');
+  if (teamId) {
+    return getTeam(teamId);
+  }
+  throw notFound('TeamId or TeamSlug not found');
+}
+
 export async function getTeam(id: string): Promise<Team> {
   try {
     await client.$connect();
     return await client.team.findUnique({ where: { id } });
+  } finally {
+    await client.$disconnect();
+  }
+}
+
+export async function getTeamBySlug(slug: string): Promise<Team> {
+  try {
+    await client.$connect();
+    return await client.team.findUnique({ where: { slug } });
+  } finally {
+    await client.$disconnect();
+  }
+}
+
+export async function createTeam(team: Omit<Team, 'id'>): Promise<Team> {
+  try {
+    await client.$connect();
+    return await client.team.create({
+      data: {
+        avatar: '',
+        name: team.name,
+        slug: team.slug,
+      },
+    });
+  } finally {
+    await client.$disconnect();
+  }
+}
+
+export async function deleteTeam(teamId: string): Promise<void> {
+  try {
+    await client.$connect();
+    await client.team.delete({
+      where: {
+        id: teamId,
+      },
+    });
   } finally {
     await client.$disconnect();
   }

@@ -2,6 +2,7 @@ import type { ActionFunction, LoaderFunction } from 'remix';
 import { Form, redirect, useSearchParams } from 'remix';
 import invariant from 'tiny-invariant';
 import { requireCookieAuth } from '~/services/authentication.server';
+import { generateToken } from '~/services/tokens.server';
 
 export const loader: LoaderFunction = async ({ request, params, context }) => {
   await requireCookieAuth(request);
@@ -9,7 +10,7 @@ export const loader: LoaderFunction = async ({ request, params, context }) => {
 };
 
 export const action: ActionFunction = async ({ request, params, context }) => {
-  await requireCookieAuth(request);
+  const user = await requireCookieAuth(request);
   if (request.method === 'POST') {
     const formData = await request.formData();
     const formAction = formData.get('_action')?.toString();
@@ -17,8 +18,9 @@ export const action: ActionFunction = async ({ request, params, context }) => {
       case 'allow': {
         const redirectUri = formData.get('redirect_uri')?.toString();
         invariant(redirectUri, 'missing redirectUri');
+        const [newToken] = await generateToken(user.id);
         const redirectUrlWithToken = new URL(redirectUri);
-        redirectUrlWithToken.searchParams.set('token', 'my-token');
+        redirectUrlWithToken.searchParams.set('token', newToken);
         return redirect(redirectUrlWithToken.toString());
       }
       case 'deny': {

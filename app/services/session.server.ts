@@ -1,7 +1,7 @@
 import type { Session } from '@prisma/client';
-import { client } from './prismaClient.Server';
+import { client } from './prismaClient.server';
 
-export async function upsertSession(session: Session) {
+export async function upsertSession(session: Omit<Session, 'creationDate'>) {
   try {
     await client.$connect();
     await client.session.upsert({

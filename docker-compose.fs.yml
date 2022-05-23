@@ -17,26 +17,21 @@ services:
   #   volumes:
   #     - ./data/fs:/data
 
-  mongo:
-    image : mongo:4
+  db:
+    image: postgres:14.3
     restart: always
-    hostname: mongodb
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=example
-      - MONGO_INITDB_DATABASE=turborepo
-      - MONGO_REPLICA_SET_NAME=rs0
     ports:
-      - 27017:27017
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: example
+      POSTGRES_DB: turborepo
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - ./data/postgres/:/var/lib/postgresql/data
 
-  mongo-express:
-    image: mongo-express
+  adminer:
+    image: adminer:4.8.1
     restart: always
     ports:
-      - 8081:8081
-    environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: root
-      ME_CONFIG_MONGODB_ADMINPASSWORD: example
-      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
+      - 8081:8080

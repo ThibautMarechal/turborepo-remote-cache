@@ -9,9 +9,12 @@
   ],
   "license": "MIT",
   "scripts": {
-    "build": "remix build",
+    "build": "run-s build:*",
+    "build:type": "tsc",
+    "build:remix": "remix build",
     "dev": "remix dev",
     "postinstall": "remix setup node",
+    "migrate": "prisma migrate",
     "lint": "eslint ./app --color",
     "prestart": "remix-serve build",
     "start": "remix-serve build"
@@ -25,14 +28,17 @@
     "azure-blob-storage": "^4.2.5",
     "azure-blob-store": "^1.0.7",
     "fs-blob-store": "^6.0.0",
+    "prisma": "^3.14.0",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
+    "react-table": "^7.8.0",
     "remix": "^1.5.1",
     "remix-auth": "^3.2.2",
     "remix-auth-form": "^1.1.2",
     "remix-utils": "^3.2.0",
     "s3-blob-store": "^4.1.1",
-    "tiny-invariant": "^1.2.0"
+    "tiny-invariant": "^1.2.0",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@remix-run/dev": "^1.5.1",
@@ -40,12 +46,11 @@
     "@thimar/eslint-config": "^1.2.1",
     "@types/react": "^18.0.9",
     "@types/react-dom": "^18.0.4",
+    "@types/react-table": "^7.7.12",
     "@types/readable-stream": "^2.3.13",
+    "@types/uuid": "^8.3.4",
     "eslint": "^8.16.0",
-    "prisma": "^3.14.0",
+    "npm-run-all": "^4.1.5",
     "typescript": "^4.6.4"
-  },
-  "engines": {
-    "node": ">=14"
   }
 }

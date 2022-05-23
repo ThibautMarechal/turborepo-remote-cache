@@ -1,10 +1,18 @@
 import { Form, useSearchParams, type ActionFunction, type LoaderFunction } from 'remix';
 import { authenticator } from '~/services/authentication.server';
+import { getUser } from '~/services/users.server';
 
 export const loader: LoaderFunction = async ({ request }) => {
-  return await authenticator.isAuthenticated(request, {
-    successRedirect: '/',
-  });
+  const userFromCoockie = await authenticator.isAuthenticated(request);
+  if (userFromCoockie) {
+    try {
+      await getUser(userFromCoockie.id);
+    } catch (e) {
+      // Logout deleted users
+      return await authenticator.logout(request, { redirectTo: '/login' });
+    }
+  }
+  return null;
 };
 
 export const action: ActionFunction = async ({ request }) => {

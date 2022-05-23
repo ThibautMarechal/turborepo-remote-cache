@@ -4,10 +4,12 @@ import { CacheStorage } from '~/services/storage.server';
 import { DURATION_HEADER, getTurboContext, turboContextToMeta } from '~/utils/turboContext';
 import { streamToString, stringToStream } from '~/utils/stream';
 import { requireTokenAuth } from '~/services/authentication.server';
+import { requireTeamParameter } from '~/services/teams.server';
 
 export const loader: LoaderFunction = async ({ request, params, context }) => {
   const user = await requireTokenAuth(request);
-  const turboCtx = getTurboContext({ request, params, context }, user);
+  const team = await requireTeamParameter(request);
+  const turboCtx = getTurboContext({ request, params, context }, user, team);
 
   const storage = new CacheStorage();
   if (await storage.existArtifact(turboCtx)) {
@@ -28,7 +30,8 @@ export const loader: LoaderFunction = async ({ request, params, context }) => {
 
 export const action: ActionFunction = async ({ request, params, context }) => {
   const user = await requireTokenAuth(request);
-  const turboCtx = getTurboContext({ request, params, context }, user);
+  const team = await requireTeamParameter(request);
+  const turboCtx = getTurboContext({ request, params, context }, user, team);
 
   if (!request.body) {
     throw json(undefined, 422);

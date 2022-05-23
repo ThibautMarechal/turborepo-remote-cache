@@ -1,3 +1,6 @@
+import type { Team } from './Team';
+import type { User } from './User';
+
 export enum EventType {
   HIT = 'HIT',
   MISS = 'MISS',
@@ -16,16 +19,13 @@ export type TurboEvent = {
   source: SourceType;
 };
 
-export type TurboContext = {
-  teamId?: string;
-  teamSlug?: string;
-  artifactId?: string;
-  apiVersion: string;
-  duration?: string | null;
-  user: User;
-};
-
-export type ArtifactMeta = {
+export type CacheMetadata = {
   hash: string;
   duration: number;
 };
+
+export enum CachingStatus {
+  ENABLED = 'enabled',
+  DISABLED = 'disabled',
+  OVER_LIMIT = 'over_limit',
+}

@@ -2,63 +2,64 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider        = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "mongodb"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model Event {
-  id         String  @id @default(auto()) @map("_id") @db.ObjectId
-  sessionId  String
-  session    Session @relation(fields: [sessionId], references: [id])
-  duration   Int
-  eventType  String
-  hash       String
-  sourceType String
+  id           String   @id @default(uuid()) @db.Uuid
+  sessionId    String
+  session      Session  @relation(fields: [sessionId], references: [id])
+  duration     Int
+  eventType    String
+  hash         String
+  sourceType   String
+  creationDate DateTime @default(now())
 }
 
 model Session {
-  id     String  @id @map("_id")
-  teamId String
-  team   Team    @relation(fields: [teamId], references: [id])
-  userId String  @db.ObjectId
-  user   User    @relation(fields: [userId], references: [id])
-  events Event[]
+  id           String   @id
+  teamId       String   @db.Uuid
+  team         Team     @relation(fields: [teamId], references: [id])
+  userId       String   @db.Uuid
+  user         User     @relation(fields: [userId], references: [id])
+  events       Event[]  @relation(map: "sessionId")
+  creationDate DateTime @default(now())
 }
 
 model User {
-  id           String    @id @default(auto()) @map("_id") @db.ObjectId
-  username     String
+  id           String    @id @default(uuid()) @db.Uuid
+  username     String    @unique
   name         String
-  email        String
-  sessions     Session[]
-  tokens       Token[]
+  email        String    @unique
+  sessions     Session[] @relation(map: "userId")
+  tokens       Token[]   @relation(map: "userId")
   passwordHash String
   roles        String[]
-  teams        Team[]    @relation(fields: [teamIds], references: [id])
-  teamIds      String[]  @db.ObjectId
+  teams        Team[]    @relation(map: "userId")
+  creationDate DateTime  @default(now())
 }
 
 model Team {
-  id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  name      String
-  avatar    String
-  createdAt DateTime
-  slug      String
-  sessions  Session[]
-  users     User[]    @relation(fields: [userIds], references: [id])
-  userIds   String[]  @db.ObjectId
+  id           String    @id @default(uuid()) @db.Uuid
+  name         String    @unique
+  avatar       String?
+  creationDate DateTime  @default(now())
+  slug         String    @unique
+  sessions     Session[] @relation(map: "teamId")
+  users        User[]    @relation(map: "teamId")
 }
 
 model Token {
-  id           String    @id @default(auto()) @map("_id") @db.ObjectId
+  id           String    @id @default(uuid()) @db.Uuid
   hash         String    @unique
   name         String
-  creationDate DateTime
+  creationDate DateTime  @default(now())
   lastUseDate  DateTime?
-  userId       String
+  userId       String    @db.Uuid
   user         User      @relation(fields: [userId], references: [id])
 }

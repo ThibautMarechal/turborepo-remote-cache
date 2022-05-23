@@ -1,7 +1,7 @@
 import type { Readable } from 'stream';
 import path from 'path';
 import type { AbstractBlobStore } from 'abstract-blob-store';
-import type { TurboContext } from '~/types/turborepo';
+import type { TurboContext } from '~/types/TurboContext';
 import fs from 'fs-blob-store';
 import aws from 'aws-sdk';
 import s3 from 's3-blob-store';
@@ -62,11 +62,11 @@ export class CacheStorage {
 
   private getArtifactKey(turboCtx: TurboContext): string {
     invariant(turboCtx.artifactId, 'Expected artifactId');
-    invariant(turboCtx.teamSlug, 'Expected teamId or teamSlug');
-    return `${path.join(turboCtx.teamSlug, turboCtx.artifactId)}.tar.gz`;
+    invariant(turboCtx.team, 'Expected team');
+    return `${path.join(turboCtx.team.id, turboCtx.artifactId)}.tar.gz`;
   }
 
-  private getArtifactMetaKey(turboCtx: TurboContext): string {
+  private getCacheMetadataKey(turboCtx: TurboContext): string {
     return `${this.getArtifactKey(turboCtx)}-meta.json`;
   }
 
@@ -82,7 +82,7 @@ export class CacheStorage {
   }
 
   async readMeta(turboCtx: TurboContext): Promise<Readable> {
-    return this.read(this.getArtifactMetaKey(turboCtx));
+    return this.read(this.getCacheMetadataKey(turboCtx));
   }
 
   private write(key: string, stream: Readable): Promise<void> {
@@ -104,7 +104,7 @@ export class CacheStorage {
   }
 
   writeMeta(turboCtx: TurboContext, metaStream: Readable): Promise<void> {
-    return this.write(this.getArtifactMetaKey(turboCtx), metaStream);
+    return this.write(this.getCacheMetadataKey(turboCtx), metaStream);
   }
 
   private exist(key: string): Promise<boolean> {
@@ -124,7 +124,7 @@ export class CacheStorage {
   }
 
   existMeta(turboCtx: TurboContext): Promise<boolean> {
-    return this.exist(this.getArtifactMetaKey(turboCtx));
+    return this.exist(this.getCacheMetadataKey(turboCtx));
   }
 
   private remove(key: string): Promise<void> {
@@ -144,6 +144,6 @@ export class CacheStorage {
   }
 
   removeMeta(turboCtx: TurboContext): Promise<void> {
-    return this.remove(this.getArtifactMetaKey(turboCtx));
+    return this.remove(this.getCacheMetadataKey(turboCtx));
   }
 }
