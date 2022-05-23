@@ -1,6 +1,4 @@
 import type { Event } from '@prisma/client';
-import { EventType } from '~/types/vercel/turborepo';
-import type { SourceType } from '~/types/vercel/turborepo';
 import { client } from './prismaClient.server';
 
 export async function insertEvents(events: Omit<Event, 'id' | 'creationDate'>[]) {
@@ -91,30 +89,30 @@ export async function getTimeSaved(teamId?: string) {
   }
 }
 
-function getHitsByLocationFromEvents(source: SourceType) {
-  return {
-    $sum: {
-      $cond: [
-        {
-          $and: [{ $eq: ['$source', source] }, { $eq: ['$event', EventType.HIT] }],
-        },
-        1,
-        0,
-      ],
-    },
-  };
-}
+// function getHitsByLocationFromEvents(source: SourceType) {
+//   return {
+//     $sum: {
+//       $cond: [
+//         {
+//           $and: [{ $eq: ['$source', source] }, { $eq: ['$event', EventType.HIT] }],
+//         },
+//         1,
+//         0,
+//       ],
+//     },
+//   };
+// }
 
-function getDurationByLocationFromEvents(source: SourceType) {
-  return {
-    $sum: {
-      $cond: [
-        {
-          $and: [{ $eq: ['$source', source] }, { $eq: ['$event', EventType.HIT] }],
-        },
-        '$duration',
-        0,
-      ],
-    },
-  };
-}
+// function getDurationByLocationFromEvents(source: SourceType) {
+//   return {
+//     $sum: {
+//       $cond: [
+//         {
+//           $and: [{ $eq: ['$source', source] }, { $eq: ['$event', EventType.HIT] }],
+//         },
+//         '$duration',
+//         0,
+//       ],
+//     },
+//   };
+// }

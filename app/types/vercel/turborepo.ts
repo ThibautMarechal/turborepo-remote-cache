@@ -1,6 +1,3 @@
-import type { Team } from './Team';
-import type { User } from './User';
-
 export enum EventType {
   HIT = 'HIT',
   MISS = 'MISS',

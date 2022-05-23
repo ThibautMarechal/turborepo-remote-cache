@@ -1,7 +1,6 @@
 import { hash } from '~/utils/hash';
 import { client } from './prismaClient.server';
 import type { User } from '@prisma/client';
-import { json } from 'remix-utils';
 
 export async function getUsers(): Promise<User[]> {
   try {

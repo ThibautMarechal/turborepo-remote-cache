@@ -1,5 +1,5 @@
 import type { Team } from '@prisma/client';
-import { notFound } from 'remix-utils';
+import { removeTeamUndescore } from '~/mapper/team';
 import { client } from './prismaClient.server';
 
 export async function getTeams(): Promise<Team[]> {
@@ -47,7 +47,7 @@ export async function getTeamFromRequest(request: Request): Promise<Team | null>
   }
   const teamId = url.searchParams.get('teamId');
   if (teamId) {
-    return getTeam(teamId);
+    return getTeam(removeTeamUndescore(teamId));
   }
   return null;
 }
