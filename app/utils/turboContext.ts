@@ -1,7 +1,7 @@
 import type { DataFunctionArgs } from '@remix-run/server-runtime';
 import { unauthorized } from 'remix-utils';
 import type { TurboContext, ArtifactMeta } from '~/types/turborepo';
-import { User } from '~/types/User';
+import type { User } from '~/types/User';
 
 export function getTurboContext({ request, params }: DataFunctionArgs, user: User): TurboContext {
   const url = new URL(request.url);

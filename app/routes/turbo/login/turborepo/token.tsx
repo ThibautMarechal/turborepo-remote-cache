@@ -1,4 +1,5 @@
-import { ActionFunction, Form, LoaderFunction, redirect, useSearchParams } from 'remix';
+import type { ActionFunction, LoaderFunction } from 'remix';
+import { Form, redirect, useSearchParams } from 'remix';
 import invariant from 'tiny-invariant';
 import { requireCookieAuth } from '~/services/authentication.server';
 

@@ -1,4 +1,4 @@
-import { Session } from '@prisma/client';
+import type { Session } from '@prisma/client';
 import { client } from './prismaClient.Server';
 
 export async function upsertSession(session: Session) {

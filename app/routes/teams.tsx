@@ -1,7 +1,7 @@
 import { json, type LoaderFunction, useLoaderData } from 'remix';
 import { requireCookieAuth } from '~/services/authentication.server';
 import { getTeams } from '~/services/teams.server';
-import { Team } from '~/types/Team';
+import type { Team } from '~/types/Team';
 
 export const loader: LoaderFunction = async ({ request, params, context }) => {
   await requireCookieAuth(request);

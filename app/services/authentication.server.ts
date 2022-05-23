@@ -3,7 +3,7 @@ import { Authenticator } from 'remix-auth';
 import { FormStrategy } from 'remix-auth-form';
 import invariant from 'tiny-invariant';
 import { sessionStorage } from '~/services/cookieSession';
-import { User } from '~/types/User';
+import type { User } from '~/types/User';
 import { getToken } from './tokens.server';
 import { getUser } from './users.server';
 

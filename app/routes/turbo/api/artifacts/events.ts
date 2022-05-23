@@ -2,7 +2,7 @@ import { type ActionFunction, json } from 'remix';
 import { getTurboContext } from '~/utils/turboContext';
 import { requireTokenAuth } from '~/services/authentication.server';
 import { insertEvents } from '~/services/events.server';
-import { TurboEvent } from '~/types/turborepo';
+import type { TurboEvent } from '~/types/turborepo';
 import { upsertSession } from '~/services/session.server';
 import { unprocessableEntity } from 'remix-utils';
 

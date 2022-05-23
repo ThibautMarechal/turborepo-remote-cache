@@ -1,4 +1,4 @@
-import { Event } from '@prisma/client';
+import type { Event } from '@prisma/client';
 import { EventType, SourceType } from '~/types/turborepo';
 import { client } from './prismaClient.Server';
 
