@@ -1,10 +1,9 @@
-import type { Team } from './vercel/Team';
-import type { User } from './vercel/User';
+import type { Team, User } from '@prisma/client';
 
 export type TurboContext = {
   artifactId?: string;
   apiVersion: string;
   duration?: string | null;
   user: User;
-  team: Team;
+  team: Team | null;
 };

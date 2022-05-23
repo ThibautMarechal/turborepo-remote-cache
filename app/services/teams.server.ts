@@ -39,7 +39,7 @@ export async function getUserTeams(userId: string, limit: number = 100, since = 
   }
 }
 
-export async function requireTeamParameter(request: Request): Promise<Team> {
+export async function getTeamFromRequest(request: Request): Promise<Team | null> {
   const url = new URL(request.url);
   const teamSlug = url.searchParams.get('teamSlug');
   if (teamSlug) {
@@ -49,7 +49,7 @@ export async function requireTeamParameter(request: Request): Promise<Team> {
   if (teamId) {
     return getTeam(teamId);
   }
-  throw notFound('TeamId or TeamSlug not found');
+  return null;
 }
 
 export async function getTeam(id: string): Promise<Team> {

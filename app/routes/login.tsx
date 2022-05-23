@@ -18,7 +18,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 export const action: ActionFunction = async ({ request }) => {
   const clonedRequest = request.clone(); // cannot read 2 times the formData without clone
   const formData = await request.formData();
-  const redirectUri = formData.get('redirect_to')?.toString() ?? '/';
+  const redirectUri = formData.get('redirect_to')?.toString() || '/';
   return await authenticator.authenticate('user-pass', clonedRequest, {
     successRedirect: redirectUri,
     failureRedirect: `/login?redirect_to=${redirectUri}`,

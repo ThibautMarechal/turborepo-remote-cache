@@ -62,8 +62,7 @@ export class CacheStorage {
 
   private getArtifactKey(turboCtx: TurboContext): string {
     invariant(turboCtx.artifactId, 'Expected artifactId');
-    invariant(turboCtx.team, 'Expected team');
-    return `${path.join(turboCtx.team.id, turboCtx.artifactId)}.tar.gz`;
+    return `${path.join(turboCtx.team?.id ?? turboCtx.user.id, turboCtx.artifactId)}.tar.gz`;
   }
 
   private getCacheMetadataKey(turboCtx: TurboContext): string {
@@ -103,7 +102,7 @@ export class CacheStorage {
     return this.write(this.getArtifactKey(turboCtx), artifactStream);
   }
 
-  writeMeta(turboCtx: TurboContext, metaStream: Readable): Promise<void> {
+  writeMetadata(turboCtx: TurboContext, metaStream: Readable): Promise<void> {
     return this.write(this.getCacheMetadataKey(turboCtx), metaStream);
   }
 

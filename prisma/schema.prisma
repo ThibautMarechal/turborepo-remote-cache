@@ -23,8 +23,8 @@ model Event {
 
 model Session {
   id           String   @id
-  teamId       String   @db.Uuid
-  team         Team     @relation(fields: [teamId], references: [id])
+  teamId       String?   @db.Uuid
+  team         Team?     @relation(fields: [teamId], references: [id])
   userId       String   @db.Uuid
   user         User     @relation(fields: [userId], references: [id])
   events       Event[]  @relation(map: "sessionId")

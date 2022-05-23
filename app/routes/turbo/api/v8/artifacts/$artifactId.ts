@@ -1,14 +1,14 @@
 import { type LoaderFunction, type ActionFunction, json } from 'remix';
-import type { PassThrough } from 'stream';
+import { Readable } from 'stream';
 import { CacheStorage } from '~/services/storage.server';
 import { DURATION_HEADER, getTurboContext, turboContextToMeta } from '~/utils/turboContext';
 import { streamToString, stringToStream } from '~/utils/stream';
 import { requireTokenAuth } from '~/services/authentication.server';
-import { requireTeamParameter } from '~/services/teams.server';
+import { getTeamFromRequest } from '~/services/teams.server';
 
 export const loader: LoaderFunction = async ({ request, params, context }) => {
   const user = await requireTokenAuth(request);
-  const team = await requireTeamParameter(request);
+  const team = await getTeamFromRequest(request);
   const turboCtx = getTurboContext({ request, params, context }, user, team);
 
   const storage = new CacheStorage();
@@ -30,7 +30,7 @@ export const loader: LoaderFunction = async ({ request, params, context }) => {
 
 export const action: ActionFunction = async ({ request, params, context }) => {
   const user = await requireTokenAuth(request);
-  const team = await requireTeamParameter(request);
+  const team = await getTeamFromRequest(request);
   const turboCtx = getTurboContext({ request, params, context }, user, team);
 
   if (!request.body) {
@@ -40,9 +40,9 @@ export const action: ActionFunction = async ({ request, params, context }) => {
   const storage = new CacheStorage();
   try {
     await Promise.all([
-      // Cast as PassThrough is beacause Remix is transforming the request body with to polyfill the Fetch API
-      storage.writeArtifact(turboCtx, request.body as unknown as PassThrough),
-      storage.writeMeta(turboCtx, stringToStream(JSON.stringify(turboContextToMeta(turboCtx)))),
+      // The real type of request.body is ReadableStream. Somehow ReadableStream can be used as AsyncIterator
+      storage.writeArtifact(turboCtx, Readable.from(request.body as unknown as AsyncIterable<any>)),
+      storage.writeMetadata(turboCtx, stringToStream(JSON.stringify(turboContextToMeta(turboCtx)))),
     ]);
   } catch (err) {
     console.error(err);

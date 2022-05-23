@@ -6,7 +6,6 @@ import { getNumberOfUser } from './services/users.server';
 import type { Headers } from '@remix-run/web-fetch';
 
 export const handleDataRequest: HandleDataRequestFunction = async (response, { request }) => {
-  console.log('handleDataRequest');
   return await cors(request, response);
 };
 

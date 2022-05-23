@@ -4,7 +4,7 @@ import type { CacheMetadata } from '~/types/vercel/turborepo';
 import { json } from 'remix-utils';
 import type { Team, User } from '@prisma/client';
 
-export function getTurboContext({ request, params }: DataFunctionArgs, user: User, team: Team): TurboContext {
+export function getTurboContext({ request, params }: DataFunctionArgs, user: User, team: Team | null): TurboContext {
   const { artifactId, apiVersion } = params;
   const duration = request.headers.get(DURATION_HEADER);
   return {

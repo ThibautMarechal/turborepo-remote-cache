@@ -7,5 +7,6 @@ export function ToVercelUser(user: PrismaUser): VercelUser {
     name: user.name,
     username: user.username,
     email: user.email,
+    createdAt: user.creationDate.getDate(),
   };
 }

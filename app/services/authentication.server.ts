@@ -1,9 +1,9 @@
+import type { User } from '@prisma/client';
 import { json, redirect } from 'remix';
 import { Authenticator } from 'remix-auth';
 import { FormStrategy } from 'remix-auth-form';
 import invariant from 'tiny-invariant';
 import { sessionStorage } from '~/services/cookieSession';
-import type { User } from '~/types/vercel/User';
 import { getToken } from './tokens.server';
 import { getUser, getUserByUsernameAndPassword } from './users.server';
 
