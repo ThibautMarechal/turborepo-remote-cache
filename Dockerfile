@@ -7,8 +7,13 @@ RUN yarn build
 
 ENV NODE_ENV=production
 
-# MongoDB configuration
+# Postgres configuration
 ENV DATABASE_URL=
+
+# Admin configuration
+ENV ADMIN_USERNAME=
+ENV ADMIN_EMAIL=
+ENV ADMIN_PASSWORD=
 
 # Storage configuration
 ENV STORAGE_TYPE=
@@ -26,7 +31,5 @@ ENV STORAGE_S3_BUCKET=
 ENV STORAGE_AZURE_STORAGE_ACCOUNT=
 ENV STORAGE_AZURE_STORAGE_ACCESS_KEY=
 ENV STORAGE_AZURE_STORAGE_CONTAINER=
-
-
 
 CMD ["yarn" ,"start"]

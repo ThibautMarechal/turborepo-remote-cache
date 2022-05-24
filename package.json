@@ -19,7 +19,9 @@
     "postinstall": "remix setup node",
     "migrate": "prisma migrate",
     "lint": "eslint ./app --color --max-warnings=0",
-    "prestart": "remix-serve build",
+    "prestart": "run-s migrate:prod seed",
+    "migrate:prod": "prisma migrate deploy",
+    "seed": "prisma db seed",
     "start": "remix-serve build"
   },
   "dependencies": {
@@ -42,6 +44,7 @@
     "remix-utils": "^3.2.0",
     "s3-blob-store": "^4.1.1",
     "tiny-invariant": "^1.2.0",
+    "ts-node": "^10.8.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
@@ -60,5 +63,8 @@
     "npm-run-all": "^4.1.5",
     "tailwindcss": "^3.0.24",
     "typescript": "^4.6.4"
+  },
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} ./prisma/seed.ts"
   }
 }
