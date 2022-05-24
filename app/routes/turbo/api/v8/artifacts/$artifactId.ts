@@ -5,36 +5,40 @@ import { DURATION_HEADER, getTurboContext, turboContextToMeta } from '~/utils/tu
 import { streamToString, stringToStream } from '~/utils/stream';
 import { requireTokenAuth } from '~/services/authentication.server';
 import { getTeamFromRequest } from '~/services/teams.server';
+import { allowMethods, METHOD } from '~/utils/method';
+import { accepted, unprocessableEntity, internalServerError, notFound } from '~/utils/response';
 
 export const loader: LoaderFunction = async ({ request, params, context }) => {
+  allowMethods(request, METHOD.GET, METHOD.PUT);
   const user = await requireTokenAuth(request);
   const team = await getTeamFromRequest(request);
   const turboCtx = getTurboContext({ request, params, context }, user, team);
 
   const storage = new CacheStorage();
-  if (await storage.existArtifact(turboCtx)) {
-    const meta = JSON.parse(await streamToString(await storage.readMeta(turboCtx)));
-    const headers = new Headers();
-    headers.set('Content-Type', 'application/octet-stream');
-    if (meta) {
-      headers.set(DURATION_HEADER, meta.duration.toString());
-    }
-    // Cast as ReadableStream because Response actually accept Readable as BodyInit
-    return new Response((await storage.readArtifact(turboCtx)) as unknown as ReadableStream, {
-      status: 200,
-      headers,
-    });
+  if (!(await storage.existArtifact(turboCtx))) {
+    throw notFound();
   }
-  throw json(undefined, 404);
+  const meta = JSON.parse(await streamToString(await storage.readMeta(turboCtx)));
+  const headers = new Headers();
+  headers.set('Content-Type', 'application/octet-stream');
+  if (meta) {
+    headers.set(DURATION_HEADER, meta.duration.toString());
+  }
+  // Cast as ReadableStream because Response actually accept Readable as BodyInit
+  return new Response((await storage.readArtifact(turboCtx)) as unknown as ReadableStream, {
+    status: 200,
+    headers,
+  });
 };
 
 export const action: ActionFunction = async ({ request, params, context }) => {
+  allowMethods(request, METHOD.GET, METHOD.PUT);
   const user = await requireTokenAuth(request);
   const team = await getTeamFromRequest(request);
   const turboCtx = getTurboContext({ request, params, context }, user, team);
 
   if (!request.body) {
-    throw json(undefined, 422);
+    throw unprocessableEntity();
   }
 
   const storage = new CacheStorage();
@@ -46,7 +50,7 @@ export const action: ActionFunction = async ({ request, params, context }) => {
     ]);
   } catch (err) {
     console.error(err);
-    return json(undefined, 500);
+    throw internalServerError();
   }
-  return json(undefined);
+  return accepted();
 };

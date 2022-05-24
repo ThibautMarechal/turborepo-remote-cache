@@ -6,9 +6,11 @@ import type { TurboEvent } from '~/types/vercel/turborepo';
 import { upsertSession } from '~/services/session.server';
 import { unprocessableEntity } from 'remix-utils';
 import { getTeamFromRequest } from '~/services/teams.server';
-import { METHOD } from '~/utils/method';
+import { allowMethods, METHOD } from '~/utils/method';
+import { methodNotAllowed } from '~/utils/response';
 
 export const action: ActionFunction = async ({ request, params, context }) => {
+  allowMethods(request, METHOD.GET, METHOD.POST);
   const user = await requireTokenAuth(request);
   const team = await getTeamFromRequest(request);
   const turboEvents = (await request.json()) as TurboEvent[];
@@ -33,11 +35,6 @@ export const action: ActionFunction = async ({ request, params, context }) => {
 };
 
 export const loader: LoaderFunction = async ({ request, params, context }) => {
-  if (request.method === METHOD.OPTIONS) {
-    return new Response(null, {
-      headers: {
-        'Access-Control-Allow-Methods': [METHOD.POST, METHOD.OPTIONS].join(','),
-      },
-    });
-  }
+  allowMethods(request, METHOD.GET, METHOD.POST);
+  return methodNotAllowed();
 };
