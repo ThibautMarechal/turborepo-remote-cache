@@ -9,7 +9,6 @@ services:
       - 8080:8080
     environment:
       PORT: 8080
-      TURBO_TOKEN: my-token
       STORAGE_TYPE: s3
       STORAGE_S3_ENDPOINT: http://minio:9000
       STORAGE_S3_FORCE_PATH_STYLE: 'true'
@@ -17,8 +16,7 @@ services:
       STORAGE_S3_SECRET_ACCESS_KEY: miniosecretkey
       STORAGE_S3_SSL_ENABLED: 'false'
       STORAGE_S3_BUCKET: turborepo-remote-cache
-      MONGODB_URL: mongodb://root:example@mongo:27017/
-      MONGODB_DB: turborepo-remote-cache
+      DATABASE_URL: postgres://postgres:example@localhost:5432/turborepo
 
   mongo:
     image: mongo

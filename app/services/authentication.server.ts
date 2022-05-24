@@ -1,5 +1,5 @@
 import type { User } from '@prisma/client';
-import { json, redirect } from 'remix';
+import { redirect } from 'remix';
 import { Authenticator } from 'remix-auth';
 import { FormStrategy } from 'remix-auth-form';
 import invariant from 'tiny-invariant';
@@ -31,8 +31,8 @@ export async function requireTokenAuth(request: Request): Promise<User> {
   try {
     const { userId } = await getToken(token);
     return await getUser(userId);
-  } catch (error) {
-    console.log('Token Auth', error);
+  } catch (error: any) {
+    console.log('Token Auth Error: ', error?.constructor?.name);
     throw unauthorized();
   }
 }

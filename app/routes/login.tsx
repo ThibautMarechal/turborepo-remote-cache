@@ -28,11 +28,25 @@ export const action: ActionFunction = async ({ request }) => {
 export default function Login() {
   const [searchParams] = useSearchParams();
   return (
-    <Form method="post">
-      <input type="hidden" name="redirect_to" value={searchParams.get('redirect_to') ?? undefined} />
-      <input type="text" name="username" required />
-      <input type="password" name="password" autoComplete="current-password" required />
-      <button>Sign In</button>
-    </Form>
+    <div className="container mx-auto flex justify-center">
+      <Form method="post">
+        <input type="hidden" name="redirect_to" value={searchParams.get('redirect_to') ?? undefined} />
+        <div className="form-control w-full max-w-xs">
+          <label className="label">
+            <span className="label-text">Username</span>
+          </label>
+          <input type="text" name="username" required className="input input-bordered w-full max-w-xs" />
+        </div>
+        <div className="form-control w-full max-w-xs">
+          <label className="label">
+            <span className="label-text">Password</span>
+          </label>
+          <input type="password" name="password" autoComplete="current-password" required className="input input-bordered w-full max-w-xs" />
+        </div>
+        <div className="form-control w-full max-w-xs mt-3">
+          <button className="btn btn-primary">Log In</button>
+        </div>
+      </Form>
+    </div>
   );
 }

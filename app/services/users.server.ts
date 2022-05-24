@@ -28,7 +28,7 @@ export async function createUser(user: Pick<User, 'email' | 'name' | 'username'>
         email: user.email,
         name: user.name,
         username: user.username,
-        passwordHash: hash('default_password'),
+        passwordHash: hash('pass'),
       },
     });
   } finally {

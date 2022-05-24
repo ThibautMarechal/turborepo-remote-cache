@@ -9,10 +9,13 @@
   ],
   "license": "MIT",
   "scripts": {
-    "build": "run-p lint build:*",
+    "build": "run-s lint build:*",
     "build:type": "tsc",
+    "build:css": "tailwindcss -o ./app/tailwind.css --minify",
     "build:remix": "remix build",
-    "dev": "remix dev",
+    "dev": "run-p dev:*",
+    "dev:remix": "remix dev",
+    "dev:css": "tailwindcss -o ./app/tailwind.css --watch",
     "postinstall": "remix setup node",
     "migrate": "prisma migrate",
     "lint": "eslint ./app --color --max-warnings=0",
@@ -31,6 +34,7 @@
     "prisma": "^3.14.0",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
+    "react-gravatar": "^2.6.3",
     "react-table": "^7.8.0",
     "remix": "^1.5.1",
     "remix-auth": "^3.2.2",
@@ -43,14 +47,18 @@
   "devDependencies": {
     "@remix-run/dev": "^1.5.1",
     "@remix-run/eslint-config": "^1.5.1",
+    "@tailwindcss/typography": "^0.5.2",
     "@thimar/eslint-config": "^1.2.1",
     "@types/react": "^18.0.9",
     "@types/react-dom": "^18.0.4",
+    "@types/react-gravatar": "^2.6.10",
     "@types/react-table": "^7.7.12",
     "@types/readable-stream": "^2.3.13",
     "@types/uuid": "^8.3.4",
+    "daisyui": "^2.15.0",
     "eslint": "^8.16.0",
     "npm-run-all": "^4.1.5",
+    "tailwindcss": "^3.0.24",
     "typescript": "^4.6.4"
   }
 }

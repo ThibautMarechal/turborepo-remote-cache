@@ -6,14 +6,9 @@ COPY ./ .
 RUN yarn build
 
 ENV NODE_ENV=production
-ENV TURBO_TOKEN=
 
 # MongoDB configuration
 ENV DATABASE_URL=
-
-# USER configuration
-ENV ADMIN_USERNAME=
-ENV ADMIN_PASSWORD=
 
 # Storage configuration
 ENV STORAGE_TYPE=

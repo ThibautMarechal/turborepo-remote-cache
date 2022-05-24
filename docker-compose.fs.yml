@@ -2,36 +2,15 @@ version: '3.1'
 
 services:
 
-  # turborepo-remote-cache:
-  #   build:
-  #     context: .
-  #   ports:
-  #     - 8080:8080
-  #   environment:
-  #     PORT: 8080
-  #     TURBO_TOKEN: my-token
-  #     STORAGE_TYPE: fs
-  #     MONGODB_URL: mongodb://root:example@mongo:27017/
-  #     MONGODB_DB: turborepo-remote-cache
-  #     STORAGE_FS_PATH: /data
-  #   volumes:
-  #     - ./data/fs:/data
-
-  db:
-    image: postgres:14.3
-    restart: always
+  turborepo-remote-cache:
+    build:
+      context: .
     ports:
-      - 5432:5432
+      - 8080:8080
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: example
-      POSTGRES_DB: turborepo
-      PGDATA: /var/lib/postgresql/data/pgdata
+      PORT: 8080
+      STORAGE_TYPE: fs
+      STORAGE_FS_PATH: /data
+      DATABASE_URL: postgres://postgres:example@localhost:5432/turborepo
     volumes:
-      - ./data/postgres/:/var/lib/postgresql/data
-
-  adminer:
-    image: adminer:4.8.1
-    restart: always
-    ports:
-      - 8081:8080
+      - ./data/fs:/data

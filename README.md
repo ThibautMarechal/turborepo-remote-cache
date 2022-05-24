@@ -19,7 +19,6 @@ Support the the analytics API:
 - ADMIN_PASWWORD : admin
 
 ### TURBO configuration
-- TURBO_TOKEN : The authentication token
 
 ### Storage configuration
 - STORAGE_TYPE : the type of storage to use (default: fs, options: fs ,s3, azure)
@@ -38,7 +37,7 @@ Support the the analytics API:
 - STORAGE_AZURE_STORAGE_ACCESS_KEY
 - STORAGE_AZURE_STORAGE_CONTAINER
 
-### Mongo DB configuration
+### Postgres configuration
 - DATABASE_URL
 
 ## Repository configuration

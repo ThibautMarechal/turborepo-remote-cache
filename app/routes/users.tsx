@@ -4,6 +4,7 @@ import { useTable } from 'react-table';
 import { requireCookieAuth } from '~/services/authentication.server';
 import { createUser, deleteUser, getUsers } from '~/services/users.server';
 import type { User } from '@prisma/client';
+import { useMemo } from 'react';
 
 export const loader: LoaderFunction = async ({ request }) => {
   await requireCookieAuth(request);
@@ -39,34 +40,37 @@ export default function Users() {
   const users = useLoaderData<User[]>();
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable<User>({
     data: users,
-    columns: [
-      {
-        id: 'name',
-        Header: 'Name',
-        accessor: 'name',
-      },
-      {
-        id: 'username',
-        Header: 'Username',
-        accessor: 'username',
-      },
-      {
-        id: 'email',
-        Header: 'Email',
-        accessor: 'email',
-      },
-      {
-        id: 'delete',
-        accessor: 'id',
-        Cell: ({ value }) => (
-          <form method="POST">
-            <input name="_action" value={actions.DELETE} type="hidden" />
-            <input name="id" value={value} type="hidden" />
-            <button>X</button>
-          </form>
-        ),
-      },
-    ],
+    columns: useMemo(
+      () => [
+        {
+          id: 'name',
+          Header: 'Name',
+          accessor: 'name',
+        },
+        {
+          id: 'username',
+          Header: 'Username',
+          accessor: 'username',
+        },
+        {
+          id: 'email',
+          Header: 'Email',
+          accessor: 'email',
+        },
+        {
+          id: 'delete',
+          accessor: 'id',
+          Cell: ({ value }) => (
+            <form method="POST">
+              <input name="_action" value={actions.DELETE} type="hidden" />
+              <input name="id" value={value} type="hidden" />
+              <button>X</button>
+            </form>
+          ),
+        },
+      ],
+      [],
+    ),
     getRowId: (user) => user.id,
   });
 
