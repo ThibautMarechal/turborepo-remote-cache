@@ -2,10 +2,14 @@ import type { Team } from '@prisma/client';
 import { removeTeamUndescore } from '~/mapper/team';
 import { client } from './prismaClient.server';
 
-export async function getTeams(): Promise<Team[]> {
+export async function getTeams(skip: number = 0, take: number = 50): Promise<Team[]> {
   try {
     await client.$connect();
-    return await client.team.findMany();
+    return await client.team.findMany({
+      skip,
+      take,
+      orderBy: [{ creationDate: 'desc' }],
+    });
   } finally {
     await client.$disconnect();
   }
@@ -75,7 +79,6 @@ export async function createTeam(team: Omit<Team, 'id'>): Promise<Team> {
     await client.$connect();
     return await client.team.create({
       data: {
-        avatar: '',
         name: team.name,
         slug: team.slug,
       },

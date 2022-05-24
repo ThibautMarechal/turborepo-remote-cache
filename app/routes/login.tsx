@@ -35,7 +35,7 @@ export default function Login() {
           <label className="label">
             <span className="label-text">Username</span>
           </label>
-          <input type="text" name="username" required className="input input-bordered w-full max-w-xs" />
+          <input type="text" name="username" required autoFocus className="input input-bordered w-full max-w-xs" />
         </div>
         <div className="form-control w-full max-w-xs">
           <label className="label">

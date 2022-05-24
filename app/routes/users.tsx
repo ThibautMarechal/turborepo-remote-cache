@@ -4,7 +4,8 @@ import { useTable } from 'react-table';
 import { requireCookieAuth } from '~/services/authentication.server';
 import { createUser, deleteUser, getUsers } from '~/services/users.server';
 import type { User } from '@prisma/client';
-import { useMemo } from 'react';
+import { useId, useMemo } from 'react';
+import Modal from '~/component/Modal';
 
 export const loader: LoaderFunction = async ({ request }) => {
   await requireCookieAuth(request);
@@ -21,11 +22,14 @@ export const action: ActionFunction = async ({ request, params, context }) => {
   const formData = await request.formData();
   switch (formData.get('_action')) {
     case actions.CREATE:
-      await createUser({
-        name: formData.get('name') as string,
-        username: formData.get('username') as string,
-        email: formData.get('email') as string,
-      });
+      await createUser(
+        {
+          name: formData.get('name') as string,
+          username: formData.get('username') as string,
+          email: formData.get('email') as string,
+        },
+        formData.get('password') as string,
+      );
       break;
     case actions.DELETE:
       await deleteUser(formData.get('id') as string);
@@ -73,18 +77,47 @@ export default function Users() {
     ),
     getRowId: (user) => user.id,
   });
+  const modalId = useId();
 
   return (
     <div>
-      <h1>Users</h1>
-      <form method="POST">
-        <input name="_action" value={actions.CREATE} type="hidden" />
-        <input name="name"></input>
-        <input name="username"></input>
-        <input name="email"></input>
-        <button>Create</button>
-      </form>
-      <table {...getTableProps()}>
+      <Modal.Opener id={modalId} className="btn btn-circle btn-primary fixed bottom-5 right-5">
+        +
+      </Modal.Opener>
+      <Modal id={modalId}>
+        <form method="POST">
+          <h2>Create a new user</h2>
+          <input name="_action" value={actions.CREATE} type="hidden" />
+          <div className="form-control w-full">
+            <label className="label">
+              <span className="label-text">Username</span>
+            </label>
+            <input type="text" name="username" required autoFocus className="input input-bordered w-full" />
+          </div>
+          <div className="form-control w-full">
+            <label className="label">
+              <span className="label-text">Name</span>
+            </label>
+            <input type="text" name="name" required className="input input-bordered w-full" />
+          </div>
+          <div className="form-control w-full">
+            <label className="label">
+              <span className="label-text">Email</span>
+            </label>
+            <input type="email" name="email" required className="input input-bordered w-full" />
+          </div>
+          <div className="form-control w-full">
+            <label className="label">
+              <span className="label-text">Password</span>
+            </label>
+            <input type="password" name="password" required className="input input-bordered w-full" />
+          </div>
+          <div className="form-control w-full mt-3">
+            <button className="btn btn-primary">Log In</button>
+          </div>
+        </form>
+      </Modal>
+      <table {...getTableProps()} className="table table-zebra w-full">
         <thead>
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
