@@ -16,15 +16,15 @@ model Event {
   session      Session  @relation(fields: [sessionId], references: [id])
   duration     Int
   eventType    String
-  hash         String
+  hash         String // Artifact.Id
   sourceType   String
   creationDate DateTime @default(now())
 }
 
 model Session {
   id           String   @id
-  teamId       String?   @db.Uuid
-  team         Team?     @relation(fields: [teamId], references: [id])
+  teamId       String?  @db.Uuid
+  team         Team?    @relation(fields: [teamId], references: [id])
   userId       String   @db.Uuid
   user         User     @relation(fields: [userId], references: [id])
   events       Event[]  @relation(map: "sessionId")
@@ -32,26 +32,28 @@ model Session {
 }
 
 model User {
-  id           String    @id @default(uuid()) @db.Uuid
-  username     String    @unique
+  id           String     @id @default(uuid()) @db.Uuid
+  username     String     @unique
   name         String
-  email        String    @unique
-  sessions     Session[] @relation(map: "userId")
-  tokens       Token[]   @relation(map: "userId")
+  email        String     @unique
+  sessions     Session[]  @relation(map: "userId")
+  tokens       Token[]    @relation(map: "userId")
   passwordHash String
   roles        String[]
-  teams        Team[]    @relation(map: "userId")
-  creationDate DateTime  @default(now())
+  teams        Team[]     @relation(map: "userId")
+  artifacts    Artifact[] @relation(map: "userId")
+  creationDate DateTime   @default(now())
 }
 
 model Team {
-  id           String    @id @default(uuid()) @db.Uuid
-  name         String    @unique
+  id           String     @id @default(uuid()) @db.Uuid
+  name         String     @unique
   avatar       String?
-  creationDate DateTime  @default(now())
-  slug         String    @unique
-  sessions     Session[] @relation(map: "teamId")
-  users        User[]    @relation(map: "teamId")
+  creationDate DateTime   @default(now())
+  slug         String     @unique
+  sessions     Session[]  @relation(map: "teamId")
+  users        User[]     @relation(map: "teamId")
+  artifacts    Artifact[] @relation(map: "teamId")
 }
 
 model Token {
@@ -62,4 +64,17 @@ model Token {
   lastUseDate  DateTime?
   userId       String    @db.Uuid
   user         User      @relation(fields: [userId], references: [id])
+}
+
+model Artifact {
+  id           String    @id
+  teamId       String?   @db.Uuid
+  team         Team?     @relation(fields: [teamId], references: [id])
+  userId       String    @db.Uuid
+  user         User      @relation(fields: [userId], references: [id])
+  creationDate DateTime  @default(now())
+  duration     Int       @default(0)
+  contentLength Int      @default(0)
+  hitCount     Int       @default(0)
+  lastHitDate  DateTime? @default(now())
 }

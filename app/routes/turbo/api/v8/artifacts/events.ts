@@ -17,6 +17,7 @@ export const action: ActionFunction = async ({ request, params, context }) => {
   if (!turboEvents.length) {
     return unprocessableEntity(turboEvents);
   }
+  console.log(turboEvents);
   await upsertSession({
     id: turboEvents[0].sessionId,
     teamId: team?.id ?? null,

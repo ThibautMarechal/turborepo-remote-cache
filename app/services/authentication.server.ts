@@ -4,6 +4,7 @@ import { Authenticator } from 'remix-auth';
 import { FormStrategy } from 'remix-auth-form';
 import invariant from 'tiny-invariant';
 import { sessionStorage } from '~/services/cookieSession';
+import { unauthorized } from '~/utils/response';
 import { getToken } from './tokens.server';
 import { getUser, getUserByUsernameAndPassword } from './users.server';
 
@@ -25,14 +26,14 @@ export async function requireCookieAuth(request: Request): Promise<User> {
 export async function requireTokenAuth(request: Request): Promise<User> {
   const token = request.headers.get('authorization')?.replace(/^Bearer\s/, '') ?? undefined;
   if (!token) {
-    throw json(undefined, 403);
+    throw unauthorized();
   }
   try {
     const { userId } = await getToken(token);
     return await getUser(userId);
   } catch (error) {
-    console.log(error);
-    throw json(undefined, 403);
+    console.log('Token Auth', error);
+    throw unauthorized();
   }
 }
 
@@ -44,7 +45,7 @@ authenticator.use(
     invariant(password && typeof password === 'string', 'Missing password');
     const user = await getUserByUsernameAndPassword(username, password);
     if (!user) {
-      throw json(undefined, 403);
+      throw unauthorized();
     }
     return user;
   }),

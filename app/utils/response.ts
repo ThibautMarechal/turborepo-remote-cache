@@ -6,6 +6,10 @@ export function methodNotAllowed(body?: BodyInit | null, init?: ResponseInit): R
   return createResponse(405, body, init);
 }
 
+export function unauthorized(body?: BodyInit | null, init?: ResponseInit): Response {
+  return createResponse(401, body, init);
+}
+
 export function notFound(body?: BodyInit | null, init?: ResponseInit) {
   return createResponse(404, body, init);
 }

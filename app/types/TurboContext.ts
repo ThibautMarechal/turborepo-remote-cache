@@ -3,7 +3,7 @@ import type { Team, User } from '@prisma/client';
 export type TurboContext = {
   artifactId?: string;
   apiVersion: string;
-  duration?: string | null;
+  duration?: number | null;
   user: User;
   team: Team | null;
 };
