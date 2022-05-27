@@ -61,8 +61,8 @@ export class CacheStorage {
   }
 
   private getArtifactKey(turboCtx: TurboContext): string {
-    invariant(turboCtx.artifactId, 'Expected artifactId');
-    return `${path.join(turboCtx.team?.id ?? turboCtx.user.id, turboCtx.artifactId)}.tar.gz`;
+    invariant(turboCtx.hash, 'Expected hash');
+    return `${path.join(turboCtx.team?.id ?? turboCtx.user.id, turboCtx.hash)}.tar.gz`;
   }
 
   private getCacheMetadataKey(turboCtx: TurboContext): string {

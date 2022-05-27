@@ -7,5 +7,5 @@ export const loader: LoaderFunction = async ({ request, params, context }) => {
 };
 
 export default function Index() {
-  return <div>Home</div>;
+  return <div>Dashboard</div>;
 }

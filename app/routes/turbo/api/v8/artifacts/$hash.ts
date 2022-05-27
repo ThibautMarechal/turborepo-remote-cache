@@ -7,7 +7,7 @@ import { requireTokenAuth } from '~/services/authentication.server';
 import { getTeamFromRequest } from '~/services/teams.server';
 import { allowMethods, METHOD } from '~/utils/method';
 import { accepted, unprocessableEntity, internalServerError, notFound } from '~/utils/response';
-import { hitArtifact, insertArtifact } from '~/services/artifact.server';
+import { getArtifactId, hitArtifact, insertArtifact } from '~/services/artifact.server';
 
 export const loader: LoaderFunction = async ({ request, params, context }) => {
   allowMethods(request, METHOD.GET, METHOD.PUT);
@@ -19,7 +19,7 @@ export const loader: LoaderFunction = async ({ request, params, context }) => {
   if (!(await storage.existArtifact(turboCtx))) {
     throw notFound();
   }
-  await hitArtifact(turboCtx.artifactId!);
+  await hitArtifact(getArtifactId(turboCtx));
   const meta = JSON.parse(await streamToString(await storage.readMeta(turboCtx)));
   const headers = new Headers();
   headers.set('Content-Type', 'application/octet-stream');
@@ -50,7 +50,14 @@ export const action: ActionFunction = async ({ request, params, context }) => {
       // The real type of request.body is ReadableStream. Somehow ReadableStream can be used as AsyncIterator
       storage.writeArtifact(turboCtx, Readable.from(request.body as unknown as AsyncIterable<any>)),
       storage.writeMetadata(turboCtx, stringToStream(JSON.stringify(turboContextToMeta(turboCtx)))),
-      insertArtifact({ id: turboCtx.artifactId!, duration: turboCtx.duration!, contentLength, teamId: turboCtx.team?.id ?? null, userId: turboCtx.user.id }),
+      insertArtifact({
+        id: getArtifactId(turboCtx),
+        hash: turboCtx.hash!,
+        duration: turboCtx.duration!,
+        contentLength,
+        teamId: turboCtx.team?.id ?? null,
+        userId: turboCtx.user.id,
+      }),
     ]);
   } catch (err) {
     console.error(err);

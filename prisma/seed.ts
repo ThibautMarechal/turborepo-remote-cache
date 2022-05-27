@@ -8,9 +8,9 @@ async function main() {
 
   try {
     await client.$connect();
-    const adminExist = await client.user.findUnique({
+    const adminExist = await client.user.findFirst({
       where: {
-        username: ADMIN_USERNAME,
+        isSuperAdmin: true,
       },
     });
     if (adminExist) {
@@ -20,8 +20,13 @@ async function main() {
       data: {
         name: 'Admin',
         username: ADMIN_USERNAME,
-        passwordHash: hash(ADMIN_PASSWORD),
         email: ADMIN_EMAIL ?? '',
+        isSuperAdmin: true,
+        password: {
+          create: {
+            passwordHash: hash(ADMIN_PASSWORD),
+          },
+        },
       },
     });
   } finally {

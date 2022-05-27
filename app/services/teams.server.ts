@@ -2,7 +2,7 @@ import type { Team } from '@prisma/client';
 import { removeTeamUndescore } from '~/mapper/team';
 import { client } from './prismaClient.server';
 
-export async function getTeams(skip: number = 0, take: number = 50): Promise<Team[]> {
+export async function getTeams(skip: number = 0, take: number = 100): Promise<Team[]> {
   try {
     await client.$connect();
     return await client.team.findMany({
@@ -20,9 +20,11 @@ export async function getUserTeams(userId: string, limit: number = 100, since = 
     await client.$connect();
     return await client.team.findMany({
       where: {
-        users: {
+        members: {
           some: {
-            id: userId,
+            user: {
+              id: userId,
+            },
           },
         },
         AND: {
@@ -65,6 +67,26 @@ export async function getTeam(id: string): Promise<Team> {
   }
 }
 
+export async function getTeamDetail(id: string) {
+  try {
+    await client.$connect();
+    return await client.team.findUnique({
+      where: { id },
+      include: {
+        members: {
+          include: {
+            user: true,
+          },
+        },
+        artifacts: true,
+        sessions: true,
+      },
+    });
+  } finally {
+    await client.$disconnect();
+  }
+}
+
 export async function getTeamBySlug(slug: string): Promise<Team> {
   try {
     await client.$connect();
@@ -74,7 +96,7 @@ export async function getTeamBySlug(slug: string): Promise<Team> {
   }
 }
 
-export async function createTeam(team: Omit<Team, 'id'>): Promise<Team> {
+export async function createTeam(team: Omit<Team, 'id' | 'creationDate' | 'avatar'>): Promise<Team> {
   try {
     await client.$connect();
     return await client.team.create({
@@ -83,6 +105,15 @@ export async function createTeam(team: Omit<Team, 'id'>): Promise<Team> {
         slug: team.slug,
       },
     });
+  } finally {
+    await client.$disconnect();
+  }
+}
+
+export async function updateTeam(id: string, team: Pick<Team, 'name' | 'slug'>): Promise<Team> {
+  try {
+    await client.$connect();
+    return await client.team.update({ where: { id }, data: team });
   } finally {
     await client.$disconnect();
   }

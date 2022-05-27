@@ -1,9 +1,9 @@
 import type { ActionFunction } from 'remix';
-import { json, type LoaderFunction } from 'remix';
+import { type LoaderFunction } from 'remix';
 import { formAction } from 'remix-forms';
 import { z } from 'zod';
 import { requireCookieAuth } from '~/services/authentication.server';
-import { createUser, getUsers } from '~/services/users.server';
+import { createUser } from '~/services/users.server';
 import { makeDomainFunction } from 'remix-domains';
 import Form from '~/component/Form';
 
@@ -18,7 +18,7 @@ const mutation = makeDomainFunction(schema)(async ({ password, ...user }) => awa
 
 export const loader: LoaderFunction = async ({ request }) => {
   await requireCookieAuth(request);
-  return json(await getUsers());
+  return null;
 };
 
 export const action: ActionFunction = async ({ request, params, context }) => {
@@ -34,7 +34,17 @@ export const action: ActionFunction = async ({ request, params, context }) => {
 export default function New() {
   return (
     <div className="flex justify-center">
-      <Form schema={schema} />
+      <Form schema={schema}>
+        {({ Field, Button }) => (
+          <>
+            <Field name="name" />
+            <Field name="email" />
+            <Field name="username" />
+            <Field name="password" type="password" />
+            <Button>Add</Button>
+          </>
+        )}
+      </Form>
     </div>
   );
 }

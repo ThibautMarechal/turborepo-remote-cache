@@ -3,21 +3,21 @@ import { redirect } from 'remix';
 import { Authenticator } from 'remix-auth';
 import { FormStrategy } from 'remix-auth-form';
 import invariant from 'tiny-invariant';
-import { sessionStorage } from '~/services/cookieSession';
+import { sessionStorage } from '~/services/cookieSession.server';
 import { unauthorized } from '~/utils/response';
 import { getToken } from './tokens.server';
 import { getUser, getUserByUsernameAndPassword } from './users.server';
 
-export const authenticator = new Authenticator<User>(sessionStorage);
+export const authenticator = new Authenticator<string>(sessionStorage);
 
 export async function requireCookieAuth(request: Request): Promise<User> {
   const url = new URL(request.url);
   const failureRedirect = `/login?redirect_to=${encodeURI(url.pathname + url.search)}`;
   try {
-    const userFromCookie = await authenticator.isAuthenticated(request, {
+    const userId = await authenticator.isAuthenticated(request, {
       failureRedirect,
     });
-    return await getUser(userFromCookie.id);
+    return await getUser(userId);
   } catch (e) {
     throw redirect(failureRedirect);
   }
@@ -32,22 +32,23 @@ export async function requireTokenAuth(request: Request): Promise<User> {
     const { userId } = await getToken(token);
     return await getUser(userId);
   } catch (error: any) {
-    console.log('Token Auth Error: ', error?.constructor?.name);
+    console.warn('Token Auth Error: ', error?.constructor?.name);
     throw unauthorized();
   }
 }
 
 authenticator.use(
-  new FormStrategy<User>(async ({ form }) => {
+  new FormStrategy<string>(async ({ form }) => {
     const username = form.get('username');
     const password = form.get('password');
     invariant(username && typeof username === 'string', 'Missing username');
     invariant(password && typeof password === 'string', 'Missing password');
-    const user = await getUserByUsernameAndPassword(username, password);
-    if (!user) {
+    try {
+      const user = await getUserByUsernameAndPassword(username, password);
+      return user.id;
+    } catch (error) {
       throw unauthorized();
     }
-    return user;
   }),
   'user-pass',
 );

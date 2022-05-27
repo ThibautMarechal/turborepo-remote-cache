@@ -14,7 +14,7 @@ CREATE TABLE "Event" (
 -- CreateTable
 CREATE TABLE "Session" (
     "id" TEXT NOT NULL,
-    "teamId" UUID NOT NULL,
+    "teamId" UUID,
     "userId" UUID NOT NULL,
     "creationDate" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -27,18 +27,27 @@ CREATE TABLE "User" (
     "username" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
-    "passwordHash" TEXT NOT NULL,
-    "roles" TEXT[],
+    "isSuperAdmin" BOOLEAN NOT NULL DEFAULT false,
     "creationDate" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
+CREATE TABLE "Password" (
+    "id" UUID NOT NULL,
+    "userId" UUID NOT NULL,
+    "passwordHash" TEXT NOT NULL,
+    "creationDate" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "Password_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "Team" (
     "id" UUID NOT NULL,
     "name" TEXT NOT NULL,
-    "avatar" TEXT NOT NULL,
+    "avatar" TEXT,
     "creationDate" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "slug" TEXT NOT NULL,
 
@@ -51,16 +60,36 @@ CREATE TABLE "Token" (
     "hash" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "creationDate" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "lastUseDate" TIMESTAMP(3),
+    "lastUsedDate" TIMESTAMP(3),
     "userId" UUID NOT NULL,
 
     CONSTRAINT "Token_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "_TeamToUser" (
-    "A" UUID NOT NULL,
-    "B" UUID NOT NULL
+CREATE TABLE "Artifact" (
+    "id" TEXT NOT NULL,
+    "hash" TEXT NOT NULL,
+    "teamId" UUID,
+    "userId" UUID NOT NULL,
+    "creationDate" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "duration" INTEGER NOT NULL DEFAULT 0,
+    "contentLength" INTEGER NOT NULL DEFAULT 0,
+    "hitCount" INTEGER NOT NULL DEFAULT 0,
+    "lastHitDate" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "Artifact_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Member" (
+    "id" UUID NOT NULL,
+    "teamId" UUID NOT NULL,
+    "userId" UUID NOT NULL,
+    "role" TEXT NOT NULL DEFAULT E'member',
+    "creationDate" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "Member_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -78,12 +107,6 @@ CREATE UNIQUE INDEX "Team_slug_key" ON "Team"("slug");
 -- CreateIndex
 CREATE UNIQUE INDEX "Token_hash_key" ON "Token"("hash");
 
--- CreateIndex
-CREATE UNIQUE INDEX "_TeamToUser_AB_unique" ON "_TeamToUser"("A", "B");
-
--- CreateIndex
-CREATE INDEX "_TeamToUser_B_index" ON "_TeamToUser"("B");
-
 -- AddForeignKey
 ALTER TABLE "Event" ADD CONSTRAINT "Event_sessionId_fkey" FOREIGN KEY ("sessionId") REFERENCES "Session"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
@@ -91,13 +114,22 @@ ALTER TABLE "Event" ADD CONSTRAINT "Event_sessionId_fkey" FOREIGN KEY ("sessionI
 ALTER TABLE "Session" ADD CONSTRAINT "Session_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Session" ADD CONSTRAINT "Session_teamId_fkey" FOREIGN KEY ("teamId") REFERENCES "Team"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Session" ADD CONSTRAINT "Session_teamId_fkey" FOREIGN KEY ("teamId") REFERENCES "Team"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Password" ADD CONSTRAINT "Password_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Token" ADD CONSTRAINT "Token_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_TeamToUser" ADD CONSTRAINT "_TeamToUser_A_fkey" FOREIGN KEY ("A") REFERENCES "Team"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Artifact" ADD CONSTRAINT "Artifact_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_TeamToUser" ADD CONSTRAINT "_TeamToUser_B_fkey" FOREIGN KEY ("B") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Artifact" ADD CONSTRAINT "Artifact_teamId_fkey" FOREIGN KEY ("teamId") REFERENCES "Team"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Member" ADD CONSTRAINT "Member_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Member" ADD CONSTRAINT "Member_teamId_fkey" FOREIGN KEY ("teamId") REFERENCES "Team"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

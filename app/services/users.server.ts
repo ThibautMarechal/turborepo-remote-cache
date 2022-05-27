@@ -2,15 +2,10 @@ import { hash } from '~/utils/hash';
 import { client } from './prismaClient.server';
 import type { User } from '@prisma/client';
 
-export async function getUsers(skip: number = 0, take: number = 50): Promise<User[]> {
+export async function getUsers(skip: number = 0, take: number = 100): Promise<User[]> {
   try {
     await client.$connect();
     return await client.user.findMany({
-      where: {
-        username: {
-          not: process.env.ADMIN_USERNAME ?? 'admin',
-        },
-      },
       skip,
       take,
       orderBy: [{ creationDate: 'desc' }],
@@ -29,6 +24,27 @@ export async function getUser(id: string): Promise<User> {
   }
 }
 
+export async function getUserDetail(id: string) {
+  try {
+    await client.$connect();
+    return await client.user.findUnique({
+      where: { id },
+      include: {
+        memberships: {
+          include: {
+            team: true,
+          },
+        },
+        artifacts: true,
+        sessions: true,
+        tokens: true,
+      },
+    });
+  } finally {
+    await client.$disconnect();
+  }
+}
+
 export async function createUser(user: Pick<User, 'email' | 'name' | 'username'>, password: string): Promise<User> {
   try {
     await client.$connect();
@@ -37,7 +53,11 @@ export async function createUser(user: Pick<User, 'email' | 'name' | 'username'>
         email: user.email,
         name: user.name,
         username: user.username,
-        passwordHash: hash(password),
+        password: {
+          create: {
+            passwordHash: hash(password),
+          },
+        },
       },
     });
   } finally {
@@ -45,31 +65,52 @@ export async function createUser(user: Pick<User, 'email' | 'name' | 'username'>
   }
 }
 
-export async function deleteUser(userId: string): Promise<void> {
+export async function updateUser(id: string, user: Pick<User, 'email' | 'name' | 'username'>): Promise<User> {
   try {
     await client.$connect();
-    await client.user.delete({
+    return await client.user.update({
+      where: { id },
+      data: {
+        email: user.email,
+        name: user.name,
+        username: user.username,
+      },
+    });
+  } finally {
+    await client.$disconnect();
+  }
+}
+
+export async function deleteUser(userId: string): Promise<boolean> {
+  try {
+    await client.$connect();
+    const result = await client.user.deleteMany({
       where: {
         id: userId,
+        isSuperAdmin: false,
       },
     });
+    return result.count > 0;
   } finally {
     await client.$disconnect();
   }
 }
 
-export async function getUserByUsernameAndPassword(username: string, password: string): Promise<User | null> {
+export async function getUserByUsernameAndPassword(username: string, password: string): Promise<User> {
   try {
     await client.$connect();
-    const user = await client.user.findUnique({
+    return await client.user.findFirst({
       where: {
         username,
+        AND: {
+          password: {
+            some: {
+              passwordHash: hash(password),
+            },
+          },
+        },
       },
     });
-    if (user.passwordHash !== hash(password)) {
-      return null;
-    }
-    return user;
   } finally {
     await client.$disconnect();
   }

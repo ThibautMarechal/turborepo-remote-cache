@@ -16,7 +16,7 @@ model Event {
   session      Session  @relation(fields: [sessionId], references: [id])
   duration     Int
   eventType    String
-  hash         String // Artifact.Id
+  hash         String
   sourceType   String
   creationDate DateTime @default(now())
 }
@@ -27,7 +27,7 @@ model Session {
   team         Team?    @relation(fields: [teamId], references: [id])
   userId       String   @db.Uuid
   user         User     @relation(fields: [userId], references: [id])
-  events       Event[]  @relation(map: "sessionId")
+  events       Event[]
   creationDate DateTime @default(now())
 }
 
@@ -36,13 +36,21 @@ model User {
   username     String     @unique
   name         String
   email        String     @unique
-  sessions     Session[]  @relation(map: "userId")
-  tokens       Token[]    @relation(map: "userId")
-  passwordHash String
-  roles        String[]
-  teams        Team[]     @relation(map: "userId")
-  artifacts    Artifact[] @relation(map: "userId")
+  isSuperAdmin Boolean    @default(false)
+  sessions     Session[]
+  tokens       Token[]
+  memberships  Member[]
+  artifacts    Artifact[]
   creationDate DateTime   @default(now())
+  password     Password[]
+}
+
+model Password {
+  id           String   @id @default(uuid()) @db.Uuid
+  userId       String   @db.Uuid
+  user         User     @relation(fields: [userId], references: [id])
+  passwordHash String
+  creationDate DateTime @default(now())
 }
 
 model Team {
@@ -51,9 +59,9 @@ model Team {
   avatar       String?
   creationDate DateTime   @default(now())
   slug         String     @unique
-  sessions     Session[]  @relation(map: "teamId")
-  users        User[]     @relation(map: "teamId")
-  artifacts    Artifact[] @relation(map: "teamId")
+  sessions     Session[]
+  members      Member[]
+  artifacts    Artifact[]
 }
 
 model Token {
@@ -61,20 +69,31 @@ model Token {
   hash         String    @unique
   name         String
   creationDate DateTime  @default(now())
-  lastUseDate  DateTime?
+  lastUsedDate DateTime?
   userId       String    @db.Uuid
   user         User      @relation(fields: [userId], references: [id])
 }
 
 model Artifact {
-  id           String    @id
-  teamId       String?   @db.Uuid
-  team         Team?     @relation(fields: [teamId], references: [id])
-  userId       String    @db.Uuid
-  user         User      @relation(fields: [userId], references: [id])
-  creationDate DateTime  @default(now())
-  duration     Int       @default(0)
-  contentLength Int      @default(0)
-  hitCount     Int       @default(0)
-  lastHitDate  DateTime? @default(now())
+  id            String    @id
+  hash          String
+  teamId        String?   @db.Uuid
+  team          Team?     @relation(fields: [teamId], references: [id])
+  userId        String    @db.Uuid
+  user          User      @relation(fields: [userId], references: [id])
+  creationDate  DateTime  @default(now())
+  duration      Int       @default(0)
+  contentLength Int       @default(0)
+  hitCount      Int       @default(0)
+  lastHitDate   DateTime?
+}
+
+model Member {
+  id           String   @id @default(uuid()) @db.Uuid
+  teamId       String   @db.Uuid
+  team         Team     @relation(fields: [teamId], references: [id])
+  userId       String   @db.Uuid
+  user         User     @relation(fields: [userId], references: [id])
+  role         String   @default("member")
+  creationDate DateTime @default(now())
 }

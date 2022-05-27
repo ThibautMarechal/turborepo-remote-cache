@@ -3,6 +3,7 @@ import { Form, redirect, useSearchParams } from 'remix';
 import invariant from 'tiny-invariant';
 import { requireCookieAuth } from '~/services/authentication.server';
 import { generateToken } from '~/services/tokens.server';
+import { METHOD } from '~/utils/method';
 
 export const loader: LoaderFunction = async ({ request, params, context }) => {
   await requireCookieAuth(request);
@@ -11,7 +12,7 @@ export const loader: LoaderFunction = async ({ request, params, context }) => {
 
 export const action: ActionFunction = async ({ request, params, context }) => {
   const user = await requireCookieAuth(request);
-  if (request.method === 'POST') {
+  if (request.method === METHOD.POST) {
     const formData = await request.formData();
     const formAction = formData.get('_action')?.toString();
     switch (formAction) {
@@ -37,14 +38,18 @@ export default function Index() {
   const redirectUri = searchParams.get('redirect_uri');
 
   return (
-    <Form method="post">
-      <input type="hidden" name="redirect_uri" value={redirectUri ?? ''} />
-      <button name="_action" value="allow">
-        Allow
-      </button>
-      <button name="_action" value="deny">
-        Deny
-      </button>
-    </Form>
+    <>
+      <h1 className="text-center text-4xl font-bold m-10">Authorize</h1>
+      <p className="text-center m-10">Please authorize to connect with Turborepo CLI</p>
+      <Form method="post" className="flex w-full justify-center gap-10">
+        <input type="hidden" name="redirect_uri" value={redirectUri ?? ''} />
+        <button name="_action" value="allow" autoFocus className="btn btn-primary">
+          Allow
+        </button>
+        <button name="_action" value="deny" className="btn btn-error">
+          Deny
+        </button>
+      </Form>
+    </>
   );
 }

@@ -5,11 +5,10 @@ import type { Team, User } from '@prisma/client';
 import { unprocessableEntity } from './response';
 
 export function getTurboContext({ request, params }: DataFunctionArgs, user: User, team: Team | null): TurboContext {
-  const { artifactId, apiVersion } = params;
+  const { hash } = params;
   const durationString = request.headers.get(DURATION_HEADER);
   return {
-    apiVersion: apiVersion as string,
-    artifactId,
+    hash,
     team,
     duration: durationString ? Number.parseInt(durationString) : null,
     user,
@@ -17,11 +16,11 @@ export function getTurboContext({ request, params }: DataFunctionArgs, user: Use
 }
 
 export function turboContextToMeta(turboCtx: TurboContext): CacheMetadata {
-  if (!turboCtx.artifactId) {
-    throw unprocessableEntity('Missing artifactId');
+  if (!turboCtx.hash) {
+    throw unprocessableEntity('Missing hash');
   }
   return {
-    hash: turboCtx.artifactId,
+    hash: turboCtx.hash,
     duration: turboCtx.duration ?? 0,
   };
 }

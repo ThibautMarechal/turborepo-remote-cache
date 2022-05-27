@@ -11,7 +11,46 @@ export async function getToken(token: string): Promise<Token> {
         hash: hash(token),
       },
       data: {
-        lastUseDate: new Date(),
+        lastUsedDate: new Date(),
+      },
+    });
+  } finally {
+    await client.$disconnect();
+  }
+}
+
+export async function getTokens() {
+  try {
+    await client.$connect();
+    return await client.token.findMany({
+      orderBy: [
+        {
+          creationDate: 'desc',
+        },
+      ],
+      include: {
+        user: true,
+      },
+    });
+  } finally {
+    await client.$disconnect();
+  }
+}
+
+export async function getTokensByUser(userId: string) {
+  try {
+    await client.$connect();
+    return await client.token.findMany({
+      where: {
+        userId,
+      },
+      orderBy: [
+        {
+          creationDate: 'desc',
+        },
+      ],
+      include: {
+        user: true,
       },
     });
   } finally {
@@ -34,6 +73,19 @@ export async function generateToken(userId: string, name: string = 'turborepo-cl
         },
       }),
     ];
+  } finally {
+    await client.$disconnect();
+  }
+}
+
+export async function revokeToken(id: string) {
+  try {
+    await client.$connect();
+    await client.token.delete({
+      where: {
+        id,
+      },
+    });
   } finally {
     await client.$disconnect();
   }

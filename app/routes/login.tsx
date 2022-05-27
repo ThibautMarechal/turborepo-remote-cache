@@ -1,4 +1,4 @@
-import { useSearchParams, type ActionFunction, type LoaderFunction } from 'remix';
+import { useSearchParams, type ActionFunction, type LoaderFunction, redirect } from 'remix';
 import { z } from 'zod';
 import Form from '~/component/Form';
 import { authenticator } from '~/services/authentication.server';
@@ -11,10 +11,13 @@ const schema = z.object({
 });
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const userFromCoockie = await authenticator.isAuthenticated(request);
-  if (userFromCoockie) {
+  const userId = await authenticator.isAuthenticated(request);
+  const url = new URL(request.url);
+  const redirectTo = url.searchParams.get('redirect_to') ?? '/dashboard';
+  if (userId) {
     try {
-      await getUser(userFromCoockie.id);
+      await getUser(userId);
+      return redirect(redirectTo);
     } catch (e) {
       // Logout deleted users
       return await authenticator.logout(request, { redirectTo: '/login' });
@@ -26,7 +29,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 export const action: ActionFunction = async ({ request }) => {
   const clonedRequest = request.clone(); // cannot read 2 times the formData without clone
   const formData = await request.formData();
-  const redirectUri = formData.get('redirect_to')?.toString() || '/';
+  const redirectUri = formData.get('redirect_to')?.toString() ?? '/';
   return await authenticator.authenticate('user-pass', clonedRequest, {
     successRedirect: redirectUri,
     failureRedirect: `/login?redirect_to=${redirectUri}`,
@@ -40,6 +43,7 @@ export default function Login() {
       <Form
         schema={schema}
         hiddenFields={['redirect_to']}
+        method="post"
         values={{
           redirect_to: searchParams.get('redirect_to') || '/',
         }}
