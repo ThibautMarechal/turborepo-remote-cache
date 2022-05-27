@@ -1,9 +1,10 @@
-import { Link, Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData } from 'remix';
+import { NavLink, Link, Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData, useLocation } from 'remix';
 import type { MetaFunction, LinksFunction, LoaderFunction } from 'remix';
 import Gravatar from 'react-gravatar';
 import styles from './tailwind.css';
 import { authenticator } from './services/authentication.server';
 import type { User } from '@prisma/client';
+import { useMatch } from 'react-router';
 
 export const meta: MetaFunction = () => ({
   charset: 'utf-8',
@@ -39,19 +40,19 @@ export default function App() {
             {user ? (
               <ul className="menu menu-horizontal p-0">
                 <li>
-                  <Link to="/users">Users</Link>
+                  <NavLink to="/users">Users</NavLink>
                 </li>
                 <li>
-                  <Link to="/teams">Teams</Link>
+                  <NavLink to="/teams">Teams</NavLink>
                 </li>
                 <li>
-                  <Link to="/sessions">Sessions</Link>
+                  <NavLink to="/sessions">Sessions</NavLink>
                 </li>
                 <li>
-                  <Link to="/events">Events</Link>
+                  <NavLink to="/events">Events</NavLink>
                 </li>
                 <li>
-                  <Link to="/artifacts">Artifacts</Link>
+                  <NavLink to="/artifacts">Artifacts</NavLink>
                 </li>
                 <div className="dropdown dropdown-end">
                   <label tabIndex={0} className="btn btn-ghost btn-circle avatar">

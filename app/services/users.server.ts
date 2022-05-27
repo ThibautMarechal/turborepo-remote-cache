@@ -8,7 +8,7 @@ export async function getUsers(skip: number = 0, take: number = 50): Promise<Use
     return await client.user.findMany({
       where: {
         username: {
-          not: process.env.ADMIN_USERNAME,
+          not: process.env.ADMIN_USERNAME ?? 'admin',
         },
       },
       skip,

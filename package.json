@@ -32,6 +32,7 @@
     "aws-sdk": "^2.1140.0",
     "azure-blob-storage": "^4.2.5",
     "azure-blob-store": "^1.0.7",
+    "classnames": "^2.3.1",
     "fs-blob-store": "^6.0.0",
     "prisma": "^3.14.0",
     "react": "^18.1.0",
@@ -41,11 +42,14 @@
     "remix": "^1.5.1",
     "remix-auth": "^3.2.2",
     "remix-auth-form": "^1.1.2",
+    "remix-domains": "^0.2.0",
+    "remix-forms": "^0.16.1",
     "remix-utils": "^3.2.0",
     "s3-blob-store": "^4.1.1",
     "tiny-invariant": "^1.2.0",
     "ts-node": "^10.8.0",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "zod": "^3.17.3"
   },
   "devDependencies": {
     "@remix-run/dev": "^1.5.1",

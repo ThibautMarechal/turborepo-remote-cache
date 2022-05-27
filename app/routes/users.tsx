@@ -1,11 +1,13 @@
 import type { ActionFunction } from 'remix';
-import { json, type LoaderFunction, useLoaderData } from 'remix';
+import { Outlet, json, type LoaderFunction, useLoaderData } from 'remix';
+
 import { useTable } from 'react-table';
 import { requireCookieAuth } from '~/services/authentication.server';
-import { createUser, deleteUser, getUsers } from '~/services/users.server';
+import { deleteUser, getUsers } from '~/services/users.server';
+import { formatDate } from '~/utils/intl';
 import type { User } from '@prisma/client';
-import { useId, useMemo } from 'react';
-import Modal from '~/component/Modal';
+import { useMemo } from 'react';
+import { NavLink, useMatch } from 'react-router-dom';
 
 export const loader: LoaderFunction = async ({ request }) => {
   await requireCookieAuth(request);
@@ -14,30 +16,12 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 const actions = {
   DELETE: 'DELETE',
-  CREATE: 'CREATE',
 };
 
 export const action: ActionFunction = async ({ request, params, context }) => {
   await requireCookieAuth(request);
   const formData = await request.formData();
-  switch (formData.get('_action')) {
-    case actions.CREATE:
-      await createUser(
-        {
-          name: formData.get('name') as string,
-          username: formData.get('username') as string,
-          email: formData.get('email') as string,
-        },
-        formData.get('password') as string,
-      );
-      break;
-    case actions.DELETE:
-      await deleteUser(formData.get('id') as string);
-      break;
-    default:
-      break;
-  }
-  return json(await getUsers());
+  return await deleteUser(formData.get('id') as string);
 };
 
 export default function Users() {
@@ -62,6 +46,12 @@ export default function Users() {
           accessor: 'email',
         },
         {
+          id: 'creationDate',
+          Header: 'creationDate',
+          accessor: 'creationDate',
+          Cell: ({ value }) => <span>{formatDate(value as unknown as string)}</span>,
+        },
+        {
           id: 'delete',
           accessor: 'id',
           Cell: ({ value }) => (
@@ -77,75 +67,47 @@ export default function Users() {
     ),
     getRowId: (user) => user.id,
   });
-  const modalId = useId();
-
-  return (
+  console.log(headerGroups);
+  console.log(rows);
+  const isListUrl = useMatch('/users');
+  return isListUrl ? (
     <div>
-      <Modal.Opener id={modalId} className="btn btn-circle btn-primary fixed bottom-5 right-5">
+      <NavLink to="./new" className="btn btn-circle btn-primary fixed bottom-5 right-5" style={({ isActive }) => (isActive ? { display: 'none' } : {})}>
         +
-      </Modal.Opener>
-      <Modal id={modalId}>
-        <form method="POST">
-          <h2>Create a new user</h2>
-          <input name="_action" value={actions.CREATE} type="hidden" />
-          <div className="form-control w-full">
-            <label className="label">
-              <span className="label-text">Username</span>
-            </label>
-            <input type="text" name="username" required autoFocus className="input input-bordered w-full" />
-          </div>
-          <div className="form-control w-full">
-            <label className="label">
-              <span className="label-text">Name</span>
-            </label>
-            <input type="text" name="name" required className="input input-bordered w-full" />
-          </div>
-          <div className="form-control w-full">
-            <label className="label">
-              <span className="label-text">Email</span>
-            </label>
-            <input type="email" name="email" required className="input input-bordered w-full" />
-          </div>
-          <div className="form-control w-full">
-            <label className="label">
-              <span className="label-text">Password</span>
-            </label>
-            <input type="password" name="password" required className="input input-bordered w-full" />
-          </div>
-          <div className="form-control w-full mt-3">
-            <button className="btn btn-primary">Log In</button>
-          </div>
-        </form>
-      </Modal>
-      <table {...getTableProps()} className="table table-zebra w-full">
-        <thead>
-          {headerGroups.map((headerGroup) => (
-            <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
-              {headerGroup.headers.map((column) => (
-                <th {...column.getHeaderProps()} key={column.id}>
-                  {column.render('Header')}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody {...getTableBodyProps()}>
-          {rows.map((row) => {
-            prepareRow(row);
-            return (
-              <tr {...row.getRowProps()} key={row.id}>
-                {row.cells.map((cell) => {
-                  return (
-                    <td {...cell.getCellProps()} key={`${cell.row.id}_${cell.column.id}`}>
-                      {cell.render('Cell')}
-                    </td>
-                  );
-                })}
+      </NavLink>
+      <div className="flex flex-row">
+        <table {...getTableProps()} className="table table-zebra w-full flex-grow-5">
+          <thead>
+            {headerGroups.map((headerGroup, index) => (
+              <tr {...headerGroup.getHeaderGroupProps()} key={index}>
+                {headerGroup.headers.map((column) => (
+                  <th {...column.getHeaderProps()} key={column.id}>
+                    {column.render('Header')}
+                  </th>
+                ))}
               </tr>
-            );
-          })}
-        </tbody>
-      </table>
+            ))}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+            {rows.map((row) => {
+              prepareRow(row);
+              return (
+                <tr {...row.getRowProps()} key={row.id}>
+                  {row.cells.map((cell) => {
+                    return (
+                      <td {...cell.getCellProps()} key={`${cell.row.id}_${cell.column.id}`}>
+                        {cell.render('Cell')}
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
     </div>
+  ) : (
+    <Outlet />
   );
 }

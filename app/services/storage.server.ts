@@ -25,7 +25,7 @@ export class CacheStorage {
       STORAGE_AZURE_STORAGE_ACCESS_KEY,
       STORAGE_AZURE_STORAGE_CONTAINER,
     } = process.env;
-    switch (STORAGE_TYPE) {
+    switch (STORAGE_TYPE ?? 'fs') {
       case 'fs':
         this.blobStore = fs(STORAGE_FS_PATH ?? path.join(process.cwd(), 'data', 'fs'));
         break;

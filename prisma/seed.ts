@@ -1,12 +1,8 @@
 import { PrismaClient } from '@prisma/client';
-import invariant from 'tiny-invariant';
 import { hash } from '../app/utils/hash';
 
 async function main() {
-  const { ADMIN_USERNAME, ADMIN_PASSWORD, ADMIN_EMAIL } = process.env;
-
-  invariant(ADMIN_USERNAME, 'process.env.ADMIN_USERNAME required');
-  invariant(ADMIN_PASSWORD, 'process.env.ADMIN_PASSWORD required');
+  const { ADMIN_USERNAME = 'admin', ADMIN_PASSWORD = 'turbo', ADMIN_EMAIL } = process.env;
 
   const client = new PrismaClient();
 

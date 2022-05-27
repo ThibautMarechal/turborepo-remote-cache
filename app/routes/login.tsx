@@ -1,6 +1,14 @@
-import { Form, useSearchParams, type ActionFunction, type LoaderFunction } from 'remix';
+import { useSearchParams, type ActionFunction, type LoaderFunction } from 'remix';
+import { z } from 'zod';
+import Form from '~/component/Form';
 import { authenticator } from '~/services/authentication.server';
 import { getUser } from '~/services/users.server';
+
+const schema = z.object({
+  redirect_to: z.string().optional(),
+  username: z.string().min(1).max(50),
+  password: z.string().min(1).max(50),
+});
 
 export const loader: LoaderFunction = async ({ request }) => {
   const userFromCoockie = await authenticator.isAuthenticated(request);
@@ -29,23 +37,21 @@ export default function Login() {
   const [searchParams] = useSearchParams();
   return (
     <div className="container mx-auto flex justify-center">
-      <Form method="post">
-        <input type="hidden" name="redirect_to" value={searchParams.get('redirect_to') ?? undefined} />
-        <div className="form-control w-full max-w-xs">
-          <label className="label">
-            <span className="label-text">Username</span>
-          </label>
-          <input type="text" name="username" required autoFocus className="input input-bordered w-full max-w-xs" />
-        </div>
-        <div className="form-control w-full max-w-xs">
-          <label className="label">
-            <span className="label-text">Password</span>
-          </label>
-          <input type="password" name="password" autoComplete="current-password" required className="input input-bordered w-full max-w-xs" />
-        </div>
-        <div className="form-control w-full max-w-xs mt-3">
-          <button className="btn btn-primary">Log In</button>
-        </div>
+      <Form
+        schema={schema}
+        hiddenFields={['redirect_to']}
+        values={{
+          redirect_to: searchParams.get('redirect_to') || '/',
+        }}
+      >
+        {({ Field, Button }) => (
+          <>
+            <Field name="redirect_to" />
+            <Field name="username" />
+            <Field name="password" type="password" />
+            <Button>Log In</Button>
+          </>
+        )}
       </Form>
     </div>
   );
