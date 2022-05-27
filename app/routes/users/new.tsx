@@ -36,35 +36,5 @@ export default function New() {
     <div className="flex justify-center">
       <Form schema={schema} />
     </div>
-    // <form method="POST">
-    //   <h2>Create a new user</h2>
-    //   <div className="form-control w-full">
-    //     <label className="label">
-    //       <span className="label-text">Username</span>
-    //     </label>
-    //     <input type="text" name="username" required autoFocus className="input input-bordered w-full" />
-    //   </div>
-    //   <div className="form-control w-full">
-    //     <label className="label">
-    //       <span className="label-text">Name</span>
-    //     </label>
-    //     <input type="text" name="name" required className="input input-bordered w-full" />
-    //   </div>
-    //   <div className="form-control w-full">
-    //     <label className="label">
-    //       <span className="label-text">Email</span>
-    //     </label>
-    //     <input type="email" name="email" required className="input input-bordered w-full" />
-    //   </div>
-    //   <div className="form-control w-full">
-    //     <label className="label">
-    //       <span className="label-text">Password</span>
-    //     </label>
-    //     <input type="password" name="password" required className="input input-bordered w-full" />
-    //   </div>
-    //   <div className="form-control w-full mt-3">
-    //     <button className="btn btn-primary">Log In</button>
-    //   </div>
-    // </form>
   );
 }
