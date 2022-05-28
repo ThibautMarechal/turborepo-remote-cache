@@ -1,20 +1,23 @@
 import type { ActionFunction } from 'remix';
-import { Form, Link, json, type LoaderFunction, useLoaderData, NavLink } from 'remix';
-
-import { useTable } from 'react-table';
+import { type LoaderFunction, useLoaderData, NavLink } from 'remix';
 import { requireCookieAuth } from '~/services/authentication.server';
 import type { Team } from '@prisma/client';
-import { useMemo } from 'react';
-import TrashIcon from '@heroicons/react/outline/TrashIcon';
 import Table from '~/component/Table';
-import { deleteTeam, getTeams } from '~/services/teams.server';
-import SearchIcon from '@heroicons/react/outline/SearchIcon';
-import PencilIcon from '@heroicons/react/outline/PencilIcon';
-import DateCell from '~/component/DateCell';
+import { deleteTeam, getTeams, getTeamsCount } from '~/services/teams.server';
+import { useTeamsTable } from '~/hooks/table/useTeamsTable';
+import ListTitle from '~/component/ListTitle';
+import PlusIcon from '@heroicons/react/outline/PlusIcon';
+import Pagination from '~/component/Pagination';
+import { usePaginateSearchParams } from '~/hooks/usePaginateSearchParams';
+import { getPaginationFromRequest } from '~/utils/pagination';
+import { getOrderByFromRequest } from '~/utils/sort';
 
 export const loader: LoaderFunction = async ({ request }) => {
   await requireCookieAuth(request);
-  return json(await getTeams());
+  const { skip, take } = getPaginationFromRequest(request);
+  const orderBy = getOrderByFromRequest(request);
+  const [teams, count] = await Promise.all([getTeams(skip, take, orderBy), getTeamsCount()]);
+  return { teams, count };
 };
 
 export const action: ActionFunction = async ({ request, params, context }) => {
@@ -24,61 +27,18 @@ export const action: ActionFunction = async ({ request, params, context }) => {
   return null;
 };
 
-export default function Users() {
-  const teams = useLoaderData<Team[]>();
-  const tableProps = useTable<Team>({
-    data: teams,
-    columns: useMemo(
-      () => [
-        {
-          id: 'name',
-          Header: 'Name',
-          accessor: 'name',
-        },
-        {
-          id: 'slug',
-          Header: 'Slug',
-          accessor: 'avatar',
-        },
-        {
-          id: 'creationDate',
-          Header: 'creation Date',
-          accessor: 'creationDate',
-          Cell: ({ value }) => <DateCell date={value} />,
-        },
-        {
-          id: 'actions',
-          accessor: 'id',
-          Cell: ({ value }) => (
-            <div className="flex h-6 gap-1">
-              <Link to={`./${value}`} prefetch="intent" className="btn btn-xs">
-                <SearchIcon className="h-4 w-4" />
-              </Link>
-              <Link to={`./${value}/edit`} prefetch="intent" className="btn btn-xs">
-                <PencilIcon className="h-4 w-4" />
-              </Link>
-              <Form method="post" className="h-6">
-                <button className="btn btn-xs">
-                  <TrashIcon className="h-4 w-4" />
-                </button>
-                <input name="id" value={value} type="hidden" />
-              </Form>
-            </div>
-          ),
-        },
-      ],
-      [],
-    ),
-    getRowId: (user) => user.id,
-  });
+export default function Teams() {
+  const { teams, count } = useLoaderData<{ teams: Team[]; count: number }>();
+  const tableProps = useTeamsTable(teams);
+  const paginationProps = usePaginateSearchParams();
   return (
-    <div>
+    <>
+      <ListTitle title="Teams" count={count} />
+      <Table {...tableProps} />
       <NavLink to="./new" className="btn btn-circle btn-primary fixed bottom-5 right-5" style={({ isActive }) => (isActive ? { display: 'none' } : {})}>
-        +
+        <PlusIcon className="w-8" />
       </NavLink>
-      <div className="flex flex-row">
-        <Table {...tableProps} />
-      </div>
-    </div>
+      <Pagination {...paginationProps} count={count} currentPageCount={teams.length} />
+    </>
   );
 }

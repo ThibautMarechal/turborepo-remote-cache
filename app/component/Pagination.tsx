@@ -22,7 +22,11 @@ export function createPagination(current: number, total: number, closePage: numb
   if (!includeEnd && includeRightDots) {
     filteredCenter.push(NaN);
   }
-  return [0, ...filteredCenter, lastIndex];
+  const pages = [0, ...filteredCenter];
+  if (pages.length > 1) {
+    pages.push(lastIndex);
+  }
+  return pages;
 }
 
 type Props = {
@@ -38,25 +42,30 @@ type Props = {
 export const Pagination = ({ count, getUrlAtPage, nextUrl, previousUrl, skip, take, currentPageCount }: Props) => {
   const currentPage = skip / take;
   const numberOfPages = Math.ceil(count / take);
-  return (
-    <div className="btn-group">
-      <Link className={cn('btn btn-sm', { 'btn-disabled': skip <= 0 })} to={previousUrl}>
-        Previous
-      </Link>
-      {createPagination(currentPage, numberOfPages).map((page, index) => (
-        <Link
-          key={`${page}_${index}`}
-          className={cn('btn btn-sm', { 'btn-active': currentPage === page, 'btn-disabled': currentPage === page || isNaN(page) })}
-          to={getUrlAtPage(page)}
-        >
-          {isNaN(page) ? '...' : page}
-        </Link>
-      ))}
-      <Link className={cn('btn btn-sm', { 'btn-disabled': currentPageCount < take })} to={nextUrl}>
-        Next
-      </Link>
-    </div>
-  );
+  return numberOfPages > 1 ? (
+    <>
+      <div className="flex justify-center m-5">
+        <div className="btn-group">
+          <Link className={cn('btn btn-sm', { 'btn-disabled': skip <= 0 })} to={previousUrl}>
+            Previous
+          </Link>
+          {createPagination(currentPage, numberOfPages).map((page, index) => (
+            <Link
+              key={`${page}_${index}`}
+              className={cn('btn btn-sm', { 'btn-active': currentPage === page, 'btn-disabled': currentPage === page || isNaN(page) })}
+              to={getUrlAtPage(page)}
+            >
+              {isNaN(page) ? '...' : page}
+            </Link>
+          ))}
+          <Link className={cn('btn btn-sm', { 'btn-disabled': currentPageCount < take })} to={nextUrl}>
+            Next
+          </Link>
+        </div>
+      </div>
+      {/* use noscript to display the pagination else use Intersectionobserver to make an infinite scroll */}
+    </>
+  ) : null;
 };
 
 export default Pagination;

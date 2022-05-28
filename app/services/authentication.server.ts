@@ -10,7 +10,7 @@ import { getUser, getUserByUsernameAndPassword } from './users.server';
 
 export const authenticator = new Authenticator<string>(sessionStorage);
 
-export async function requireCookieAuth(request: Request): Promise<User> {
+export async function requireCookieAuth(request: Request, redirectOnfail: boolean = true): Promise<User> {
   const url = new URL(request.url);
   const failureRedirect = `/login?redirect_to=${encodeURI(url.pathname + url.search)}`;
   try {
@@ -19,7 +19,11 @@ export async function requireCookieAuth(request: Request): Promise<User> {
     });
     return await getUser(userId);
   } catch (e) {
-    throw redirect(failureRedirect);
+    if (redirectOnfail) {
+      throw redirect(failureRedirect);
+    } else {
+      throw unauthorized();
+    }
   }
 }
 

@@ -1,37 +1,62 @@
 import * as React from 'react';
-import type { TableInstance } from 'react-table';
+import type { TableInstance } from '@tanstack/react-table';
+import cn from 'classnames';
 
-export function Table<TableElement extends object>({ getTableProps, headerGroups, getTableBodyProps, prepareRow, rows }: TableInstance<TableElement>) {
+type Props<TableElement> = TableInstance<TableElement> & {
+  footer?: boolean;
+};
+
+export function Table<TableElement>({ getHeaderGroups, getRowModel, getFooterGroups, footer }: Props<TableElement>) {
   return (
-    <table {...getTableProps()} className="table table-zebra w-full flex-grow-5">
-      <thead>
-        {headerGroups.map((headerGroup, index) => (
-          <tr {...headerGroup.getHeaderGroupProps()} key={index}>
-            {headerGroup.headers.map((column) => (
-              <th {...column.getHeaderProps()} key={column.id}>
-                {column.render('Header')}
-              </th>
-            ))}
-          </tr>
-        ))}
-      </thead>
-      <tbody {...getTableBodyProps()}>
-        {rows.map((row) => {
-          prepareRow(row);
-          return (
-            <tr {...row.getRowProps()} key={row.id}>
-              {row.cells.map((cell) => {
-                return (
-                  <td {...cell.getCellProps()} key={`${cell.row.id}_${cell.column.id}`}>
-                    {cell.render('Cell')}
-                  </td>
-                );
-              })}
+    <div className="flex">
+      <table className="table table-compact table-zebra w-full flex-grow-5">
+        <thead>
+          {getHeaderGroups().map((headerGroup) => (
+            <tr key={headerGroup.id}>
+              {headerGroup.headers.map((header) => (
+                <th
+                  colSpan={header.colSpan}
+                  key={header.id}
+                  className={cn({ 'cursor-pointer select-none': header.column.getCanSort() })}
+                  onClick={header.column.getToggleSortingHandler()}
+                >
+                  {header.isPlaceholder ? null : (header.renderHeader() as React.ReactNode)}
+                  {{
+                    asc: ' 🔼',
+                    desc: ' 🔽',
+                  }[header.column.getIsSorted() as string] ?? null}
+                  {header.column.getSortIndex() + 1 || null}
+                </th>
+              ))}
             </tr>
-          );
-        })}
-      </tbody>
-    </table>
+          ))}
+        </thead>
+        <tbody>
+          {getRowModel().rows.map((row) => {
+            return (
+              <tr key={row.id}>
+                {row.getVisibleCells().map((cell) => {
+                  return <td key={cell.id}>{cell.renderCell() as React.ReactNode}</td>;
+                })}
+              </tr>
+            );
+          })}
+        </tbody>
+        {footer && (
+          <tfoot>
+            {getFooterGroups().map((footerGroup) => (
+              <tr key={footerGroup.id}>
+                {footerGroup.headers.map((header) => (
+                  <th key={header.id} colSpan={header.colSpan}>
+                    {header.isPlaceholder ? null : (header.renderFooter() as React.ReactNode)}
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </tfoot>
+        )}
+      </table>
+    </div>
   );
 }
 

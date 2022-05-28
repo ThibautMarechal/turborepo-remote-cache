@@ -30,7 +30,7 @@ export const action: ActionFunction = async ({ request, params, context }) => {
   });
 };
 
-export default function New() {
+export default function Edit() {
   const team = useLoaderData();
   return (
     <div className="flex justify-center">

@@ -2,6 +2,18 @@ import type { Token } from '@prisma/client';
 import { hash } from '~/utils/hash';
 import { client } from './prismaClient.server';
 import { v4 as newGuid } from 'uuid';
+import type { OrderBy } from '~/utils/sort';
+import { DEFAULT_ORDER_BY } from '~/utils/sort';
+
+export function mapOrderBy(orderBy: OrderBy[]) {
+  return orderBy.map((orderBy) => {
+    const [[field, direction]] = Object.entries(orderBy);
+    if (field === 'user') {
+      return { user: { name: direction } };
+    }
+    return orderBy;
+  });
+}
 
 export async function getToken(token: string): Promise<Token> {
   try {
@@ -19,38 +31,56 @@ export async function getToken(token: string): Promise<Token> {
   }
 }
 
-export async function getTokens() {
+export async function getTokens(skip: number, take: number, orderBy: OrderBy[]) {
   try {
     await client.$connect();
     return await client.token.findMany({
-      orderBy: [
-        {
-          creationDate: 'desc',
-        },
-      ],
+      orderBy: mapOrderBy(orderBy.length ? orderBy : DEFAULT_ORDER_BY),
       include: {
         user: true,
       },
+      skip,
+      take,
     });
   } finally {
     await client.$disconnect();
   }
 }
 
-export async function getTokensByUser(userId: string) {
+export async function getTokensCount() {
+  try {
+    await client.$connect();
+    return await client.token.count();
+  } finally {
+    await client.$disconnect();
+  }
+}
+
+export async function getTokensByUser(userId: string, skip: number, take: number, orderBy: OrderBy[]) {
   try {
     await client.$connect();
     return await client.token.findMany({
       where: {
         userId,
       },
-      orderBy: [
-        {
-          creationDate: 'desc',
-        },
-      ],
+      orderBy: mapOrderBy(orderBy.length ? orderBy : DEFAULT_ORDER_BY),
       include: {
         user: true,
+      },
+      skip,
+      take,
+    });
+  } finally {
+    await client.$disconnect();
+  }
+}
+
+export async function getTokensByUserCount(userId: string) {
+  try {
+    await client.$connect();
+    return await client.token.count({
+      where: {
+        userId,
       },
     });
   } finally {

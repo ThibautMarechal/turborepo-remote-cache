@@ -1,15 +1,22 @@
 import type { ActionFunction } from 'remix';
 import { useLoaderData, type LoaderFunction } from 'remix';
 import invariant from 'tiny-invariant';
+import ListTitle from '~/component/ListTitle';
+import Pagination from '~/component/Pagination';
 import Table from '~/component/Table';
-import {} from '~/hooks/useArtifactsTable';
-import { useTokensTable } from '~/hooks/useTokensTable';
+import { useTokensTable } from '~/hooks/table/useTokensTable';
+import { usePaginateSearchParams } from '~/hooks/usePaginateSearchParams';
 import { requireCookieAuth } from '~/services/authentication.server';
-import { getTokensByUser, revokeToken } from '~/services/tokens.server';
+import { getTokensByUser, getTokensByUserCount, revokeToken } from '~/services/tokens.server';
+import { getPaginationFromRequest } from '~/utils/pagination';
+import { getOrderByFromRequest } from '~/utils/sort';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const user = await requireCookieAuth(request);
-  return await getTokensByUser(user.id);
+  const { skip, take } = getPaginationFromRequest(request);
+  const orderBy = getOrderByFromRequest(request);
+  const [tokens, count] = await Promise.all([getTokensByUser(user.id, skip, take, orderBy), getTokensByUserCount(user.id)]);
+  return { tokens, count };
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
@@ -21,12 +28,15 @@ export const action: ActionFunction = async ({ request, params }) => {
   return null;
 };
 
-export default function Artifacts() {
-  const tokens = useLoaderData<Awaited<ReturnType<typeof getTokensByUser>>>();
+export default function Tokens() {
+  const { tokens, count } = useLoaderData<{ tokens: Awaited<ReturnType<typeof getTokensByUser>>; count: number }>();
   const tableProps = useTokensTable(tokens);
+  const paginationProps = usePaginateSearchParams();
   return (
-    <div className="flex">
+    <>
+      <ListTitle title="My tokens" count={count} />
       <Table {...tableProps} />
-    </div>
+      <Pagination {...paginationProps} count={count} currentPageCount={tokens.length} />
+    </>
   );
 }

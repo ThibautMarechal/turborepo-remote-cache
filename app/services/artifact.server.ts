@@ -1,9 +1,24 @@
 import type { Artifact } from '@prisma/client';
 import type { TurboContext } from '~/types/TurboContext';
+import type { OrderBy } from '~/utils/sort';
+import { DEFAULT_ORDER_BY } from '~/utils/sort';
 import { client } from './prismaClient.server';
 
 export function getArtifactId(turboCtx: TurboContext) {
   return `${turboCtx.team?.id ?? turboCtx.user.id}/${turboCtx.hash}`;
+}
+
+export function mapOrderBy(orderBy: OrderBy[]) {
+  return orderBy.map((orderBy) => {
+    const [[field, direction]] = Object.entries(orderBy);
+    if (field === 'user') {
+      return { user: { name: direction } };
+    }
+    if (field === 'team') {
+      return { team: { name: direction } };
+    }
+    return orderBy;
+  });
 }
 
 export async function insertArtifact(artifact: Omit<Artifact, 'creationDate' | 'hitCount' | 'lastHitDate'>) {
@@ -51,37 +66,73 @@ export async function getArtifact(id: string) {
   }
 }
 
-export async function getArtifacts() {
+export async function getArtifacts(skip: number, take: number, orderBy?: OrderBy[]) {
   try {
     await client.$connect();
     return client.artifact.findMany({
+      orderBy: mapOrderBy(orderBy?.length ? orderBy : DEFAULT_ORDER_BY),
       include: {
         user: true,
         team: true,
       },
-      orderBy: [
-        {
-          creationDate: 'desc',
-        },
-      ],
+      skip,
+      take,
     });
   } finally {
     await client.$disconnect();
   }
 }
 
-export async function getArtifactsByUser(userId: string) {
+export async function getArtifactsCount() {
+  try {
+    await client.$connect();
+    return client.artifact.count();
+  } finally {
+    await client.$disconnect();
+  }
+}
+
+export async function getArtifactsByUser(userId: string, skip: number, take: number, orderBy?: OrderBy[]) {
   try {
     await client.$connect();
     return await client.artifact.findMany({
       where: {
         userId,
       },
-      orderBy: [
-        {
-          creationDate: 'desc',
-        },
-      ],
+      orderBy: mapOrderBy(orderBy?.length ? orderBy : DEFAULT_ORDER_BY),
+      include: {
+        user: true,
+        team: true,
+      },
+      skip,
+      take,
+    });
+  } finally {
+    await client.$disconnect();
+  }
+}
+
+export async function getArtifactsCountByUser(userId: string) {
+  try {
+    await client.$connect();
+    return client.artifact.count({
+      where: {
+        userId,
+      },
+    });
+  } finally {
+    await client.$disconnect();
+  }
+}
+
+export async function getArtifactsByTeam(teamId: string, orderBy?: OrderBy[]) {
+  try {
+    await client.$connect();
+    return client.artifact.findMany({
+      where: {
+        teamId,
+      },
+      orderBy: mapOrderBy(orderBy?.length ? orderBy : DEFAULT_ORDER_BY),
       include: {
         user: true,
         team: true,
@@ -92,21 +143,12 @@ export async function getArtifactsByUser(userId: string) {
   }
 }
 
-export async function getArtifactsByTeam(teamId: string) {
+export async function getArtifactsCountByTeam(teamId: string) {
   try {
     await client.$connect();
-    return client.artifact.findMany({
+    return client.artifact.count({
       where: {
         teamId,
-      },
-      orderBy: [
-        {
-          creationDate: 'desc',
-        },
-      ],
-      include: {
-        user: true,
-        team: true,
       },
     });
   } finally {

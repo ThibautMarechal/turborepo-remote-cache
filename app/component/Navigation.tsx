@@ -14,7 +14,7 @@ import { useCurrentUser } from '~/context/CurrentUser';
 export const Navigation = () => {
   const user = useCurrentUser();
   return (
-    <div className="navbar bg-base-100">
+    <div className="navbar bg-base-100 sticky top-0 z-20 shadow-xl">
       <div className="flex-1 whitespace-nowrap">
         <Link to="/" prefetch="intent">
           <h1 className="text-lg font-bold">
@@ -60,7 +60,7 @@ export const Navigation = () => {
               <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
                 <Gravatar className="w-10 rounded-full" email={user.email} />
               </label>
-              <ul tabIndex={0} className="mt-3 p-2 menu menu-compact shadow-xl dropdown-content bg-base-100 rounded-box w-52">
+              <ul tabIndex={0} className="mt-3 p-2 menu menu-compact shadow-2xl dropdown-content bg-base-100 rounded-box w-52">
                 <li className="w-full">
                   <Link className="flex justify-between w-full" to="/profile">
                     Profile

@@ -1,15 +1,26 @@
 import { hash } from '~/utils/hash';
 import { client } from './prismaClient.server';
 import type { User } from '@prisma/client';
+import type { OrderBy } from '~/utils/sort';
+import { DEFAULT_ORDER_BY } from '~/utils/sort';
 
-export async function getUsers(skip: number = 0, take: number = 100): Promise<User[]> {
+export async function getUsers(skip: number = 0, take: number = 100, orderBy?: OrderBy[]): Promise<User[]> {
   try {
     await client.$connect();
     return await client.user.findMany({
       skip,
       take,
-      orderBy: [{ creationDate: 'desc' }],
+      orderBy: orderBy?.length ? orderBy : DEFAULT_ORDER_BY,
     });
+  } finally {
+    await client.$disconnect();
+  }
+}
+
+export async function getUsersCount(): Promise<number> {
+  try {
+    await client.$connect();
+    return await client.user.count();
   } finally {
     await client.$disconnect();
   }

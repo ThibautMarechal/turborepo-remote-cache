@@ -6,6 +6,6 @@ export const loader: LoaderFunction = async ({ request, params, context }) => {
   return null;
 };
 
-export default function Index() {
+export default function DashBoard() {
   return <div>Dashboard</div>;
 }

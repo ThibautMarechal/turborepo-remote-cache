@@ -3,15 +3,21 @@ import { Readable } from 'stream';
 import { CacheStorage } from '~/services/storage.server';
 import { DURATION_HEADER, getTurboContext, turboContextToMeta } from '~/utils/turboContext';
 import { streamToString, stringToStream } from '~/utils/stream';
-import { requireTokenAuth } from '~/services/authentication.server';
+import { requireCookieAuth, requireTokenAuth } from '~/services/authentication.server';
 import { getTeamFromRequest } from '~/services/teams.server';
 import { allowMethods, METHOD } from '~/utils/method';
 import { accepted, unprocessableEntity, internalServerError, notFound } from '~/utils/response';
 import { getArtifactId, hitArtifact, insertArtifact } from '~/services/artifact.server';
+import type { User } from '@prisma/client';
 
 export const loader: LoaderFunction = async ({ request, params, context }) => {
   allowMethods(request, METHOD.GET, METHOD.PUT);
-  const user = await requireTokenAuth(request);
+  let user: User;
+  try {
+    user = await requireTokenAuth(request);
+  } catch (e) {
+    user = await requireCookieAuth(request, false);
+  }
   const team = await getTeamFromRequest(request);
   const turboCtx = getTurboContext({ request, params, context }, user, team);
 

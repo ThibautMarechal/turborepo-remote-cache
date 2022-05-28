@@ -1,6 +1,28 @@
 import type { Session } from '@prisma/client';
 import polly from 'polly-js';
+import type { OrderBy } from '~/utils/sort';
+import { DEFAULT_ORDER_BY } from '~/utils/sort';
 import { client } from './prismaClient.server';
+
+export function mapOrderBy(orderBy: OrderBy[]) {
+  return orderBy.map((orderBy) => {
+    const [[field, direction]] = Object.entries(orderBy);
+    if (field === 'user') {
+      return { user: { name: direction } };
+    }
+    if (field === 'team') {
+      return { team: { name: direction } };
+    }
+    if (field === 'events') {
+      return {
+        events: {
+          _count: direction,
+        },
+      };
+    }
+    return orderBy;
+  });
+}
 
 export async function upsertSession(session: Omit<Session, 'creationDate'>) {
   try {
@@ -78,15 +100,11 @@ export async function getSessionsCount() {
   }
 }
 
-export async function getSessions(skip: number = 0, take: number = 10) {
+export async function getSessions(skip: number, take: number, orderBy?: OrderBy[]) {
   try {
     await client.$connect();
     return await client.session.findMany({
-      orderBy: [
-        {
-          creationDate: 'desc',
-        },
-      ],
+      orderBy: mapOrderBy(orderBy?.length ? orderBy : DEFAULT_ORDER_BY),
       include: {
         events: true,
         team: true,
@@ -100,18 +118,14 @@ export async function getSessions(skip: number = 0, take: number = 10) {
   }
 }
 
-export async function getSessionsByUser(userId: string, skip: number = 0, take: number = 10) {
+export async function getSessionsByUser(userId: string, skip: number, take: number, orderBy?: OrderBy[]) {
   try {
     await client.$connect();
     return await client.session.findMany({
       where: {
         userId,
       },
-      orderBy: [
-        {
-          creationDate: 'desc',
-        },
-      ],
+      orderBy: mapOrderBy(orderBy?.length ? orderBy : DEFAULT_ORDER_BY),
       include: {
         events: true,
         team: true,
@@ -125,18 +139,14 @@ export async function getSessionsByUser(userId: string, skip: number = 0, take: 
   }
 }
 
-export async function getSessionsByTeam(teamId: string, skip: number = 0, take: number = 10) {
+export async function getSessionsByTeam(teamId: string, skip: number, take: number, orderBy?: OrderBy[]) {
   try {
     await client.$connect();
     return await client.session.findMany({
       where: {
         teamId,
       },
-      orderBy: [
-        {
-          creationDate: 'desc',
-        },
-      ],
+      orderBy: mapOrderBy(orderBy?.length ? orderBy : DEFAULT_ORDER_BY),
       include: {
         events: true,
         team: true,

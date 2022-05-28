@@ -1,21 +1,31 @@
 import type { Team } from '@prisma/client';
 import { removeTeamUndescore } from '~/mapper/team';
+import type { OrderBy } from '~/utils/sort';
 import { client } from './prismaClient.server';
 
-export async function getTeams(skip: number = 0, take: number = 100): Promise<Team[]> {
+export async function getTeams(skip: number, take: number, orderBy: OrderBy[]): Promise<Team[]> {
   try {
     await client.$connect();
     return await client.team.findMany({
       skip,
       take,
-      orderBy: [{ creationDate: 'desc' }],
+      orderBy,
     });
   } finally {
     await client.$disconnect();
   }
 }
 
-export async function getUserTeams(userId: string, limit: number = 100, since = new Date(Date.UTC(0, 0, 0)), until = new Date(Date.UTC(3000, 0, 0))): Promise<Team[]> {
+export async function getTeamsCount(): Promise<number> {
+  try {
+    await client.$connect();
+    return await client.team.count();
+  } finally {
+    await client.$disconnect();
+  }
+}
+
+export async function getUserTeams(userId: string, limit: number, since = new Date(Date.UTC(0, 0, 0)), until = new Date(Date.UTC(3000, 0, 0))): Promise<Team[]> {
   try {
     await client.$connect();
     return await client.team.findMany({

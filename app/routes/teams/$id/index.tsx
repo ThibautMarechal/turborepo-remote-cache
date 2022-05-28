@@ -15,7 +15,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   return omit(user, 'passwordHash');
 };
 
-export default function New() {
+export default function Team() {
   const team = useLoaderData<Awaited<ReturnType<typeof getTeamDetail>>>();
   return (
     <div className="flex flex-wrap justify-center gap-2 m-2">
