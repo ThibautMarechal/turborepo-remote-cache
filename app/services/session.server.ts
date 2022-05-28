@@ -1,16 +1,25 @@
 import type { Session } from '@prisma/client';
+import polly from 'polly-js';
 import { client } from './prismaClient.server';
 
 export async function upsertSession(session: Omit<Session, 'creationDate'>) {
   try {
     await client.$connect();
-    return await client.session.upsert({
-      update: session,
-      create: session,
-      where: {
-        id: session.id,
-      },
-    });
+    // https://github.com/prisma/prisma/issues/3242
+    // Primsa don't use UPSERT query from postgres, it SELECT then use INSERT or UPDATE dependeing on the result.
+    // We use polly to retry the query if the race condition occurs
+    // We use 10 retry just to be sure (turbo can run 10 tasks in parrallel), but I doubt that we will retry more than 1 time.
+    return polly()
+      .retry(10)
+      .executeForPromise(() =>
+        client.session.upsert({
+          update: session,
+          create: session,
+          where: {
+            id: session.id,
+          },
+        }),
+      );
   } finally {
     await client.$disconnect();
   }

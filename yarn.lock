@@ -5684,6 +5684,11 @@ pkg-dir@^3.0.0:
   dependencies:
     find-up "^3.0.0"
 
+polly-js@^1.8.3:
+  version "1.8.3"
+  resolved "https://registry.yarnpkg.com/polly-js/-/polly-js-1.8.3.tgz#c1bfe878f676a78146e394a95b41b4ba5143300c"
+  integrity sha512-pFgSsipKs5bxtXMM+Vfw2p8kOEZhJ+Z9xDZLbiMjjw57WZdlg+6eTZdSIHDycNii+4+7xmzCfryQVIqwgeYX4g==
+
 posix-character-classes@^0.1.0:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/posix-character-classes/-/posix-character-classes-0.1.1.tgz#01eac0fe3b5af71a2a6c02feabb8c1fef7e00eab"

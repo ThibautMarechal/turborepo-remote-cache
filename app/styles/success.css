@@ -13,7 +13,7 @@
     position: absolute;
     width: 300%;
     height: 100%;
-    background: linear-gradient(90deg, #4338ca, #ec4899, #4338ca, #ec4899, #4338ca);
+    background: linear-gradient(90deg, hsl(var(--p)), hsl(var(--s)), hsl(var(--p)), hsl(var(--s)), hsl(var(--p)));
     pointer-events: none;
     mix-blend-mode: multiply;
     animation: fullturbo 2s linear infinite;

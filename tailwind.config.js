@@ -4,9 +4,9 @@ module.exports = {
     themes: [
       {
         turbo: {
-          primary: '#4338ca',
+          primary: '#2090fe',
 
-          secondary: '#ec4899',
+          secondary: '#e41f50',
 
           accent: '#bae6fd',
 
