@@ -28,6 +28,7 @@ CREATE TABLE "User" (
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "isSuperAdmin" BOOLEAN NOT NULL DEFAULT false,
+    "isDeleted" BOOLEAN NOT NULL DEFAULT false,
     "creationDate" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
@@ -49,6 +50,7 @@ CREATE TABLE "Team" (
     "name" TEXT NOT NULL,
     "avatar" TEXT,
     "creationDate" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "isDeleted" BOOLEAN NOT NULL DEFAULT false,
     "slug" TEXT NOT NULL,
 
     CONSTRAINT "Team_pkey" PRIMARY KEY ("id")
@@ -76,7 +78,7 @@ CREATE TABLE "Artifact" (
     "duration" INTEGER NOT NULL DEFAULT 0,
     "contentLength" INTEGER NOT NULL DEFAULT 0,
     "hitCount" INTEGER NOT NULL DEFAULT 0,
-    "lastHitDate" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+    "lastHitDate" TIMESTAMP(3),
 
     CONSTRAINT "Artifact_pkey" PRIMARY KEY ("id")
 );

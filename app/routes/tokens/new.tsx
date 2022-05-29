@@ -1,6 +1,7 @@
 import type { ActionFunction } from 'remix';
 import { type LoaderFunction, useActionData } from 'remix';
 import { formAction } from 'remix-forms';
+import copy from 'copy-to-clipboard';
 import { z } from 'zod';
 import { requireCookieAuth } from '~/services/authentication.server';
 import { makeDomainFunction } from 'remix-domains';
@@ -45,8 +46,8 @@ export default function New() {
             <br />
             We will only show it once. Be sure to remember your token !
           </p>
-          <input className="input w-full text-center" value={data} />
-          <button className="btn w-full btn-primary">
+          <input className="input w-full text-center" value={data} readOnly />
+          <button type="button" className="btn w-full btn-primary" onClick={() => copy(data)}>
             <ClipboardCopyIcon className="text-secondary w-6 h-6 mr-2" />
             Copy to clipboard
           </button>

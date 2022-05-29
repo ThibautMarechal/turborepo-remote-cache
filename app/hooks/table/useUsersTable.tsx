@@ -11,6 +11,7 @@ import PencilIcon from '@heroicons/react/outline/PencilIcon';
 import { usePaginateSortingTable } from './usePaginateSortingTable';
 import cn from 'classnames';
 import type { ActionSubmission } from '@remix-run/react/transition';
+import HasRights from '~/component/HasRights';
 
 const table = createTable().setRowType<User>();
 
@@ -44,16 +45,18 @@ const defaultColumns = [
       const isDeleting = state === 'submitting' && (submission as ActionSubmission).formData.get('id') === id;
       return (
         <div className="flex gap-1">
-          <Link to={`./${getValue()}`} prefetch="intent" className="btn btn-sm btn-square">
+          <Link to={`/users/${getValue()}`} prefetch="intent" className="btn btn-xs btn-square">
             <SearchIcon className="h-4 w-4" />
           </Link>
-          <Link to={`./${getValue()}/edit`} prefetch="intent" className="btn btn-sm btn-square">
-            <PencilIcon className="h-4 w-4" />
-          </Link>
-          <Form method="post">
-            <button className={cn('btn btn-sm btn-square', { loading: isDeleting })}>{!isDeleting && <TrashIcon className="h-4 w-4" />}</button>
-            <input name="id" value={id} type="hidden" />
-          </Form>
+          <HasRights predicate={(u) => u.isSuperAdmin}>
+            <Link to={`/users/${getValue()}/edit`} prefetch="intent" className="btn btn-xs btn-square">
+              <PencilIcon className="h-4 w-4" />
+            </Link>
+            <Form method="post">
+              <button className={cn('btn btn-xs btn-square', { loading: isDeleting })}>{!isDeleting && <TrashIcon className="h-4 w-4" />}</button>
+              <input name="id" value={id} type="hidden" />
+            </Form>
+          </HasRights>
         </div>
       );
     },

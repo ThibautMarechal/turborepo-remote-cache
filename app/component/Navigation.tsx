@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Gravatar from 'react-gravatar';
-import { Link, NavLink } from 'remix';
+import { Link, NavLink, useLocation } from 'remix';
 import LogoutIcon from '@heroicons/react/outline/LogoutIcon';
 import UserIcon from '@heroicons/react/outline/UserIcon';
 import UsersIcon from '@heroicons/react/outline/UsersIcon';
@@ -8,15 +8,16 @@ import UserGroup from '@heroicons/react/outline/UserGroupIcon';
 import LightningBoltIcon from '@heroicons/react/outline/LightningBoltIcon';
 import ArchiveIcon from '@heroicons/react/outline/ArchiveIcon';
 import FingerPrintIcon from '@heroicons/react/outline/FingerPrintIcon';
-
+import cn from 'classnames';
 import { useCurrentUser } from '~/context/CurrentUser';
 
 export const Navigation = () => {
   const user = useCurrentUser();
+  const { pathname } = useLocation();
   return (
     <div className="navbar bg-base-100 sticky top-0 z-20 shadow-xl">
       <div className="flex-1 whitespace-nowrap">
-        <Link to="/" prefetch="intent">
+        <Link to="/" className={cn({ fullturbo: pathname === '/' })} prefetch="intent">
           <h1 className="text-lg font-bold">
             <img src="/favicon.ico" alt="logo" className="mask mask-circle w-10 inline-block mr-5" />
             Turbo Remote Cache
@@ -28,34 +29,36 @@ export const Navigation = () => {
           <ul className="menu menu-horizontal p-0 gap-1">
             <li>
               <NavLink to="/users">
-                <UsersIcon className="h-5" />
+                <UsersIcon className={cn('h-5', { 'text-primary': !pathname.startsWith('/users') })} />
                 Users
               </NavLink>
             </li>
             <li>
               <NavLink to="/teams">
-                <UserGroup className="h-5" />
+                <UserGroup className={cn('h-5', { 'text-primary': !pathname.startsWith('/teams') })} />
                 Teams
               </NavLink>
             </li>
             <li>
               <NavLink to="/sessions">
-                <LightningBoltIcon className="h-5" />
+                <LightningBoltIcon className={cn('h-5', { 'text-primary': !pathname.startsWith('/sessions') })} />
                 Sessions
               </NavLink>
             </li>
             <li>
               <NavLink to="/artifacts">
-                <ArchiveIcon className="h-5" />
+                <ArchiveIcon className={cn('h-5', { 'text-primary': !pathname.startsWith('/artifacts') })} />
                 Artifacts
               </NavLink>
             </li>
-            <li>
-              <NavLink to="/tokens">
-                <FingerPrintIcon className="h-5" />
-                Tokens
-              </NavLink>
-            </li>
+            {user.isSuperAdmin && (
+              <li>
+                <NavLink to="/tokens">
+                  <FingerPrintIcon className={cn('h-5', { 'text-primary': !pathname.startsWith('/tokens') })} />
+                  Tokens
+                </NavLink>
+              </li>
+            )}
             <div className="dropdown dropdown-end">
               <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
                 <Gravatar className="w-10 rounded-full" email={user.email} />
@@ -64,13 +67,13 @@ export const Navigation = () => {
                 <li className="w-full">
                   <Link className="flex justify-between w-full" to="/profile">
                     Profile
-                    <UserIcon className="h-5" />
+                    <UserIcon className="h-5 text-primary" />
                   </Link>
                 </li>
                 <li className="w-full">
                   <Link className="flex justify-between w-full" to="/logout">
                     Logout
-                    <LogoutIcon className="h-5" />
+                    <LogoutIcon className="h-5 text-primary" />
                   </Link>
                 </li>
               </ul>

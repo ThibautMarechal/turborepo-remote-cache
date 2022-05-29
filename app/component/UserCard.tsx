@@ -3,6 +3,7 @@ import Gravatar from 'react-gravatar';
 import { Link } from 'remix';
 import PencilIcon from '@heroicons/react/outline/PencilIcon';
 import type { UserDetail } from '~/types/prisma';
+import HasRights from './HasRights';
 
 type Props = {
   user: UserDetail;
@@ -20,9 +21,11 @@ export const UserCard = ({ user, children }: Props) => {
             </div>
           </div>
           {user.name}
-          <Link to="./edit" prefetch="intent" className="btn btn-xs absolute top-0 right-0">
-            <PencilIcon className="h-4 w-4" />
-          </Link>
+          <HasRights predicate={(u) => u.isSuperAdmin || user.id === u.id}>
+            <Link to={`/users/${user.id}/edit`} prefetch="intent" className="btn btn-xs absolute top-0 right-0">
+              <PencilIcon className="h-4 w-4" />
+            </Link>
+          </HasRights>
         </h2>
         <div>
           <span className="font-bold mr-2">Name:</span>

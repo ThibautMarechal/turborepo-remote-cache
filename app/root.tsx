@@ -5,6 +5,7 @@ import { authenticator } from './services/authentication.server';
 import { getUserDetail } from './services/users.server';
 import { CurrentUserProvider } from './context/CurrentUser';
 import Navigation from './component/Navigation';
+import fullturboStyle from '~/styles/success.css';
 
 export const meta: MetaFunction = () => ({
   charset: 'utf-8',
@@ -21,7 +22,10 @@ export const loader: LoaderFunction = async ({ request, params, context }) => {
   }
 };
 
-export const links: LinksFunction = () => [{ rel: 'stylesheet', href: tailwind }];
+export const links: LinksFunction = () => [
+  { rel: 'stylesheet', href: tailwind },
+  { rel: 'stylesheet', href: fullturboStyle },
+];
 
 export default function Root() {
   const { user } = useLoaderData<{ user: Awaited<ReturnType<typeof getUserDetail>> }>();

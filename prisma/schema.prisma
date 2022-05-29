@@ -37,6 +37,8 @@ model User {
   name         String
   email        String     @unique
   isSuperAdmin Boolean    @default(false)
+  roles        String[]
+  isDeleted    Boolean    @default(false)
   sessions     Session[]
   tokens       Token[]
   memberships  Member[]
@@ -58,6 +60,7 @@ model Team {
   name         String     @unique
   avatar       String?
   creationDate DateTime   @default(now())
+  isDeleted    Boolean    @default(false)
   slug         String     @unique
   sessions     Session[]
   members      Member[]

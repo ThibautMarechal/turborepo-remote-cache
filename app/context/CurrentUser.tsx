@@ -1,7 +1,7 @@
-import type { Member, Team, User } from '@prisma/client';
 import * as React from 'react';
+import type { UserDetail } from '~/types/prisma';
 
-type ContextType = null | (User & { memberships: Array<Member & { team: Team }> });
+type ContextType = null | UserDetail;
 
 const Context = React.createContext<ContextType>(null);
 Context.displayName = 'CurrentUserProvider';

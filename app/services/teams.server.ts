@@ -7,6 +7,9 @@ export async function getTeams(skip: number, take: number, orderBy: OrderBy[]): 
   try {
     await client.$connect();
     return await client.team.findMany({
+      where: {
+        isDeleted: false,
+      },
       skip,
       take,
       orderBy,
@@ -19,7 +22,11 @@ export async function getTeams(skip: number, take: number, orderBy: OrderBy[]): 
 export async function getTeamsCount(): Promise<number> {
   try {
     await client.$connect();
-    return await client.team.count();
+    return await client.team.count({
+      where: {
+        isDeleted: false,
+      },
+    });
   } finally {
     await client.$disconnect();
   }
@@ -106,7 +113,7 @@ export async function getTeamBySlug(slug: string): Promise<Team> {
   }
 }
 
-export async function createTeam(team: Omit<Team, 'id' | 'creationDate' | 'avatar'>): Promise<Team> {
+export async function createTeam(team: Pick<Team, 'name' | 'slug'>): Promise<Team> {
   try {
     await client.$connect();
     return await client.team.create({
@@ -132,9 +139,20 @@ export async function updateTeam(id: string, team: Pick<Team, 'name' | 'slug'>):
 export async function deleteTeam(teamId: string): Promise<void> {
   try {
     await client.$connect();
-    await client.team.delete({
+    await client.team.update({
       where: {
         id: teamId,
+      },
+      data: {
+        name: '[Deleted Team]',
+        slug: teamId,
+        avatar: null,
+        isDeleted: true,
+        members: {
+          deleteMany: {
+            teamId,
+          },
+        },
       },
     });
   } finally {

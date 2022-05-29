@@ -35,6 +35,7 @@
     "azure-blob-storage": "^4.2.5",
     "azure-blob-store": "^1.0.7",
     "classnames": "^2.3.1",
+    "copy-to-clipboard": "^3.3.1",
     "fs-blob-store": "^6.0.0",
     "lodash": "^4.17.21",
     "polly-js": "^1.8.3",

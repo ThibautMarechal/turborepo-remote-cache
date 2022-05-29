@@ -46,7 +46,7 @@ const defaultColumns = [
         <div className="flex">
           <Form method="post">
             <input name="id" value={id} type="hidden" />
-            <button className={cn('btn btn-sm btn-square', { loading: isDeleting })}>{!isDeleting && <TrashIcon className="h-4 w-4" />}</button>
+            <button className={cn('btn btn-xs btn-square', { loading: isDeleting })}>{!isDeleting && <TrashIcon className="h-4 w-4" />}</button>
           </Form>
         </div>
       );

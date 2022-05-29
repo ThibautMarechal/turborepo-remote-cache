@@ -8,6 +8,9 @@ export async function getUsers(skip: number = 0, take: number = 100, orderBy?: O
   try {
     await client.$connect();
     return await client.user.findMany({
+      where: {
+        isDeleted: false,
+      },
       skip,
       take,
       orderBy: orderBy?.length ? orderBy : DEFAULT_ORDER_BY,
@@ -20,7 +23,11 @@ export async function getUsers(skip: number = 0, take: number = 100, orderBy?: O
 export async function getUsersCount(): Promise<number> {
   try {
     await client.$connect();
-    return await client.user.count();
+    return await client.user.count({
+      where: {
+        isDeleted: false,
+      },
+    });
   } finally {
     await client.$disconnect();
   }
@@ -129,14 +136,37 @@ export async function updateUser(id: string, user: Pick<User, 'email' | 'name' |
 export async function deleteUser(userId: string) {
   try {
     await client.$connect();
-    await client.user.delete({
+    const { isSuperAdmin } = await client.user.findUnique({
+      where: { id: userId },
+      select: { isSuperAdmin: true },
+    });
+    if (isSuperAdmin) {
+      throw new Error('Cannot delete super admin');
+    }
+    await client.user.update({
       where: {
         id: userId,
       },
-      include: {
-        password: {},
-        tokens: true,
-        memberships: true,
+      data: {
+        name: '[Deleted User]',
+        email: userId,
+        username: userId,
+        isDeleted: true,
+        memberships: {
+          deleteMany: {
+            userId,
+          },
+        },
+        tokens: {
+          deleteMany: {
+            userId,
+          },
+        },
+        password: {
+          deleteMany: {
+            userId,
+          },
+        },
       },
     });
   } finally {

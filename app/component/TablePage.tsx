@@ -16,8 +16,14 @@ export function TablePage<TableElement>({ title, count, tableProps, paginationPr
   return (
     <>
       <ListTitle title={title} count={count} />
-      <Table {...tableProps} />
-      <Pagination {...paginationProps} />
+      {count ? (
+        <>
+          <Table {...tableProps} />
+          <Pagination {...paginationProps} />
+        </>
+      ) : (
+        <div className="mt-40 text-center text-xl opacity-50">No content</div>
+      )}
     </>
   );
 }
