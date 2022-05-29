@@ -1,8 +1,4 @@
-import { useLoaderData, type LoaderFunction } from 'remix';
-import ListTitle from '~/component/ListTitle';
-import Pagination from '~/component/Pagination';
-import Table from '~/component/Table';
-import { usePaginateSearchParams } from '~/hooks/usePaginateSearchParams';
+import { type LoaderFunction } from 'remix';
 import { useSessionsTable } from '~/hooks/table/useSessionsTable';
 import { requireCookieAuth } from '~/services/authentication.server';
 
@@ -11,32 +7,27 @@ import { getPaginationFromRequest } from '~/utils/pagination';
 import type { User } from '@prisma/client';
 import { getUser } from '~/services/users.server';
 import { getOrderByFromRequest } from '~/utils/sort';
+import { useTablePageLoaderData } from '~/hooks/useTablePageLoaderData';
+import { TablePage } from '~/component/TablePage';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   await requireCookieAuth(request);
   const { skip, take } = getPaginationFromRequest(request);
   const orderBy = getOrderByFromRequest(request);
-  const [user, sessions, count] = await Promise.all([
+  const [user, items, count] = await Promise.all([
     getUser(params.id as string),
     getSessionsByUser(params.id as string, skip, take, orderBy),
     getSessionsByUserCount(params.id as string),
   ]);
   return {
     user,
-    sessions,
+    items,
     count,
   };
 };
 
 export default function Sessions() {
-  const { user, sessions, count } = useLoaderData<{ user: User; sessions: Awaited<ReturnType<typeof getSessionsByUser>>; count: number }>();
-  const paginationProps = usePaginateSearchParams();
-  const tableProps = useSessionsTable(sessions);
-  return (
-    <>
-      <ListTitle title={`${user?.name}'s sessions`} count={count} />
-      <Table {...tableProps} />
-      <Pagination {...paginationProps} count={count} currentPageCount={sessions.length} />
-    </>
-  );
+  const { user, items, count } = useTablePageLoaderData<Awaited<ReturnType<typeof getSessionsByUser>>[number], { user: User }>();
+  const { tableProps, paginationProps } = useSessionsTable(items, count);
+  return <TablePage title={`${user?.name}'s sessions`} count={count} tableProps={tableProps} paginationProps={paginationProps} />;
 }

@@ -26,6 +26,43 @@ export async function getUsersCount(): Promise<number> {
   }
 }
 
+export async function getUsersByTeam(teamId: string, skip: number = 0, take: number = 100, orderBy?: OrderBy[]): Promise<User[]> {
+  try {
+    await client.$connect();
+    return await client.user.findMany({
+      where: {
+        memberships: {
+          some: {
+            teamId,
+          },
+        },
+      },
+      skip,
+      take,
+      orderBy: orderBy?.length ? orderBy : DEFAULT_ORDER_BY,
+    });
+  } finally {
+    await client.$disconnect();
+  }
+}
+
+export async function getUsersByTeamCount(teamId: string) {
+  try {
+    await client.$connect();
+    return await client.user.count({
+      where: {
+        memberships: {
+          some: {
+            teamId,
+          },
+        },
+      },
+    });
+  } finally {
+    await client.$disconnect();
+  }
+}
+
 export async function getUser(id: string): Promise<User> {
   try {
     await client.$connect();
@@ -46,9 +83,6 @@ export async function getUserDetail(id: string) {
             team: true,
           },
         },
-        artifacts: true,
-        sessions: true,
-        tokens: true,
       },
     });
   } finally {
@@ -92,16 +126,19 @@ export async function updateUser(id: string, user: Pick<User, 'email' | 'name' |
   }
 }
 
-export async function deleteUser(userId: string): Promise<boolean> {
+export async function deleteUser(userId: string) {
   try {
     await client.$connect();
-    const result = await client.user.deleteMany({
+    await client.user.delete({
       where: {
         id: userId,
-        isSuperAdmin: false,
+      },
+      include: {
+        password: {},
+        tokens: true,
+        memberships: true,
       },
     });
-    return result.count > 0;
   } finally {
     await client.$disconnect();
   }

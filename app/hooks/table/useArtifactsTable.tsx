@@ -1,7 +1,7 @@
 import TrashIcon from '@heroicons/react/outline/TrashIcon';
 import DownloadIcon from '@heroicons/react/outline/DownloadIcon';
 import type { Artifact, Team, User } from '@prisma/client';
-import { Form, Link } from 'remix';
+import { Form } from 'remix';
 import DateCell from '~/component/DateCell';
 import TeamCell from '~/component/TeamCell';
 import UserCell from '~/component/UserCell';
@@ -9,7 +9,7 @@ import { createTable } from '@tanstack/react-table';
 
 import { formatDuration, formatSize } from '~/utils/intl';
 import * as React from 'react';
-import { useSortingTable } from './useSortingTable';
+import { usePaginateSortingTable } from './usePaginateSortingTable';
 
 const table = createTable().setRowType<Artifact & { user: User; team: Team | null }>();
 
@@ -78,4 +78,4 @@ const defaultColumns = [
     ),
   }),
 ];
-export const useArtifactsTable = (data: Array<Artifact & { user: User; team: Team | null }>) => useSortingTable(table, defaultColumns, data);
+export const useArtifactsTable = (data: Array<Artifact & { user: User; team: Team | null }>, count: number) => usePaginateSortingTable(table, defaultColumns, data, count);

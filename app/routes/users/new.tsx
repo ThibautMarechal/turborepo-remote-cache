@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { requireCookieAuth } from '~/services/authentication.server';
 import { createUser } from '~/services/users.server';
 import { makeDomainFunction } from 'remix-domains';
-import Form from '~/component/Form';
+import { Form } from '~/component/Form';
 
 const schema = z.object({
   username: z.string().min(1).max(50),

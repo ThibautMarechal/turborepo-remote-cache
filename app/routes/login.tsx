@@ -1,6 +1,6 @@
 import { useSearchParams, type ActionFunction, type LoaderFunction, redirect } from 'remix';
 import { z } from 'zod';
-import Form from '~/component/Form';
+import { Form } from '~/component/Form';
 import { authenticator } from '~/services/authentication.server';
 import { getUser } from '~/services/users.server';
 

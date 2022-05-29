@@ -4,7 +4,7 @@ import { formAction } from 'remix-forms';
 import { z } from 'zod';
 import { requireCookieAuth } from '~/services/authentication.server';
 import { makeDomainFunction } from 'remix-domains';
-import Form from '~/component/Form';
+import { Form } from '~/component/Form';
 import { getTeam, updateTeam } from '~/services/teams.server';
 
 const schema = z.object({

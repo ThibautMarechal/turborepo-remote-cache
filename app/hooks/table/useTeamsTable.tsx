@@ -7,7 +7,7 @@ import { createTable } from '@tanstack/react-table';
 import * as React from 'react';
 import SearchIcon from '@heroicons/react/outline/SearchIcon';
 import PencilIcon from '@heroicons/react/outline/PencilIcon';
-import { useSortingTable } from './useSortingTable';
+import { usePaginateSortingTable } from './usePaginateSortingTable';
 
 const table = createTable().setRowType<Team>();
 
@@ -47,4 +47,4 @@ const defaultColumns = [
     ),
   }),
 ];
-export const useTeamsTable = (data: Team[]) => useSortingTable(table, defaultColumns, data);
+export const useTeamsTable = (data: Team[], count: number) => usePaginateSortingTable(table, defaultColumns, data, count);

@@ -14,7 +14,11 @@ export const meta: MetaFunction = () => ({
 
 export const loader: LoaderFunction = async ({ request, params, context }) => {
   const userFromCookie = await authenticator.isAuthenticated(request);
-  return { user: userFromCookie ? await getUserDetail(userFromCookie) : null };
+  try {
+    return { user: userFromCookie ? await getUserDetail(userFromCookie) : null };
+  } catch (e) {
+    return { user: null };
+  }
 };
 
 export const links: LinksFunction = () => [{ rel: 'stylesheet', href: tailwind }];

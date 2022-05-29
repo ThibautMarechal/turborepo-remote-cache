@@ -7,7 +7,7 @@ import { allowMethods, METHOD } from '~/utils/method';
 export const loader: LoaderFunction = async ({ request, params, context }) => {
   allowMethods(request, METHOD.GET);
   const user = await requireTokenAuth(request);
-  const teams = await getUserTeams(user.id);
+  const teams = await getUserTeams(user.id, 100);
   return json({
     teams: teams.map(ToVercelTeam),
     pagination: {

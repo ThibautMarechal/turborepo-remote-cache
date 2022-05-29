@@ -1,23 +1,20 @@
-import type { ActionFunction } from 'remix';
-import { type LoaderFunction, useLoaderData, NavLink } from 'remix';
+import { type LoaderFunction, type ActionFunction, NavLink } from 'remix';
 import { requireCookieAuth } from '~/services/authentication.server';
 import type { Team } from '@prisma/client';
-import Table from '~/component/Table';
 import { deleteTeam, getTeams, getTeamsCount } from '~/services/teams.server';
 import { useTeamsTable } from '~/hooks/table/useTeamsTable';
-import ListTitle from '~/component/ListTitle';
 import PlusIcon from '@heroicons/react/outline/PlusIcon';
-import Pagination from '~/component/Pagination';
-import { usePaginateSearchParams } from '~/hooks/usePaginateSearchParams';
 import { getPaginationFromRequest } from '~/utils/pagination';
 import { getOrderByFromRequest } from '~/utils/sort';
+import { useTablePageLoaderData } from '~/hooks/useTablePageLoaderData';
+import { TablePage } from '~/component/TablePage';
 
 export const loader: LoaderFunction = async ({ request }) => {
   await requireCookieAuth(request);
   const { skip, take } = getPaginationFromRequest(request);
   const orderBy = getOrderByFromRequest(request);
-  const [teams, count] = await Promise.all([getTeams(skip, take, orderBy), getTeamsCount()]);
-  return { teams, count };
+  const [items, count] = await Promise.all([getTeams(skip, take, orderBy), getTeamsCount()]);
+  return { items, count };
 };
 
 export const action: ActionFunction = async ({ request, params, context }) => {
@@ -28,17 +25,14 @@ export const action: ActionFunction = async ({ request, params, context }) => {
 };
 
 export default function Teams() {
-  const { teams, count } = useLoaderData<{ teams: Team[]; count: number }>();
-  const tableProps = useTeamsTable(teams);
-  const paginationProps = usePaginateSearchParams();
+  const { items, count } = useTablePageLoaderData<Team>();
+  const { tableProps, paginationProps } = useTeamsTable(items, count);
   return (
     <>
-      <ListTitle title="Teams" count={count} />
-      <Table {...tableProps} />
-      <NavLink to="./new" className="btn btn-circle btn-primary fixed bottom-5 right-5" style={({ isActive }) => (isActive ? { display: 'none' } : {})}>
+      <TablePage title="Teams" count={count} tableProps={tableProps} paginationProps={paginationProps} />
+      <NavLink to="./new" className="btn btn-circle btn-primary fixed bottom-5 right-5">
         <PlusIcon className="w-8" />
       </NavLink>
-      <Pagination {...paginationProps} count={count} currentPageCount={teams.length} />
     </>
   );
 }

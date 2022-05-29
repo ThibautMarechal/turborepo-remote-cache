@@ -5,7 +5,7 @@ import cn from 'classnames';
 
 import type { SomeZodObject } from 'zod';
 
-export default function Form<Schema extends SomeZodObject>(props: FormProps<Schema>) {
+export function Form<Schema extends SomeZodObject>(props: FormProps<Schema>) {
   return (
     <RemixForm<Schema>
       // className={/* your form classes */}

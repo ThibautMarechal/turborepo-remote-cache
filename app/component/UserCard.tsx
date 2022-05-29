@@ -1,13 +1,11 @@
 import * as React from 'react';
-import type { Member, Team, User } from '@prisma/client';
 import Gravatar from 'react-gravatar';
 import { Link } from 'remix';
 import PencilIcon from '@heroicons/react/outline/PencilIcon';
+import type { UserDetail } from '~/types/prisma';
 
 type Props = {
-  user: User & {
-    memberships: Array<Member & { team: Team }>;
-  };
+  user: UserDetail;
   children?: React.ReactNode;
 };
 

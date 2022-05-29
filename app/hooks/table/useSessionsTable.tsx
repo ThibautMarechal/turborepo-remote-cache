@@ -5,7 +5,7 @@ import TeamCell from '~/component/TeamCell';
 import UserCell from '~/component/UserCell';
 import { EventType, SourceType } from '~/types/vercel/turborepo';
 import { formatDuration } from '~/utils/intl';
-import { useSortingTable } from './useSortingTable';
+import { usePaginateSortingTable } from './usePaginateSortingTable';
 
 const table = createTable().setRowType<Session & { user: User; team: Team | null; events: Event[] }>();
 
@@ -61,4 +61,5 @@ const defaultColumns = [
     },
   ),
 ];
-export const useSessionsTable = (data: Array<Session & { user: User; team: Team | null; events: Event[] }>) => useSortingTable(table, defaultColumns, data);
+export const useSessionsTable = (data: Array<Session & { user: User; team: Team | null; events: Event[] }>, count: number) =>
+  usePaginateSortingTable(table, defaultColumns, data, count);

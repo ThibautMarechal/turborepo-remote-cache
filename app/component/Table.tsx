@@ -2,15 +2,15 @@ import * as React from 'react';
 import type { TableInstance } from '@tanstack/react-table';
 import cn from 'classnames';
 
-type Props<TableElement> = TableInstance<TableElement> & {
+export type TableProps<TableElement> = TableInstance<TableElement> & {
   footer?: boolean;
 };
 
-export function Table<TableElement>({ getHeaderGroups, getRowModel, getFooterGroups, footer }: Props<TableElement>) {
+export function Table<TableElement>({ getHeaderGroups, getRowModel, getFooterGroups, footer }: TableProps<TableElement>) {
   return (
-    <div className="flex">
+    <div className="relative">
       <table className="table table-compact table-zebra w-full flex-grow-5">
-        <thead>
+        <thead className="sticky top-0">
           {getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
