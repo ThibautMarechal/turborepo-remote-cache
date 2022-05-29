@@ -1,6 +1,6 @@
 import PlusIcon from '@heroicons/react/outline/PlusIcon';
 import type { ActionFunction, LoaderFunction } from 'remix';
-import { NavLink } from 'remix';
+import { Link } from 'remix';
 import { TablePage } from '~/component/TablePage';
 import { useTokensTable } from '~/hooks/table/useTokensTable';
 import { useTablePageLoaderData } from '~/hooks/useTablePageLoaderData';
@@ -30,9 +30,9 @@ export default function Tokens() {
   return (
     <>
       <TablePage title="All tokens" count={count} tableProps={tableProps} paginationProps={paginationProps} />
-      <NavLink to="./new" className="btn btn-circle btn-primary fixed bottom-5 right-5">
+      <Link to="./new" className="btn btn-circle btn-primary fixed bottom-5 right-5">
         <PlusIcon className="w-8" />
-      </NavLink>
+      </Link>
     </>
   );
 }

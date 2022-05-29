@@ -1,4 +1,4 @@
-import { type LoaderFunction, type ActionFunction, NavLink } from 'remix';
+import { type LoaderFunction, type ActionFunction, Link } from 'remix';
 import { requireCookieAuth } from '~/services/authentication.server';
 import type { Team } from '@prisma/client';
 import { deleteTeam, getTeams, getTeamsCount } from '~/services/teams.server';
@@ -30,9 +30,9 @@ export default function Teams() {
   return (
     <>
       <TablePage title="Teams" count={count} tableProps={tableProps} paginationProps={paginationProps} />
-      <NavLink to="./new" className="btn btn-circle btn-primary fixed bottom-5 right-5">
+      <Link to="./new" className="btn btn-circle btn-primary fixed bottom-5 right-5">
         <PlusIcon className="w-8" />
-      </NavLink>
+      </Link>
     </>
   );
 }

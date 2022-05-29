@@ -10,7 +10,7 @@ import { usePaginateSortingTable } from './usePaginateSortingTable';
 const table = createTable().setRowType<Session & { user: User; team: Team | null; events: Event[] }>();
 
 const defaultColumns = [
-  table.createDataColumn((artifact) => artifact.team, {
+  table.createDataColumn((session) => session.team, {
     id: 'team',
     header: 'Team',
     cell: ({ getValue }) => {
@@ -18,32 +18,32 @@ const defaultColumns = [
       return team ? <TeamCell team={team} /> : <div className="opacity-50">No Team</div>;
     },
   }),
-  table.createDataColumn((artifact) => artifact.user, {
+  table.createDataColumn((session) => session.user, {
     id: 'user',
     header: 'User',
     cell: ({ getValue }) => <UserCell user={getValue()} />,
   }),
-  table.createDataColumn((artifact) => artifact.creationDate, {
+  table.createDataColumn((session) => session.creationDate, {
     id: 'creationDate',
     header: 'Creation date',
     cell: ({ getValue }) => <DateCell date={getValue()} />,
   }),
-  table.createDataColumn((artifact) => artifact.events.length, {
+  table.createDataColumn((session) => session.events.length, {
     id: 'events',
     header: 'Events',
   }),
-  table.createDataColumn((artifact) => artifact.events.filter((event) => event.eventType === EventType.HIT).length, {
+  table.createDataColumn((session) => session.events.filter((event) => event.eventType === EventType.HIT).length, {
     id: 'hit-events',
     header: 'Hit events',
     enableSorting: false,
   }),
-  table.createDataColumn((artifact) => artifact.events.filter((event) => event.eventType === EventType.MISS).length, {
+  table.createDataColumn((session) => session.events.filter((event) => event.eventType === EventType.MISS).length, {
     id: 'miss-events',
     header: 'Miss events',
     enableSorting: false,
   }),
   table.createDataColumn(
-    (artifact) => artifact.events.filter((event) => event.eventType === EventType.HIT && event.sourceType === SourceType.LOCAL).reduce((acc, event) => acc + event.duration, 0),
+    (session) => session.events.filter((event) => event.eventType === EventType.HIT && event.sourceType === SourceType.LOCAL).reduce((acc, event) => acc + event.duration, 0),
     {
       id: 'local-saved',
       header: 'Duration saved locally',
@@ -52,7 +52,7 @@ const defaultColumns = [
     },
   ),
   table.createDataColumn(
-    (artifact) => artifact.events.filter((event) => event.eventType === EventType.HIT && event.sourceType === SourceType.REMOTE).reduce((acc, event) => acc + event.duration, 0),
+    (session) => session.events.filter((event) => event.eventType === EventType.HIT && event.sourceType === SourceType.REMOTE).reduce((acc, event) => acc + event.duration, 0),
     {
       id: 'remote-saved',
       header: 'Duration saved remotely',

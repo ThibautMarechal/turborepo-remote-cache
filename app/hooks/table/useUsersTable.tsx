@@ -3,8 +3,6 @@ import type { User } from '@prisma/client';
 import { Form, Link, useTransition } from 'remix';
 import DateCell from '~/component/DateCell';
 import { createTable } from '@tanstack/react-table';
-
-import * as React from 'react';
 import Gravatar from 'react-gravatar';
 import SearchIcon from '@heroicons/react/outline/SearchIcon';
 import PencilIcon from '@heroicons/react/outline/PencilIcon';
@@ -12,49 +10,54 @@ import { usePaginateSortingTable } from './usePaginateSortingTable';
 import cn from 'classnames';
 import type { ActionSubmission } from '@remix-run/react/transition';
 import HasRights from '~/component/HasRights';
+import { canDoUserAction, UserAction } from '~/types/actions';
 
 const table = createTable().setRowType<User>();
 
 const defaultColumns = [
-  table.createDataColumn((artifact) => artifact.email, {
+  table.createDataColumn((user) => user.email, {
     id: 'email',
     header: '',
     enableSorting: false,
     cell: ({ getValue }) => <Gravatar className="rounded-full w-6 h-6" email={getValue()} />,
   }),
-  table.createDataColumn((artifact) => artifact.name, {
+  table.createDataColumn((user) => user.name, {
     id: 'name',
     header: 'Name',
   }),
-  table.createDataColumn((artifact) => artifact.username, {
+  table.createDataColumn((user) => user.username, {
     id: 'username',
     header: 'Username',
   }),
-  table.createDataColumn((artifact) => artifact.creationDate, {
+  table.createDataColumn((user) => user.creationDate, {
     id: 'creationDate',
     header: 'Creation date',
     cell: ({ getValue }) => <DateCell date={getValue()} />,
   }),
-  table.createDataColumn((artifact) => artifact.id, {
+  table.createDataColumn((user) => user, {
     id: 'actions',
     enableSorting: false,
     cell: ({ getValue }) => {
-      const id = getValue();
+      const user = getValue();
       // eslint-disable-next-line react-hooks/rules-of-hooks
       const { state, submission } = useTransition();
-      const isDeleting = state === 'submitting' && (submission as ActionSubmission).formData.get('id') === id;
+      const isDeleting = state === 'submitting' && (submission as ActionSubmission).formData.get('id') === user.id;
       return (
         <div className="flex gap-1">
-          <Link to={`/users/${getValue()}`} prefetch="intent" className="btn btn-xs btn-square">
-            <SearchIcon className="h-4 w-4" />
-          </Link>
-          <HasRights predicate={(u) => u.isSuperAdmin}>
-            <Link to={`/users/${getValue()}/edit`} prefetch="intent" className="btn btn-xs btn-square">
+          <HasRights predicate={(u) => canDoUserAction(u, UserAction.VIEW, user)}>
+            <Link to={`/users/${user.id}`} prefetch="intent" className="btn btn-xs btn-square">
+              <SearchIcon className="h-4 w-4" />
+            </Link>
+          </HasRights>
+          <HasRights predicate={(u) => canDoUserAction(u, UserAction.EDIT, user)}>
+            <Link to={`/users/${user.id}/edit`} prefetch="intent" className="btn btn-xs btn-square">
               <PencilIcon className="h-4 w-4" />
             </Link>
+          </HasRights>
+          <HasRights predicate={(u) => canDoUserAction(u, UserAction.DELETE, user)}>
             <Form method="post">
               <button className={cn('btn btn-xs btn-square', { loading: isDeleting })}>{!isDeleting && <TrashIcon className="h-4 w-4" />}</button>
-              <input name="id" value={id} type="hidden" />
+              <input name="id" value={user.id} type="hidden" />
             </Form>
           </HasRights>
         </div>

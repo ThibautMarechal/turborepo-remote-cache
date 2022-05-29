@@ -1,4 +1,4 @@
-import { type LoaderFunction, type ActionFunction, NavLink } from 'remix';
+import { type LoaderFunction, type ActionFunction, Link } from 'remix';
 import { requireCookieAuth } from '~/services/authentication.server';
 import { deleteUser, getUsers, getUsersCount } from '~/services/users.server';
 import type { User } from '@prisma/client';
@@ -30,9 +30,9 @@ export default function Users() {
   return (
     <>
       <TablePage title="Users" count={count} tableProps={tableProps} paginationProps={paginationProps} />
-      <NavLink to="./new" className="btn btn-circle btn-primary fixed bottom-5 right-5">
+      <Link to="./new" className="btn btn-circle btn-primary fixed bottom-5 right-5">
         <PlusIcon className="w-8" />
-      </NavLink>
+      </Link>
     </>
   );
 }

@@ -13,21 +13,21 @@ import HasRights from '~/component/HasRights';
 const table = createTable().setRowType<Team>();
 
 const defaultColumns = [
-  table.createDataColumn((artifact) => artifact.name, {
+  table.createDataColumn((team) => team.name, {
     id: 'name',
     header: 'Name',
   }),
-  table.createDataColumn((artifact) => artifact.slug, {
+  table.createDataColumn((team) => team.slug, {
     id: 'slug',
     header: 'Slug',
   }),
 
-  table.createDataColumn((artifact) => artifact.creationDate, {
+  table.createDataColumn((team) => team.creationDate, {
     id: 'creationDate',
     header: 'Creation date',
     cell: ({ getValue }) => <DateCell date={getValue()} />,
   }),
-  table.createDataColumn((artifact) => artifact.id, {
+  table.createDataColumn((team) => team.id, {
     id: 'actions',
     enableSorting: false,
     cell: ({ getValue }) => {

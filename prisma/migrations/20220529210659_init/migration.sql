@@ -28,6 +28,7 @@ CREATE TABLE "User" (
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "isSuperAdmin" BOOLEAN NOT NULL DEFAULT false,
+    "role" TEXT NOT NULL DEFAULT E'DEVELOPER',
     "isDeleted" BOOLEAN NOT NULL DEFAULT false,
     "creationDate" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -88,7 +89,7 @@ CREATE TABLE "Member" (
     "id" UUID NOT NULL,
     "teamId" UUID NOT NULL,
     "userId" UUID NOT NULL,
-    "role" TEXT NOT NULL DEFAULT E'member',
+    "role" TEXT NOT NULL DEFAULT E'MEMBER',
     "creationDate" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "Member_pkey" PRIMARY KEY ("id")

@@ -133,6 +133,41 @@ export async function updateTeam(id: string, team: Pick<Team, 'name' | 'slug'>):
     await client.$disconnect();
   }
 }
+export async function addUserToTteam(teamId: string, userId: string, role: string) {
+  try {
+    await client.$connect();
+    return await client.team.update({
+      where: { id: teamId },
+      data: {
+        members: {
+          create: {
+            userId,
+            role,
+          },
+        },
+      },
+    });
+  } finally {
+    await client.$disconnect();
+  }
+}
+export async function removeUserFromTeam(teamId: string, userId: string) {
+  try {
+    await client.$connect();
+    return await client.team.update({
+      where: { id: teamId },
+      data: {
+        members: {
+          deleteMany: {
+            userId,
+          },
+        },
+      },
+    });
+  } finally {
+    await client.$disconnect();
+  }
+}
 
 export async function deleteTeam(teamId: string): Promise<void> {
   try {
