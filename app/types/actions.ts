@@ -3,7 +3,7 @@ import type { TeamDetail, UserDetail } from './prisma';
 import { ServerRole, TeamRole } from './roles';
 
 export function isAdmin(user: UserDetail): boolean {
-  return user.isSuperAdmin || user.roles.includes(ServerRole.ADMIN);
+  return user.isSuperAdmin || user.role === ServerRole.ADMIN;
 }
 
 export enum UserAction {

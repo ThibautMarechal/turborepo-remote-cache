@@ -79,5 +79,6 @@
   },
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} ./prisma/seed.ts"
-  }
+  },
+  "version": "1.0.0"
 }

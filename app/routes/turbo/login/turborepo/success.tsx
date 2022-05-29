@@ -1,4 +1,3 @@
-import type { LinksFunction } from 'remix';
 import { type LoaderFunction } from 'remix';
 import { requireCookieAuth } from '~/services/authentication.server';
 
