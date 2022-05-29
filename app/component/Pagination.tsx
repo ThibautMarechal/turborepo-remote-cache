@@ -24,11 +24,7 @@ export function createPagination(current: number, total: number, closePage: numb
   if (!includeEnd && includeRightDots) {
     filteredCenter.push(NaN);
   }
-  const pages = [0, ...filteredCenter];
-  if (pages.length > 1) {
-    pages.push(lastIndex);
-  }
-  return pages;
+  return [0, ...filteredCenter, lastIndex];
 }
 
 export type PaginationProps = {
