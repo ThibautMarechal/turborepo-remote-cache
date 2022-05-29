@@ -1,8 +1,9 @@
 import { PrismaClient } from '@prisma/client';
 import { hash } from '../app/utils/hash';
+import { v4 as newGuid } from 'uuid';
 
 async function main() {
-  const { ADMIN_USERNAME = 'admin', ADMIN_PASSWORD = 'turbo', ADMIN_EMAIL } = process.env;
+  const { ADMIN_USERNAME = 'admin', ADMIN_NAME = 'Admin', ADMIN_PASSWORD = 'turbo', ADMIN_EMAIL } = process.env;
 
   const client = new PrismaClient();
 
@@ -16,11 +17,13 @@ async function main() {
     if (adminExist) {
       return;
     }
+    const adminId = newGuid();
     await client.user.create({
       data: {
+        id: adminId,
         name: 'Admin',
         username: ADMIN_USERNAME,
-        email: ADMIN_EMAIL ?? '',
+        email: ADMIN_EMAIL ?? adminId,
         isSuperAdmin: true,
         password: {
           create: {
