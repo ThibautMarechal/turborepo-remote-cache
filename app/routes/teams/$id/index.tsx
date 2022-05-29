@@ -1,6 +1,5 @@
 import { Link, useLoaderData, type LoaderFunction } from 'remix';
 import { requireCookieAuth } from '~/services/authentication.server';
-import omit from 'lodash/omit';
 import PencilIcon from '@heroicons/react/outline/PencilIcon';
 import { getTeamDetail } from '~/services/teams.server';
 import Stats from '~/component/Stats';
@@ -8,17 +7,35 @@ import Stat from '~/component/Stat';
 import ArchiveIcon from '@heroicons/react/outline/ArchiveIcon';
 import LightningBoltIcon from '@heroicons/react/outline/LightningBoltIcon';
 import UserGroupIcon from '@heroicons/react/outline/UserGroupIcon';
+import TimeSavedStats from '~/component/TimeSavedStats';
+import { getTimeSaved } from '~/services/events.server';
+import { SourceType } from '~/types/vercel/turborepo';
+import type { TeamDetail } from '~/types/prisma';
+import { getSessionsByTeamCount } from '~/services/session.server';
+import { getArtifactsByTeamCount } from '~/services/artifact.server';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   await requireCookieAuth(request);
-  const user = await getTeamDetail(params.id as string);
-  return omit(user, 'passwordHash');
+  const [team, sessions, artifacts, savedLocally, savedRemotely] = await Promise.all([
+    getTeamDetail(params.id as string),
+    getSessionsByTeamCount(params.id as string),
+    getArtifactsByTeamCount(params.id as string),
+    getTimeSaved(SourceType.LOCAL, { teamId: params.id as string }),
+    getTimeSaved(SourceType.REMOTE, { teamId: params.id as string }),
+  ]);
+  return { team, sessions, artifacts, savedLocally, savedRemotely };
 };
 
 export default function Team() {
-  const team = useLoaderData<Awaited<ReturnType<typeof getTeamDetail>>>();
+  const { team, sessions, artifacts, savedLocally, savedRemotely } = useLoaderData<{
+    team: TeamDetail;
+    sessions: number;
+    artifacts: number;
+    savedLocally: number;
+    savedRemotely: number;
+  }>();
   return (
-    <div className="flex flex-wrap justify-center gap-2 m-2">
+    <div className="flex w-full justify-center items-center flex-col gap-5 mt-5">
       <div className="card w-96 bg-base-100 shadow-xl">
         <div className="card-body">
           <h2 className="card-title">
@@ -45,7 +62,7 @@ export default function Team() {
             </Link>
           }
           icon={<LightningBoltIcon className="w-8 h-8" />}
-          value={team.sessions.length}
+          value={sessions}
           description={'Number of "turbo run <command>"'}
         />
         <Stat
@@ -55,7 +72,7 @@ export default function Team() {
             </Link>
           }
           icon={<ArchiveIcon className="w-8 h-8" />}
-          value={team.artifacts.length}
+          value={artifacts}
           description={'Artifacts linked to the team'}
         />
         <Stat
@@ -69,6 +86,7 @@ export default function Team() {
           description={'Users in the team'}
         />
       </Stats>
+      <TimeSavedStats local={savedLocally} remote={savedRemotely} />
     </div>
   );
 }

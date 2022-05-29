@@ -143,7 +143,7 @@ export async function getArtifactsByTeam(teamId: string, orderBy?: OrderBy[]) {
   }
 }
 
-export async function getArtifactsCountByTeam(teamId: string) {
+export async function getArtifactsByTeamCount(teamId: string) {
   try {
     await client.$connect();
     return client.artifact.count({

@@ -18,9 +18,9 @@ export const Navigation = () => {
     <div className="navbar bg-base-100 sticky top-0 z-20 shadow-xl">
       <div className="flex-1 whitespace-nowrap">
         <Link to="/" className={cn({ fullturbo: pathname === '/' })} prefetch="intent">
-          <h1 className="text-lg font-bold">
-            <img src="/favicon.ico" alt="logo" className="mask mask-circle w-10 inline-block mr-5" />
+          <h1 className="text-2xl font-bold">
             Turbo Remote Cache
+            <img src="/favicon.svg" alt="logo" className="-translate-x-3/4 w-10 inline-block mr-5" />
           </h1>
         </Link>
       </div>
@@ -28,33 +28,33 @@ export const Navigation = () => {
         {user && (
           <ul className="menu menu-horizontal p-0 gap-1">
             <li>
-              <NavLink to="/users">
-                <UsersIcon className={cn('h-5', { 'text-primary': !pathname.startsWith('/users') })} />
+              <NavLink to="/users" className="text-primary-content">
+                <UsersIcon className={cn('h-5', { 'text-primary': !pathname.startsWith('/users'), 'text-secondary': pathname.startsWith('/users') })} />
                 Users
               </NavLink>
             </li>
             <li>
-              <NavLink to="/teams">
-                <UserGroup className={cn('h-5', { 'text-primary': !pathname.startsWith('/teams') })} />
+              <NavLink to="/teams" className="text-primary-content">
+                <UserGroup className={cn('h-5', { 'text-primary': !pathname.startsWith('/teams'), 'text-secondary': pathname.startsWith('/teams') })} />
                 Teams
               </NavLink>
             </li>
             <li>
-              <NavLink to="/sessions">
-                <LightningBoltIcon className={cn('h-5', { 'text-primary': !pathname.startsWith('/sessions') })} />
+              <NavLink to="/sessions" className="text-primary-content hover:text-red-50">
+                <LightningBoltIcon className={cn('h-5', { 'text-primary': !pathname.startsWith('/sessions'), 'text-secondary': pathname.startsWith('/sessions') })} />
                 Sessions
               </NavLink>
             </li>
             <li>
-              <NavLink to="/artifacts">
-                <ArchiveIcon className={cn('h-5', { 'text-primary': !pathname.startsWith('/artifacts') })} />
+              <NavLink to="/artifacts" className="text-primary-content">
+                <ArchiveIcon className={cn('h-5', { 'text-primary': !pathname.startsWith('/artifacts'), 'text-secondary': pathname.startsWith('/artifacts') })} />
                 Artifacts
               </NavLink>
             </li>
             {user.isSuperAdmin && (
               <li>
-                <NavLink to="/tokens">
-                  <FingerPrintIcon className={cn('h-5', { 'text-primary': !pathname.startsWith('/tokens') })} />
+                <NavLink to="/tokens" className="text-primary-content">
+                  <FingerPrintIcon className={cn('h-5', { 'text-primary': !pathname.startsWith('/tokens'), 'text-secondary': pathname.startsWith('/tokens') })} />
                   Tokens
                 </NavLink>
               </li>

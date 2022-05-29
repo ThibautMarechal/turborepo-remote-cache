@@ -95,8 +95,6 @@ export async function getTeamDetail(id: string) {
             user: true,
           },
         },
-        artifacts: true,
-        sessions: true,
       },
     });
   } finally {

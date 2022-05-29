@@ -5,7 +5,7 @@ import { authenticator } from './services/authentication.server';
 import { getUserDetail } from './services/users.server';
 import { CurrentUserProvider } from './context/CurrentUser';
 import Navigation from './component/Navigation';
-import fullturboStyle from '~/styles/success.css';
+import fullturboStyle from '~/styles/fullturbo.css';
 
 export const meta: MetaFunction = () => ({
   charset: 'utf-8',
@@ -25,6 +25,7 @@ export const loader: LoaderFunction = async ({ request, params, context }) => {
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: tailwind },
   { rel: 'stylesheet', href: fullturboStyle },
+  { rel: 'icon', href: '/favicon.svg' },
 ];
 
 export default function Root() {

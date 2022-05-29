@@ -1,14 +1,6 @@
 import type { LinksFunction } from 'remix';
 import { type LoaderFunction } from 'remix';
-import styles from '~/styles/success.css';
 import { requireCookieAuth } from '~/services/authentication.server';
-
-export const links: LinksFunction = () => [
-  {
-    href: styles,
-    rel: 'stylesheet',
-  },
-];
 
 export const loader: LoaderFunction = async ({ request, params, context }) => {
   await requireCookieAuth(request);

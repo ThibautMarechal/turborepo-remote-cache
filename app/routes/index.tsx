@@ -15,18 +15,29 @@ import { getTeamsCount } from '~/services/teams.server';
 import { getTokensCount } from '~/services/tokens.server';
 import { getUsersCount } from '~/services/users.server';
 import { formatDuration } from '~/utils/intl';
+import { getTimeSaved } from '~/services/events.server';
+import { SourceType } from '~/types/vercel/turborepo';
+import TimeSavedStats from '~/component/TimeSavedStats';
 
 export const loader: LoaderFunction = async ({ request, params, context }) => {
   await requireCookieAuth(request);
-  const [users, teams, sessions, artifacts, tokens] = await Promise.all([getUsersCount(), getTeamsCount(), getSessionsCount(), getArtifactsCount(), getTokensCount()]);
+  const [users, teams, sessions, artifacts, tokens, savedLocally, savedRemotely] = await Promise.all([
+    getUsersCount(),
+    getTeamsCount(),
+    getSessionsCount(),
+    getArtifactsCount(),
+    getTokensCount(),
+    getTimeSaved(SourceType.LOCAL),
+    getTimeSaved(SourceType.REMOTE),
+  ]);
   return {
     users,
     teams,
     sessions,
     artifacts,
     tokens,
-    savedLocally: 10,
-    savedRemotely: 20,
+    savedLocally,
+    savedRemotely,
   };
 };
 
@@ -93,10 +104,7 @@ export default function DashBoard() {
           />
         </HasRights>
       </Stats>
-      <Stats>
-        <Stat icon={<ClockIcon className="w-8 h-8" />} title="Time Saved locally" value={formatDuration(savedLocally)} />
-        <Stat icon={<ClockIcon className="w-8 h-8" />} title="Time Saved remotly" value={formatDuration(savedRemotely)} />
-      </Stats>
+      <TimeSavedStats local={savedLocally} remote={savedRemotely} />
     </div>
   );
 }

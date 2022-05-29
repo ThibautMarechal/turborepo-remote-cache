@@ -7,29 +7,44 @@ import { getArtifactsCountByUser } from '~/services/artifact.server';
 import { getSessionsByUserCount } from '~/services/session.server';
 import type { UserDetail } from '~/types/prisma';
 import { getTokensByUserCount } from '~/services/tokens.server';
+import TimeSavedStats from '~/component/TimeSavedStats';
+import { getTimeSaved } from '~/services/events.server';
+import { SourceType } from '~/types/vercel/turborepo';
 
 export const loader: LoaderFunction = async ({ request, params, context }) => {
   await requireCookieAuth(request);
-  const [user, sessions, artifacts, tokens] = await Promise.all([
+  const [user, sessions, artifacts, tokens, savedLocally, savedRemotely] = await Promise.all([
     getUserDetail(params.id as string),
     getSessionsByUserCount(params.id as string),
     getArtifactsCountByUser(params.id as string),
     getTokensByUserCount(params.id as string),
+    getTimeSaved(SourceType.LOCAL, { userId: params.id as string }),
+    getTimeSaved(SourceType.REMOTE, { userId: params.id as string }),
   ]);
   return {
     user,
     sessions,
     artifacts,
     tokens,
+    savedLocally,
+    savedRemotely,
   };
 };
 
 export default function User() {
-  const { user, sessions, artifacts, tokens } = useLoaderData<{ user: UserDetail; sessions: number; artifacts: number; tokens: number }>();
+  const { user, sessions, artifacts, tokens, savedLocally, savedRemotely } = useLoaderData<{
+    user: UserDetail;
+    sessions: number;
+    artifacts: number;
+    tokens: number;
+    savedLocally: number;
+    savedRemotely: number;
+  }>();
   return (
-    <div className="flex flex-wrap justify-center gap-2 m-2">
+    <div className="flex w-full justify-center items-center flex-col gap-5 mt-5">
       <UserCard user={user} />
-      <UserStats sessions={sessions} artifacts={artifacts} tokens={tokens} />
+      <UserStats userId={user.id} sessions={sessions} artifacts={artifacts} tokens={tokens} />
+      <TimeSavedStats local={savedLocally} remote={savedRemotely} />
     </div>
   );
 }
