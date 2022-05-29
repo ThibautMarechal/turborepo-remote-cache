@@ -57,7 +57,7 @@ export default function DashBoard() {
         <Stat
           icon={<UsersIcon className="w-8 h-8" />}
           title={
-            <Link to="/sessions" prefetch="intent">
+            <Link to="/users" prefetch="intent">
               Users
             </Link>
           }
@@ -66,7 +66,7 @@ export default function DashBoard() {
         <Stat
           icon={<UserGroupIcon className="w-8 h-8" />}
           title={
-            <Link to="/sessions" prefetch="intent">
+            <Link to="/teams" prefetch="intent">
               Teams
             </Link>
           }
