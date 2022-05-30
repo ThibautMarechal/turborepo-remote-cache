@@ -8,6 +8,7 @@ import { getSessionsByUserCount } from '~/services/session.server';
 import type { UserDetail } from '~/types/prisma';
 import { getTokensByUserCount } from '~/services/tokens.server';
 import TimeSavedStats from '~/component/TimeSavedStats';
+import type { TimeSavedByMonth } from '~/services/events.server';
 import { getTimeSavedByMonth } from '~/services/events.server';
 import { SourceType } from '~/types/vercel/turborepo';
 

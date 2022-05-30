@@ -5,7 +5,6 @@ import type { SourceType } from '~/types/vercel/turborepo';
 import { EventType } from '~/types/vercel/turborepo';
 import { client } from './prismaClient.server';
 import { validate } from 'uuid';
-import { number } from 'prop-types';
 
 export async function insertEvents(events: Omit<Event, 'id' | 'creationDate'>[]) {
   try {

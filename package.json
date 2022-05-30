@@ -77,6 +77,10 @@
     "tailwindcss": "^3.0.24",
     "typescript": "^4.6.4"
   },
+  "resolutions": {
+    "react-charts/@types/react": "^18.0.9",
+    "react-charts/@types/react-dom": "^18.0.4"
+  },
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} ./prisma/seed.ts"
   },
