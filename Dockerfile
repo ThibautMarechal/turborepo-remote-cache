@@ -43,4 +43,34 @@ COPY --from=build /app/prisma /app/prisma
 COPY --from=build /app/app /app/app
 COPY --from=build /app/package.json /app/package.json
 
+ENV NODE_ENV="production"
+# Postgres configuration
+ENV DATABASE_URL=
+
+# Admin configuration
+ENV ADMIN_USERNAME=
+ENV ADMIN_EMAIL=
+ENV ADMIN_PASSWORD=
+
+# Secret
+ENV COOKIE_SECRET=
+ENV COOKIE_NOT_SECURE=
+
+# Storage configuration
+ENV STORAGE_TYPE=
+# fs (File Storage)
+ENV STORAGE_FS_PATH=
+# s3 (Amazon S3)
+ENV STORAGE_S3_ACCESS_KEY_ID=
+ENV STORAGE_S3_SECRET_ACCESS_KEY=
+ENV STORAGE_S3_FORCE_PATH_STYLE=
+ENV STORAGE_S3_ENDPOINT=
+ENV STORAGE_S3_REGION=
+ENV STORAGE_S3_SSL_ENABLED=
+ENV STORAGE_S3_BUCKET=
+# azure (Azure blob storage)
+ENV STORAGE_AZURE_STORAGE_ACCOUNT=
+ENV STORAGE_AZURE_STORAGE_ACCESS_KEY=
+ENV STORAGE_AZURE_STORAGE_CONTAINER=
+
 CMD ["yarn", "start"]

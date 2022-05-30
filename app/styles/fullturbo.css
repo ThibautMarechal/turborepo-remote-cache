@@ -8,16 +8,6 @@
     user-select: none;
     overflow: hidden;
   }
-  .fullturbo::before {
-    content: '';
-    position: absolute;
-    width: 300%;
-    height: 100%;
-    background: linear-gradient(90deg, hsl(var(--p)), hsl(var(--s)), hsl(var(--p)), hsl(var(--s)), hsl(var(--p)));
-    pointer-events: none;
-    mix-blend-mode: multiply;
-    animation: fullturbo 2s linear infinite;
-  }
   .hover\:fullturbo{
     position: relative;
     user-select: none;
@@ -28,6 +18,7 @@
     background: #000;
     mix-blend-mode: lighten;
   }
+  .fullturbo::before,
   .hover\:fullturbo:hover::before {
     content: '';
     position: absolute;
@@ -36,7 +27,15 @@
     background: linear-gradient(90deg, hsl(var(--p)), hsl(var(--s)), hsl(var(--p)), hsl(var(--s)), hsl(var(--p)));
     pointer-events: none;
     mix-blend-mode: multiply;
-    animation: fullturbo 1s linear infinite;
+    animation-name: fullturbo;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+  }
+  .fullturbo::before{
+    animation-duration: 2s;
+  }
+  .hover\:fullturbo:hover::before{
+    animation-duration: 1s;
   }
 }
 
