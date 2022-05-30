@@ -11,6 +11,6 @@ services:
       PORT: 8080
       STORAGE_TYPE: fs
       STORAGE_FS_PATH: /data
-      DATABASE_URL: postgres://postgres:example@localhost:5432/turborepo
+      DATABASE_URL: postgres://postgres:example@db:5432/turborepo
     volumes:
       - ./data/fs:/data

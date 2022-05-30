@@ -1,8 +1,6 @@
 # base node image
 FROM node:16-bullseye-slim as base
 
-# set for base and all layer that inherit from it
-
 # Install all node_modules, including dev dependencies
 FROM base as deps
 
@@ -27,7 +25,6 @@ WORKDIR /app
 
 COPY --from=deps /app/node_modules /app/node_modules
 ENV NODE_ENV production
-
 COPY . .
 RUN yarn prisma generate
 RUN yarn build
@@ -42,5 +39,8 @@ COPY --from=build /app/node_modules/.prisma /app/node_modules/.prisma
 
 COPY --from=build /app/build /app/build
 COPY --from=build /app/public /app/public
+COPY --from=build /app/prisma /app/prisma
+COPY --from=build /app/app /app/app
+COPY --from=build /app/package.json /app/package.json
 
 CMD ["yarn", "start"]
