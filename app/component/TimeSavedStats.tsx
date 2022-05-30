@@ -52,16 +52,18 @@ export const TimeSavedStats = ({ local, remote }: Props) => {
                   scale: (value: any) => formatMonth(value),
                   tooltip: (value: any) => formatMonth(value),
                 },
-                shouldNice: true,
+                showGrid: false,
               },
               secondaryAxes: [
                 {
                   getValue: ({ timeSaved }) => timeSaved,
                   formatters: {
                     cursor: (value: number) => formatDuration(value),
-                    scale: () => '',
+                    scale: (value: number) => formatDuration(value),
                     tooltip: (value: number) => formatDuration(value),
                   },
+                  show: false,
+                  showGrid: false,
                   elementType: 'bar',
                   stacked: true,
                 },
