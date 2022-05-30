@@ -84,5 +84,5 @@
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} ./prisma/seed.ts"
   },
-  "version": "1.0.1"
+  "version": "1.1.0"
 }
