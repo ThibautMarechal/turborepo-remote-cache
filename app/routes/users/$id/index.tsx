@@ -8,7 +8,7 @@ import { getSessionsByUserCount } from '~/services/session.server';
 import type { UserDetail } from '~/types/prisma';
 import { getTokensByUserCount } from '~/services/tokens.server';
 import TimeSavedStats from '~/component/TimeSavedStats';
-import { getTimeSaved } from '~/services/events.server';
+import { getTimeSavedByMonth } from '~/services/events.server';
 import { SourceType } from '~/types/vercel/turborepo';
 
 export const loader: LoaderFunction = async ({ request, params, context }) => {
@@ -18,8 +18,8 @@ export const loader: LoaderFunction = async ({ request, params, context }) => {
     getSessionsByUserCount(params.id as string),
     getArtifactsCountByUser(params.id as string),
     getTokensByUserCount(params.id as string),
-    getTimeSaved(SourceType.LOCAL, { userId: params.id as string }),
-    getTimeSaved(SourceType.REMOTE, { userId: params.id as string }),
+    getTimeSavedByMonth(SourceType.LOCAL, { userId: params.id as string }),
+    getTimeSavedByMonth(SourceType.REMOTE, { userId: params.id as string }),
   ]);
   return {
     user,
@@ -37,8 +37,8 @@ export default function User() {
     sessions: number;
     artifacts: number;
     tokens: number;
-    savedLocally: number;
-    savedRemotely: number;
+    savedLocally: TimeSavedByMonth[];
+    savedRemotely: TimeSavedByMonth[];
   }>();
   return (
     <div className="flex w-full justify-center items-center flex-col gap-5 mt-5">

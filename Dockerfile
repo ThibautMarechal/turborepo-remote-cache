@@ -52,8 +52,10 @@ ENV ADMIN_USERNAME=
 ENV ADMIN_EMAIL=
 ENV ADMIN_PASSWORD=
 
-# Secret
+# Cookie
 ENV COOKIE_SECRET=
+
+# Only use "true" when not deployed over https
 ENV COOKIE_NOT_SECURE=
 
 # Storage configuration

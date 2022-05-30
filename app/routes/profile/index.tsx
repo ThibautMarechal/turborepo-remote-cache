@@ -5,7 +5,8 @@ import UserStats from '~/component/UserStats';
 import { useCurrentUser } from '~/context/CurrentUser';
 import { getArtifactsCountByUser } from '~/services/artifact.server';
 import { requireCookieAuth } from '~/services/authentication.server';
-import { getTimeSaved } from '~/services/events.server';
+import type { TimeSavedByMonth } from '~/services/events.server';
+import { getTimeSavedByMonth } from '~/services/events.server';
 import { getSessionsByUserCount } from '~/services/session.server';
 import { getTokensByUserCount } from '~/services/tokens.server';
 import { getUserDetail } from '~/services/users.server';
@@ -18,8 +19,8 @@ export const loader: LoaderFunction = async ({ request, params, context }) => {
     getSessionsByUserCount(userId),
     getArtifactsCountByUser(userId),
     getTokensByUserCount(userId),
-    getTimeSaved(SourceType.LOCAL, { userId }),
-    getTimeSaved(SourceType.REMOTE, { userId }),
+    getTimeSavedByMonth(SourceType.LOCAL, { userId }),
+    getTimeSavedByMonth(SourceType.REMOTE, { userId }),
   ]);
   return {
     user,
@@ -36,8 +37,8 @@ export default function Index() {
     sessions: number;
     artifacts: number;
     tokens: number;
-    savedLocally: number;
-    savedRemotely: number;
+    savedLocally: TimeSavedByMonth[];
+    savedRemotely: TimeSavedByMonth[];
   }>();
   const user = useCurrentUser();
   if (!user) {

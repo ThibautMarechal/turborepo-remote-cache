@@ -25,5 +25,19 @@ module.exports = {
       },
     ],
   },
+  theme: {
+    extend: {
+      animation: {
+        appear: 'appear 2s ease forwards',
+      },
+      keyframes: {
+        appear: {
+          '0%': { opacity: '0%' },
+          '50%': { opacity: '0%' },
+          '100%': { opacity: '100%' },
+        },
+      },
+    },
+  },
   plugins: [require('@tailwindcss/typography'), require('daisyui')],
 };

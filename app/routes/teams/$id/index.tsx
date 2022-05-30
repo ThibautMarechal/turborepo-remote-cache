@@ -8,7 +8,8 @@ import ArchiveIcon from '@heroicons/react/outline/ArchiveIcon';
 import LightningBoltIcon from '@heroicons/react/outline/LightningBoltIcon';
 import UserGroupIcon from '@heroicons/react/outline/UserGroupIcon';
 import TimeSavedStats from '~/component/TimeSavedStats';
-import { getTimeSaved } from '~/services/events.server';
+import type { TimeSavedByMonth } from '~/services/events.server';
+import { getTimeSavedByMonth } from '~/services/events.server';
 import { SourceType } from '~/types/vercel/turborepo';
 import type { TeamDetail } from '~/types/prisma';
 import { getSessionsByTeamCount } from '~/services/session.server';
@@ -20,8 +21,8 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     getTeamDetail(params.id as string),
     getSessionsByTeamCount(params.id as string),
     getArtifactsByTeamCount(params.id as string),
-    getTimeSaved(SourceType.LOCAL, { teamId: params.id as string }),
-    getTimeSaved(SourceType.REMOTE, { teamId: params.id as string }),
+    getTimeSavedByMonth(SourceType.LOCAL, { teamId: params.id as string }),
+    getTimeSavedByMonth(SourceType.REMOTE, { teamId: params.id as string }),
   ]);
   return { team, sessions, artifacts, savedLocally, savedRemotely };
 };
@@ -31,8 +32,8 @@ export default function Team() {
     team: TeamDetail;
     sessions: number;
     artifacts: number;
-    savedLocally: number;
-    savedRemotely: number;
+    savedLocally: TimeSavedByMonth[];
+    savedRemotely: TimeSavedByMonth[];
   }>();
   return (
     <div className="flex w-full justify-center items-center flex-col gap-5 mt-5">

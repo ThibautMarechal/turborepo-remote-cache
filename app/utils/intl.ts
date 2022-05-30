@@ -17,7 +17,7 @@ export function formatSize(contentLength: number) {
   return `${Number(size.toFixed(2))} ${units[quotient]}`;
 }
 
-export function formatDuration(durationMs: number, locale = 'en-gb') {
+export function formatDuration(durationMs: number, locale = 'en-gb', long: boolean = false) {
   const timeFormatter = new Intl.RelativeTimeFormat(locale);
   const seconds = durationMs / 1000;
   if (seconds < 60) {
@@ -39,6 +39,15 @@ export function formatDate(date: string | Date, locale = 'en-gb') {
   const dateFormmatter = Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'medium' });
   return dateFormmatter.format(new Date(date));
 }
+
+export function formatMonth(date: string | Date, locale = 'en-gb') {
+  const dateFormmatter = Intl.DateTimeFormat(locale, { dateStyle: 'long' });
+  const dateParts = dateFormmatter.formatToParts(new Date(date));
+  const month = dateParts.find((part) => part.type === 'month')?.value;
+  const year = dateParts.find((part) => part.type === 'year')?.value;
+  return `${month} ${year}`;
+}
+
 export function formatRelativeDate(date: string | Date, locale = 'en-gb') {
   const now = new Date();
   const then = new Date(date);

@@ -44,6 +44,7 @@
     "prisma": "^3.14.0",
     "prop-types": "^15.8.1",
     "react": "^18.1.0",
+    "react-charts": "^3.0.0-beta.36",
     "react-dom": "^18.1.0",
     "react-gravatar": "^2.6.3",
     "react-intersection-observer": "^9.1.0",

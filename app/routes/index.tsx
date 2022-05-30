@@ -13,20 +13,21 @@ import { getSessionsCount } from '~/services/session.server';
 import { getTeamsCount } from '~/services/teams.server';
 import { getTokensCount } from '~/services/tokens.server';
 import { getUsersCount } from '~/services/users.server';
-import { getTimeSaved } from '~/services/events.server';
+import type { TimeSavedByMonth } from '~/services/events.server';
+import { getTimeSavedByMonth } from '~/services/events.server';
 import { SourceType } from '~/types/vercel/turborepo';
 import TimeSavedStats from '~/component/TimeSavedStats';
 
 export const loader: LoaderFunction = async ({ request, params, context }) => {
-  await requireCookieAuth(request);
+  const user = await requireCookieAuth(request);
   const [users, teams, sessions, artifacts, tokens, savedLocally, savedRemotely] = await Promise.all([
     getUsersCount(),
     getTeamsCount(),
     getSessionsCount(),
     getArtifactsCount(),
     getTokensCount(),
-    getTimeSaved(SourceType.LOCAL),
-    getTimeSaved(SourceType.REMOTE),
+    getTimeSavedByMonth(SourceType.LOCAL, { userId: user.id }),
+    getTimeSavedByMonth(SourceType.REMOTE, { userId: user.id }),
   ]);
   return {
     users,
@@ -46,8 +47,8 @@ export default function DashBoard() {
     sessions: number;
     artifacts: number;
     tokens: number;
-    savedLocally: number;
-    savedRemotely: number;
+    savedLocally: TimeSavedByMonth[];
+    savedRemotely: TimeSavedByMonth[];
   }>();
   return (
     <div className="flex w-full justify-center items-center flex-col gap-5 mt-5">
