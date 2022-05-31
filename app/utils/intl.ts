@@ -35,12 +35,12 @@ export function formatDuration(durationMs: number, locale = 'en-gb', long: boole
   return timeFormatter.format(Math.floor(days), 'days').replace(/^[^\d]*/, '');
 }
 
-export function formatDate(date: string | Date, locale = 'en-gb') {
+export function formatDate(date: string | number | Date, locale = 'en-gb') {
   const dateFormmatter = Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'medium' });
   return dateFormmatter.format(new Date(date));
 }
 
-export function formatMonth(date: string | Date, locale = 'en-gb') {
+export function formatMonth(date: string | number | Date, locale = 'en-gb') {
   const dateFormmatter = Intl.DateTimeFormat(locale, { dateStyle: 'long' });
   const dateParts = dateFormmatter.formatToParts(new Date(date));
   const month = dateParts.find((part) => part.type === 'month')?.value;
@@ -48,7 +48,7 @@ export function formatMonth(date: string | Date, locale = 'en-gb') {
   return `${month} ${year}`;
 }
 
-export function formatRelativeDate(date: string | Date, locale = 'en-gb') {
+export function formatRelativeDate(date: string | number | Date, locale = 'en-gb') {
   const now = new Date();
   const then = new Date(date);
   const diff = now.getTime() - then.getTime();

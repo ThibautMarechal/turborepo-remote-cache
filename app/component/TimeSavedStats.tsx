@@ -36,17 +36,15 @@ export const TimeSavedStats = ({ local, remote }: Props) => {
           <div className="w-full">
             <Chart
               options={{
-                initialWidth: 0,
-                initialHeight: 0,
                 data,
                 primaryAxis: {
-                  getValue: ({ month, year }) => new Date(year, month - 1).toDateString(),
+                  getValue: ({ month, year }) => new Date(year, month - 1).toISOString(),
                   formatters: {
-                    cursor: (value: any) => formatMonth(value),
-                    scale: (value: any) => formatMonth(value),
-                    tooltip: (value: any) => formatMonth(value),
+                    cursor: (time: any) => formatMonth(time),
+                    scale: (time: any) => formatMonth(time),
+                    tooltip: (time: any) => formatMonth(time),
                   },
-                  showGrid: false,
+                  padBandRange: true,
                 },
                 secondaryAxes: [
                   {
@@ -56,10 +54,8 @@ export const TimeSavedStats = ({ local, remote }: Props) => {
                       scale: (value: number) => formatDuration(value),
                       tooltip: (value: number) => formatDuration(value),
                     },
-                    show: false,
-                    showGrid: false,
                     elementType: 'bar',
-                    stacked: true,
+                    show: false,
                   },
                 ],
                 defaultColors: ['hsl(var(--p))', 'hsl(var(--pc))'],
