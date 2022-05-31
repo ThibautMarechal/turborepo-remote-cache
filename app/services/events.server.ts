@@ -98,7 +98,8 @@ SELECT
   extract(year from "${Prisma.EventScalarFieldEnum.creationDate}") as year
 FROM "${Prisma.ModelName.Event}"
 WHERE ${conditions.join('\nAND ')}
-GROUP BY month, year;
+GROUP BY month, year
+ORDER BY year ASC, month ASC;
 `;
     return await client.$queryRawUnsafe<TimeSavedByMonth[]>(query);
   } finally {
