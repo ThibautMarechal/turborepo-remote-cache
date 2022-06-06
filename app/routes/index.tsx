@@ -17,6 +17,7 @@ import type { TimeSavedByMonth } from '~/services/events.server';
 import { getTimeSavedByMonth } from '~/services/events.server';
 import { SourceType } from '~/types/vercel/turborepo';
 import TimeSavedStats from '~/component/TimeSavedStats';
+import { requireAdmin } from '~/roles/rights';
 
 export const loader: LoaderFunction = async ({ request, params, context }) => {
   const user = await requireCookieAuth(request);
@@ -71,27 +72,27 @@ export default function DashBoard() {
           }
           value={teams}
         />
-        <Stat
-          icon={<LightningBoltIcon className="w-8 h-8" />}
-          title={
-            <Link to="/sessions" prefetch="intent">
-              Sessions
-            </Link>
-          }
-          value={sessions}
-          description={'Number of "turbo run <command>"'}
-        />
-        <Stat
-          icon={<ArchiveIcon className="w-8 h-8" />}
-          title={
-            <Link to="/artifacts" prefetch="intent">
-              Artifacts
-            </Link>
-          }
-          value={artifacts}
-          description={'Artifacts pushed by the user'}
-        />
-        <HasRights predicate={(u) => u.isSuperAdmin}>
+        <HasRights predicate={(u) => requireAdmin(u)}>
+          <Stat
+            icon={<LightningBoltIcon className="w-8 h-8" />}
+            title={
+              <Link to="/sessions" prefetch="intent">
+                Sessions
+              </Link>
+            }
+            value={sessions}
+            description={'Number of "turbo run <command>"'}
+          />
+          <Stat
+            icon={<ArchiveIcon className="w-8 h-8" />}
+            title={
+              <Link to="/artifacts" prefetch="intent">
+                Artifacts
+              </Link>
+            }
+            value={artifacts}
+            description={'Artifacts pushed by the user'}
+          />
           <Stat
             icon={<FingerPrintIcon className="w-8 h-8" />}
             title={

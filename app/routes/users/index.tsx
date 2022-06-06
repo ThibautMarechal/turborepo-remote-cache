@@ -8,12 +8,16 @@ import { getOrderByFromRequest } from '~/utils/sort';
 import { getPaginationFromRequest } from '~/utils/pagination';
 import TablePage from '~/component/TablePage';
 import { useTablePageLoaderData } from '~/hooks/useTablePageLoaderData';
+import HasRights from '~/component/HasRights';
+import { requireAdmin } from '~/roles/rights';
+import { getSearchFromRequest } from '~/utils/search';
 
 export const loader: LoaderFunction = async ({ request }) => {
   await requireCookieAuth(request);
   const { skip, take } = getPaginationFromRequest(request);
   const orderBy = getOrderByFromRequest(request);
-  const [items, count] = await Promise.all([getUsers(skip, take, orderBy), getUsersCount()]);
+  const search = getSearchFromRequest(request);
+  const [items, count] = await Promise.all([getUsers(skip, take, orderBy, search), getUsersCount()]);
   return { items, count };
 };
 
@@ -29,10 +33,12 @@ export default function Users() {
   const { tableProps, paginationProps } = useUsersTable(items, count);
   return (
     <>
-      <TablePage title="Users" count={count} tableProps={tableProps} paginationProps={paginationProps} />
-      <Link to="./new" className="btn btn-circle btn-primary fixed bottom-5 right-5">
-        <PlusIcon className="w-8" />
-      </Link>
+      <TablePage title="Users" count={count} tableProps={tableProps} paginationProps={paginationProps} searchable />
+      <HasRights predicate={(u) => requireAdmin(u)}>
+        <Link to="./new" className="btn btn-circle btn-primary fixed bottom-5 right-5">
+          <PlusIcon className="w-8" />
+        </Link>
+      </HasRights>
     </>
   );
 }

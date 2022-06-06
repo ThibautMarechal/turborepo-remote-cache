@@ -5,5 +5,6 @@ import { allowMethods, METHOD } from '~/utils/method';
 
 export const loader: LoaderFunction = async ({ request }) => {
   allowMethods(request, METHOD.GET);
-  return json({ user: ToVercelUser(await requireTokenAuth(request)) });
+  const user = await requireTokenAuth(request);
+  return json({ user: ToVercelUser(user) });
 };

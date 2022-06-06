@@ -10,12 +10,13 @@ type Props<TableElement> = {
   paginationProps: PaginationProps;
   title: React.ReactNode;
   count: number;
+  searchable?: boolean;
 };
 
-export function TablePage<TableElement>({ title, count, tableProps, paginationProps }: Props<TableElement>) {
+export function TablePage<TableElement>({ title, count, tableProps, paginationProps, searchable }: Props<TableElement>) {
   return (
     <>
-      <ListTitle title={title} count={count} />
+      <ListTitle title={title} count={count} searchable={searchable} />
       {count ? (
         <>
           <Table {...tableProps} />

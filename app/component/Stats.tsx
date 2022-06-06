@@ -5,7 +5,7 @@ type Props = {
 };
 
 export const Stats = ({ children }: Props) => {
-  return <div className="stats shadow">{children}</div>;
+  return <div className="stats stats-vertical lg:stats-horizontal shadow">{children}</div>;
 };
 
 export default Stats;

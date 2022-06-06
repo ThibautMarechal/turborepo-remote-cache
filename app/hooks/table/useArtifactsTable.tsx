@@ -12,6 +12,7 @@ import { usePaginateSortingTable } from './usePaginateSortingTable';
 import HasRights from '~/component/HasRights';
 import type { ActionSubmission } from '@remix-run/react/transition';
 import cn from 'classnames';
+import { requireAdmin } from '~/roles/rights';
 
 const table = createTable().setRowType<Artifact & { user: User; team: Team | null }>();
 
@@ -72,7 +73,8 @@ const defaultColumns = [
       const isDeleting = state === 'submitting' && (submission as ActionSubmission).formData.get('id') === artifact.id;
       return (
         <div className="flex gap-1">
-          <HasRights predicate={(u) => u.isSuperAdmin}>
+          {/* TODO rights based on route */}
+          <HasRights predicate={(u) => requireAdmin(u)}>
             <Form method="post">
               <input name="id" value={artifact.id} type="hidden" />
               <button className={cn('btn btn-xs btn-square', { loading: isDeleting })}>{!isDeleting && <TrashIcon className="h-4 w-4" />}</button>

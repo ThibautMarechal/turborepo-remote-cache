@@ -4,8 +4,9 @@ import { TablePage } from '~/component/TablePage';
 import { useSessionsTable } from '~/hooks/table/useSessionsTable';
 import { useTablePageLoaderData } from '~/hooks/useTablePageLoaderData';
 import { requireCookieAuth } from '~/services/authentication.server';
-import { getSessionsByTeam, getSessionsByTeamCount } from '~/services/session.server';
-import { getTeam } from '~/services/teams.server';
+import { getSessions, getSessionsCount } from '~/services/session.server';
+import { getTeamBySlug } from '~/services/teams.server';
+import type { SessionDetail } from '~/types/prisma';
 import { getPaginationFromRequest } from '~/utils/pagination';
 import { getOrderByFromRequest } from '~/utils/sort';
 
@@ -13,11 +14,8 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   await requireCookieAuth(request);
   const { take, skip } = getPaginationFromRequest(request);
   const orderBy = getOrderByFromRequest(request);
-  const [team, items, count] = await Promise.all([
-    getTeam(params.id as string),
-    getSessionsByTeam(params.id as string, skip, take, orderBy),
-    getSessionsByTeamCount(params.id as string),
-  ]);
+  const team = await getTeamBySlug(params.teamSlug as string);
+  const [items, count] = await Promise.all([getSessions({ teamId: team.id, skip, take, orderBy }), getSessionsCount({ teamId: team.id })]);
   return {
     items,
     team,
@@ -26,7 +24,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 };
 
 export default function New() {
-  const { items, team, count } = useTablePageLoaderData<Awaited<ReturnType<typeof getSessionsByTeam>>[number], { team: Team }>();
+  const { items, team, count } = useTablePageLoaderData<SessionDetail, { team: Team }>();
   const { tableProps, paginationProps } = useSessionsTable(items, count);
   return <TablePage title={`${team.name}'s sessions`} count={count} tableProps={tableProps} paginationProps={paginationProps} />;
 }

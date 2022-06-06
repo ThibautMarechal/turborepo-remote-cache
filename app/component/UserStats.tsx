@@ -6,6 +6,7 @@ import { Link } from 'remix';
 import Stat from './Stat';
 import Stats from './Stats';
 import HasRights from './HasRights';
+import { requireAdmin } from '~/roles/rights';
 
 type Props = {
   sessions: number;
@@ -37,7 +38,7 @@ export const UserStats = ({ userId, sessions, artifacts, tokens }: Props) => {
         value={artifacts}
         description={'Artifacts pushed by the user'}
       />
-      <HasRights predicate={(u) => u.isSuperAdmin || u.id === userId}>
+      <HasRights predicate={(u) => requireAdmin(u) || u.id === userId}>
         <Stat
           icon={<FingerPrintIcon className="w-8 h-8" />}
           title={

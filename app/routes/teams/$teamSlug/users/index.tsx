@@ -5,21 +5,19 @@ import { Link, type LoaderFunction } from 'remix';
 import { TablePage } from '~/component/TablePage';
 import { useUsersTable } from '~/hooks/table/useUsersTable';
 import { useTablePageLoaderData } from '~/hooks/useTablePageLoaderData';
+import { requireTeamOwner } from '~/roles/rights';
 import { requireCookieAuth } from '~/services/authentication.server';
-import { getTeam, removeUserFromTeam } from '~/services/teams.server';
+import { getTeamBySlug, removeUserFromTeam } from '~/services/teams.server';
 import { getUsersByTeam, getUsersByTeamCount } from '~/services/users.server';
 import { getPaginationFromRequest } from '~/utils/pagination';
 import { getOrderByFromRequest } from '~/utils/sort';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   await requireCookieAuth(request);
+  const team = await getTeamBySlug(params.teamSlug as string);
   const { take, skip } = getPaginationFromRequest(request);
   const orderBy = getOrderByFromRequest(request);
-  const [team, items, count] = await Promise.all([
-    getTeam(params.id as string),
-    getUsersByTeam(params.id as string, skip, take, orderBy),
-    getUsersByTeamCount(params.id as string),
-  ]);
+  const [items, count] = await Promise.all([getUsersByTeam(team.id as string, skip, take, orderBy), getUsersByTeamCount(team.id as string)]);
   return {
     items,
     team,
@@ -28,9 +26,11 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 };
 
 export const action: ActionFunction = async ({ request, params, context }) => {
-  await requireCookieAuth(request);
+  const user = await requireCookieAuth(request);
+  const team = await getTeamBySlug(params.teamSlug as string);
+  requireTeamOwner(user, team.id);
   const formData = await request.formData();
-  await removeUserFromTeam(params.id as string, formData.get('id') as string);
+  await removeUserFromTeam(team.id as string, formData.get('id') as string);
   return null;
 };
 

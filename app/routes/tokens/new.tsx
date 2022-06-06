@@ -7,23 +7,23 @@ import { requireCookieAuth } from '~/services/authentication.server';
 import { makeDomainFunction } from 'remix-domains';
 import { Form } from '~/component/Form';
 import { generateToken } from '~/services/tokens.server';
-import { useCurrentUser } from '~/context/CurrentUser';
 import ClipboardCopyIcon from '@heroicons/react/outline/ClipboardCopyIcon';
+import { requireAdmin } from '~/roles/rights';
 
 const schema = z.object({
-  userId: z.string().uuid(),
   name: z.string().min(1).max(50),
 });
 
-const mutation = makeDomainFunction(schema)(async ({ userId, name }) => await generateToken(userId, name).then(([token]) => token));
-
 export const loader: LoaderFunction = async ({ request }) => {
-  await requireCookieAuth(request);
+  const user = await requireCookieAuth(request);
+  requireAdmin(user);
   return null;
 };
 
 export const action: ActionFunction = async ({ request, params, context }) => {
-  await requireCookieAuth(request);
+  const user = await requireCookieAuth(request);
+  requireAdmin(user);
+  const mutation = makeDomainFunction(schema)(async ({ name }) => await generateToken(user.id, name).then(([token]) => token));
   return await formAction({
     request,
     schema,
@@ -33,7 +33,6 @@ export const action: ActionFunction = async ({ request, params, context }) => {
 
 export default function New() {
   const data = useActionData<string>();
-  const user = useCurrentUser();
   return (
     <div className="flex justify-center">
       {data ? (
@@ -53,7 +52,7 @@ export default function New() {
           </button>
         </div>
       ) : (
-        <Form schema={schema} hiddenFields={['userId']} values={{ userId: user?.id }} />
+        <Form schema={schema} />
       )}
     </div>
   );

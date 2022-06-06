@@ -1,6 +1,7 @@
 import type { Artifact, Team, Token, User } from '@prisma/client';
+import { ServerRole } from '~/roles/ServerRole';
+import { TeamRole } from '~/roles/TeamRole';
 import type { TeamDetail, UserDetail } from './prisma';
-import { ServerRole, TeamRole } from './roles';
 
 export function isAdmin(user: UserDetail): boolean {
   return user.isSuperAdmin || user.role === ServerRole.ADMIN;

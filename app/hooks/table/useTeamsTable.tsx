@@ -9,6 +9,7 @@ import SearchIcon from '@heroicons/react/outline/SearchIcon';
 import PencilIcon from '@heroicons/react/outline/PencilIcon';
 import { usePaginateSortingTable } from './usePaginateSortingTable';
 import HasRights from '~/component/HasRights';
+import { requireTeamOwner } from '~/roles/rights';
 
 const table = createTable().setRowType<Team>();
 
@@ -27,24 +28,25 @@ const defaultColumns = [
     header: 'Creation date',
     cell: ({ getValue }) => <DateCell date={getValue()} />,
   }),
-  table.createDataColumn((team) => team.id, {
+  table.createDataColumn((team) => team, {
     id: 'actions',
     enableSorting: false,
     cell: ({ getValue }) => {
+      const team = getValue();
       return (
         <div className="flex gap-1">
-          <Link to={`/teams/${getValue()}`} prefetch="intent" className="btn btn-xs btn-square">
+          <Link to={`/teams/${team.slug}`} prefetch="intent" className="btn btn-xs btn-square">
             <SearchIcon className="h-4 w-4" />
           </Link>
-          <HasRights predicate={(u) => u.isSuperAdmin}>
-            <Link to={`/teams/${getValue()}/edit`} prefetch="intent" className="btn btn-xs btn-square">
+          <HasRights predicate={(u) => requireTeamOwner(u, team.id)}>
+            <Link to={`/teams/${team.slug}/edit`} prefetch="intent" className="btn btn-xs btn-square">
               <PencilIcon className="h-4 w-4" />
             </Link>
             <Form method="post" className="h-6">
               <button className="btn btn-xs btn-square">
                 <TrashIcon className="h-4 w-4" />
               </button>
-              <input name="id" value={getValue()} type="hidden" />
+              <input name="id" value={team.id} type="hidden" />
             </Form>
           </HasRights>
         </div>

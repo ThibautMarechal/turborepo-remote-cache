@@ -9,7 +9,15 @@ type Props = {
 
 export const HasRights = ({ children, predicate }: Props) => {
   const currentUser = useCurrentUser();
-  return <>{currentUser && predicate(currentUser) && children} </>;
+  let hasAccess = false;
+  try {
+    if (currentUser && predicate(currentUser)) {
+      hasAccess = true;
+    }
+  } catch (e) {
+    hasAccess = false;
+  }
+  return <>{hasAccess && children} </>;
 };
 
 export default HasRights;

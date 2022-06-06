@@ -1,6 +1,8 @@
 {
   "name": "turborepo-remote-cache-remix",
+  "version": "1.1.0",
   "description": "Self hosted Turborepo remote cache",
+  "sideEffects": false,
   "keywords": [
     "turborepo",
     "remote-cache",
@@ -36,6 +38,7 @@
     "aws-sdk": "^2.1140.0",
     "azure-blob-storage": "^4.2.5",
     "azure-blob-store": "^1.0.7",
+    "bcryptjs": "^2.4.3",
     "classnames": "^2.3.1",
     "copy-to-clipboard": "^3.3.1",
     "fs-blob-store": "^6.0.0",
@@ -66,6 +69,7 @@
     "@remix-run/eslint-config": "^1.5.1",
     "@tailwindcss/typography": "^0.5.2",
     "@thimar/eslint-config": "^1.2.1",
+    "@types/bcryptjs": "^2.4.2",
     "@types/qs": "^6.9.7",
     "@types/react": "^18.0.9",
     "@types/react-dom": "^18.0.4",
@@ -82,7 +86,6 @@
     "react-charts/@types/react-dom": "^18.0.4"
   },
   "prisma": {
-    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} ./prisma/seed.ts"
-  },
-  "version": "1.1.0"
+    "seed": "ts-node --require tsconfig-paths/register prisma/seed.ts"
+  }
 }

@@ -1,195 +1,184 @@
-import { hash } from '~/utils/hash';
+import { compareHash, hash } from '~/utils/hash';
 import { client } from './prismaClient.server';
 import type { User } from '@prisma/client';
 import type { OrderBy } from '~/utils/sort';
 import { DEFAULT_ORDER_BY } from '~/utils/sort';
 
-export async function getUsers(skip: number = 0, take: number = 100, orderBy?: OrderBy[]): Promise<User[]> {
-  try {
-    await client.$connect();
-    return await client.user.findMany({
-      where: {
-        isDeleted: false,
-      },
-      skip,
-      take,
-      orderBy: orderBy?.length ? orderBy : DEFAULT_ORDER_BY,
-    });
-  } finally {
-    await client.$disconnect();
-  }
+export async function getUsers(skip: number = 0, take: number = 100, orderBy: OrderBy[], search: string): Promise<User[]> {
+  return await client.user.findMany({
+    where: {
+      isDeleted: false,
+      OR: [
+        {
+          email: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        },
+        {
+          name: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        },
+        {
+          username: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        },
+      ],
+    },
+    skip,
+    take,
+    orderBy: orderBy.length ? orderBy : DEFAULT_ORDER_BY,
+  });
 }
 
 export async function getUsersCount(): Promise<number> {
-  try {
-    await client.$connect();
-    return await client.user.count({
-      where: {
-        isDeleted: false,
-      },
-    });
-  } finally {
-    await client.$disconnect();
-  }
+  return await client.user.count({
+    where: {
+      isDeleted: false,
+    },
+  });
 }
 
-export async function getUsersByTeam(teamId: string, skip: number = 0, take: number = 100, orderBy?: OrderBy[]): Promise<User[]> {
-  try {
-    await client.$connect();
-    return await client.user.findMany({
-      where: {
-        memberships: {
-          some: {
-            teamId,
-          },
+export async function getUsersByTeam(teamId: string, skip: number = 0, take: number = 100, orderBy: OrderBy[]): Promise<User[]> {
+  return await client.user.findMany({
+    where: {
+      memberships: {
+        some: {
+          teamId,
         },
       },
-      skip,
-      take,
-      orderBy: orderBy?.length ? orderBy : DEFAULT_ORDER_BY,
-    });
-  } finally {
-    await client.$disconnect();
-  }
+    },
+    skip,
+    take,
+    orderBy: orderBy.length ? orderBy : DEFAULT_ORDER_BY,
+  });
 }
 
 export async function getUsersByTeamCount(teamId: string) {
-  try {
-    await client.$connect();
-    return await client.user.count({
-      where: {
-        memberships: {
-          some: {
-            teamId,
-          },
+  return await client.user.count({
+    where: {
+      memberships: {
+        some: {
+          teamId,
         },
       },
-    });
-  } finally {
-    await client.$disconnect();
-  }
+    },
+  });
 }
 
 export async function getUser(id: string): Promise<User> {
-  try {
-    await client.$connect();
-    return await client.user.findUnique({ where: { id } });
-  } finally {
-    await client.$disconnect();
-  }
+  return await client.user.findUnique({ where: { id } });
+}
+
+export async function getUserByUsername(username: string): Promise<User> {
+  return await client.user.findUnique({ where: { username } });
 }
 
 export async function getUserDetail(id: string) {
-  try {
-    await client.$connect();
-    return await client.user.findUnique({
-      where: { id },
-      include: {
-        memberships: {
-          include: {
-            team: true,
-          },
+  return await client.user.findUnique({
+    where: { id },
+    include: {
+      memberships: {
+        include: {
+          team: true,
         },
       },
-    });
-  } finally {
-    await client.$disconnect();
-  }
+    },
+  });
 }
 
-export async function createUser(user: Pick<User, 'email' | 'name' | 'username'>, password: string): Promise<User> {
-  try {
-    await client.$connect();
-    return await client.user.create({
-      data: {
-        email: user.email,
-        name: user.name,
-        username: user.username,
-        password: {
-          create: {
-            passwordHash: hash(password),
-          },
+export async function getUserDetailByUsername(username: string): Promise<User> {
+  return await client.user.findUnique({
+    where: { username },
+    include: {
+      memberships: {
+        include: {
+          team: true,
         },
       },
-    });
-  } finally {
-    await client.$disconnect();
-  }
+    },
+  });
 }
 
-export async function updateUser(id: string, user: Pick<User, 'email' | 'name' | 'username'>): Promise<User> {
-  try {
-    await client.$connect();
-    return await client.user.update({
-      where: { id },
-      data: {
-        email: user.email,
-        name: user.name,
-        username: user.username,
+export async function createUser(user: Pick<User, 'email' | 'name' | 'username' | 'role'>, password: string): Promise<User> {
+  return await client.user.create({
+    data: {
+      email: user.email,
+      name: user.name,
+      username: user.username,
+      role: user.role,
+      password: {
+        create: {
+          passwordHash: await hash(password),
+        },
       },
-    });
-  } finally {
-    await client.$disconnect();
-  }
+    },
+  });
+}
+
+export async function updateUser(id: string, user: Pick<User, 'email' | 'name'>): Promise<User> {
+  return await client.user.update({
+    where: { id },
+    data: {
+      email: user.email,
+      name: user.name,
+    },
+  });
 }
 
 export async function deleteUser(userId: string) {
-  try {
-    await client.$connect();
-    const { isSuperAdmin } = await client.user.findUnique({
-      where: { id: userId },
-      select: { isSuperAdmin: true },
-    });
-    if (isSuperAdmin) {
-      throw new Error('Cannot delete super admin');
-    }
-    await client.user.update({
-      where: {
-        id: userId,
-      },
-      data: {
-        name: '[Deleted User]',
-        email: userId,
-        username: userId,
-        isDeleted: true,
-        memberships: {
-          deleteMany: {
-            userId,
-          },
-        },
-        tokens: {
-          deleteMany: {
-            userId,
-          },
-        },
-        password: {
-          deleteMany: {
-            userId,
-          },
-        },
-      },
-    });
-  } finally {
-    await client.$disconnect();
+  const { isSuperAdmin } = await client.user.findUnique({
+    where: { id: userId },
+    select: { isSuperAdmin: true },
+  });
+  if (isSuperAdmin) {
+    throw new Error('Cannot delete super admin');
   }
+  await client.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      name: '[Deleted User]',
+      email: userId,
+      username: userId,
+      isDeleted: true,
+      memberships: {
+        deleteMany: {
+          userId,
+        },
+      },
+      tokens: {
+        deleteMany: {
+          userId,
+        },
+      },
+      password: {
+        deleteMany: {
+          userId,
+        },
+      },
+    },
+  });
 }
 
 export async function getUserByUsernameAndPassword(username: string, password: string): Promise<User> {
-  try {
-    await client.$connect();
-    return await client.user.findFirst({
-      where: {
-        username,
-        AND: {
-          password: {
-            some: {
-              passwordHash: hash(password),
-            },
-          },
-        },
-      },
-    });
-  } finally {
-    await client.$disconnect();
+  const user = await client.user.findUnique({
+    where: {
+      username,
+    },
+  });
+  const { passwordHash } = await client.password.findFirst({
+    where: {
+      userId: user.id,
+    },
+  });
+  if (await compareHash(password, passwordHash)) {
+    return user;
   }
+  throw new Error('User with password not found');
 }

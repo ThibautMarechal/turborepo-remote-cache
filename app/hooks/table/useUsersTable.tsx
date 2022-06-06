@@ -10,7 +10,7 @@ import { usePaginateSortingTable } from './usePaginateSortingTable';
 import cn from 'classnames';
 import type { ActionSubmission } from '@remix-run/react/transition';
 import HasRights from '~/component/HasRights';
-import { canDoUserAction, UserAction } from '~/types/actions';
+import { requireAdmin } from '~/roles/rights';
 
 const table = createTable().setRowType<User>();
 
@@ -29,6 +29,10 @@ const defaultColumns = [
     id: 'username',
     header: 'Username',
   }),
+  table.createDataColumn((user) => user.role, {
+    id: 'role',
+    header: 'Role',
+  }),
   table.createDataColumn((user) => user.creationDate, {
     id: 'creationDate',
     header: 'Creation date',
@@ -44,17 +48,15 @@ const defaultColumns = [
       const isDeleting = state === 'submitting' && (submission as ActionSubmission).formData.get('id') === user.id;
       return (
         <div className="flex gap-1">
-          <HasRights predicate={(u) => canDoUserAction(u, UserAction.VIEW, user)}>
-            <Link to={`/users/${user.id}`} prefetch="intent" className="btn btn-xs btn-square">
-              <SearchIcon className="h-4 w-4" />
-            </Link>
-          </HasRights>
-          <HasRights predicate={(u) => canDoUserAction(u, UserAction.EDIT, user)}>
-            <Link to={`/users/${user.id}/edit`} prefetch="intent" className="btn btn-xs btn-square">
+          <Link to={`/users/${user.username}`} prefetch="intent" className="btn btn-xs btn-square">
+            <SearchIcon className="h-4 w-4" />
+          </Link>
+          <HasRights predicate={(u) => requireAdmin(u)}>
+            <Link to={`/users/${user.username}/edit`} prefetch="intent" className="btn btn-xs btn-square">
               <PencilIcon className="h-4 w-4" />
             </Link>
           </HasRights>
-          <HasRights predicate={(u) => canDoUserAction(u, UserAction.DELETE, user)}>
+          <HasRights predicate={(u) => requireAdmin(u) && !user.isSuperAdmin}>
             <Form method="post">
               <button className={cn('btn btn-xs btn-square', { loading: isDeleting })}>{!isDeleting && <TrashIcon className="h-4 w-4" />}</button>
               <input name="id" value={user.id} type="hidden" />

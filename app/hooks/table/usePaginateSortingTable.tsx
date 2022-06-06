@@ -15,6 +15,7 @@ export function usePaginateSortingTable<TableElement extends ReactTableGenerics>
   const { orderBy, setOrderBy } = useSortSearchParams();
 
   const [pagedData, setPagedData] = React.useState(data);
+
   React.useEffect(() => {
     setPagedData(data);
   }, [data]);

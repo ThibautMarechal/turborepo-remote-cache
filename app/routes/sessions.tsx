@@ -6,12 +6,15 @@ import { getPaginationFromRequest } from '~/utils/pagination';
 import { getOrderByFromRequest } from '~/utils/sort';
 import { useTablePageLoaderData } from '~/hooks/useTablePageLoaderData';
 import { TablePage } from '~/component/TablePage';
+import { requireAdmin } from '~/roles/rights';
+import type { SessionDetail } from '~/types/prisma';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  await requireCookieAuth(request);
+  const user = await requireCookieAuth(request);
+  requireAdmin(user);
   const { skip, take } = getPaginationFromRequest(request);
   const orderBy = getOrderByFromRequest(request);
-  const [items, count] = await Promise.all([getSessions(skip, take, orderBy), getSessionsCount()]);
+  const [items, count] = await Promise.all([getSessions({ skip, take, orderBy }), getSessionsCount()]);
   return {
     items,
     count,
@@ -19,7 +22,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 };
 
 export default function Sessions() {
-  const { items, count } = useTablePageLoaderData<Awaited<ReturnType<typeof getSessions>>[number]>();
+  const { items, count } = useTablePageLoaderData<SessionDetail>();
   const { tableProps, paginationProps } = useSessionsTable(items, count);
   return <TablePage title="All sessions" count={count} tableProps={tableProps} paginationProps={paginationProps} />;
 }

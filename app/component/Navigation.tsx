@@ -10,6 +10,8 @@ import ArchiveIcon from '@heroicons/react/outline/ArchiveIcon';
 import FingerPrintIcon from '@heroicons/react/outline/FingerPrintIcon';
 import cn from 'classnames';
 import { useCurrentUser } from '~/context/CurrentUser';
+import HasRights from './HasRights';
+import { requireAdmin } from '~/roles/rights';
 
 export const Navigation = () => {
   const user = useCurrentUser();
@@ -40,25 +42,29 @@ export const Navigation = () => {
               </NavLink>
             </li>
             <li>
-              <NavLink to="/sessions" className="text-primary-content hover:text-red-50">
-                <LightningBoltIcon className={cn('h-5', { 'text-primary': !pathname.startsWith('/sessions'), 'text-secondary': pathname.startsWith('/sessions') })} />
-                Sessions
-              </NavLink>
+              <HasRights predicate={(u) => requireAdmin(u)}>
+                <NavLink to="/sessions" className="text-primary-content hover:text-red-50">
+                  <LightningBoltIcon className={cn('h-5', { 'text-primary': !pathname.startsWith('/sessions'), 'text-secondary': pathname.startsWith('/sessions') })} />
+                  Sessions
+                </NavLink>
+              </HasRights>
             </li>
             <li>
-              <NavLink to="/artifacts" className="text-primary-content">
-                <ArchiveIcon className={cn('h-5', { 'text-primary': !pathname.startsWith('/artifacts'), 'text-secondary': pathname.startsWith('/artifacts') })} />
-                Artifacts
-              </NavLink>
+              <HasRights predicate={(u) => requireAdmin(u)}>
+                <NavLink to="/artifacts" className="text-primary-content">
+                  <ArchiveIcon className={cn('h-5', { 'text-primary': !pathname.startsWith('/artifacts'), 'text-secondary': pathname.startsWith('/artifacts') })} />
+                  Artifacts
+                </NavLink>
+              </HasRights>
             </li>
-            {user.isSuperAdmin && (
+            <HasRights predicate={(u) => requireAdmin(u)}>
               <li>
                 <NavLink to="/tokens" className="text-primary-content">
                   <FingerPrintIcon className={cn('h-5', { 'text-primary': !pathname.startsWith('/tokens'), 'text-secondary': pathname.startsWith('/tokens') })} />
                   Tokens
                 </NavLink>
               </li>
-            )}
+            </HasRights>
             <div className="dropdown dropdown-end">
               <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
                 <Gravatar className="w-10 rounded-full" email={user.email} />

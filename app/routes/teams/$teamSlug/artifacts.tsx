@@ -1,26 +1,28 @@
+import type { Team } from '@prisma/client';
 import { type LoaderFunction } from 'remix';
 import { TablePage } from '~/component/TablePage';
 import { useArtifactsTable } from '~/hooks/table/useArtifactsTable';
 import { useTablePageLoaderData } from '~/hooks/useTablePageLoaderData';
+import { requireAdmin } from '~/roles/rights';
 import { getArtifacts, getArtifactsCount } from '~/services/artifact.server';
 import { requireCookieAuth } from '~/services/authentication.server';
+import { getTeamBySlug } from '~/services/teams.server';
 import type { ArtifactDetail } from '~/types/prisma';
 import { getPaginationFromRequest } from '~/utils/pagination';
 import { getOrderByFromRequest } from '~/utils/sort';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const user = await requireCookieAuth(request);
+  requireAdmin(user);
   const orderBy = getOrderByFromRequest(request);
   const { skip, take } = getPaginationFromRequest(request);
-  const [items, count] = await Promise.all([getArtifacts({ userId: user.id, skip, take, orderBy }), getArtifactsCount({ userId: user.id })]);
-  return {
-    items,
-    count,
-  };
+  const team = await getTeamBySlug(params.teamSlug as string);
+  const [items, count] = await Promise.all([getArtifacts({ teamId: params.id, skip, take, orderBy }), getArtifactsCount({ teamId: params.id })]);
+  return { team, items, count };
 };
 
 export default function Artifacts() {
-  const { items, count } = useTablePageLoaderData<ArtifactDetail>();
+  const { team, items, count } = useTablePageLoaderData<ArtifactDetail, { team: Team }>();
   const { tableProps, paginationProps } = useArtifactsTable(items, count);
-  return <TablePage title="My artifacts" count={count} tableProps={tableProps} paginationProps={paginationProps} />;
+  return <TablePage title={`${team.name}'s artifacts`} count={count} tableProps={tableProps} paginationProps={paginationProps} />;
 }

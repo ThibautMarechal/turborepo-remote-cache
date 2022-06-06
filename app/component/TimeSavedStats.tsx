@@ -56,6 +56,8 @@ export const TimeSavedStats = ({ local, remote }: Props) => {
                     },
                     elementType: 'bar',
                     show: false,
+                    min: 0,
+                    stacked: true,
                   },
                 ],
                 defaultColors: ['hsl(var(--p))', 'hsl(var(--pc))'],

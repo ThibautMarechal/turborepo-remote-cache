@@ -3,17 +3,20 @@ import invariant from 'tiny-invariant';
 import { TablePage } from '~/component/TablePage';
 import { useArtifactsTable } from '~/hooks/table/useArtifactsTable';
 import { useTablePageLoaderData } from '~/hooks/useTablePageLoaderData';
+import { requireAdmin } from '~/roles/rights';
 import { deleteArtifact, getArtifact, getArtifacts, getArtifactsCount } from '~/services/artifact.server';
 import { requireCookieAuth } from '~/services/authentication.server';
 import { CacheStorage } from '~/services/storage.server';
+import type { ArtifactDetail } from '~/types/prisma';
 import { getPaginationFromRequest } from '~/utils/pagination';
 import { getOrderByFromRequest } from '~/utils/sort';
 
 export const loader: LoaderFunction = async ({ request, params, context }) => {
-  await requireCookieAuth(request);
+  const user = await requireCookieAuth(request);
+  requireAdmin(user);
   const orderBy = getOrderByFromRequest(request);
   const { skip, take } = getPaginationFromRequest(request);
-  const [items, count] = await Promise.all([getArtifacts(skip, take, orderBy), getArtifactsCount()]);
+  const [items, count] = await Promise.all([getArtifacts({ skip, take, orderBy }), getArtifactsCount()]);
   return {
     items,
     count,
@@ -32,7 +35,7 @@ export const action: ActionFunction = async ({ request, params, context }) => {
 };
 
 export default function Artifacts() {
-  const { items, count } = useTablePageLoaderData<Awaited<ReturnType<typeof getArtifacts>>[number]>();
+  const { items, count } = useTablePageLoaderData<ArtifactDetail>();
   const { tableProps, paginationProps } = useArtifactsTable(items, count);
   return <TablePage title="All artifacts" count={count} tableProps={tableProps} paginationProps={paginationProps} />;
 }

@@ -10,6 +10,10 @@ export function unauthorized(body?: BodyInit | null, init?: ResponseInit): Respo
   return createResponse(401, body, init);
 }
 
+export function forbidden(body?: BodyInit | null, init?: ResponseInit): Response {
+  return createResponse(403, body, init);
+}
+
 export function notFound(body?: BodyInit | null, init?: ResponseInit) {
   return createResponse(404, body, init);
 }

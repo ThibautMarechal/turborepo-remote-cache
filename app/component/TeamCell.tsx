@@ -7,11 +7,7 @@ type Props = {
 };
 
 export const TeamCell = ({ team }: Props) => {
-  return (
-    <Link to={`/teams/${team.id}`}>
-      {team.name} ({team.slug})
-    </Link>
-  );
+  return <Link to={`/teams/${team.slug}`}>{team.name}</Link>;
 };
 
 export default TeamCell;

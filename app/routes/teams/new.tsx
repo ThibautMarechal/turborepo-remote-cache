@@ -6,6 +6,7 @@ import { requireCookieAuth } from '~/services/authentication.server';
 import { makeDomainFunction } from 'remix-domains';
 import { Form } from '~/component/Form';
 import { createTeam } from '~/services/teams.server';
+import { requireAdmin } from '~/roles/rights';
 
 const schema = z.object({
   name: z.string().min(1).max(50),
@@ -15,12 +16,14 @@ const schema = z.object({
 const mutation = makeDomainFunction(schema)(async (team) => await createTeam(team));
 
 export const loader: LoaderFunction = async ({ request }) => {
-  await requireCookieAuth(request);
+  const user = await requireCookieAuth(request);
+  requireAdmin(user);
   return null;
 };
 
 export const action: ActionFunction = async ({ request, params, context }) => {
-  await requireCookieAuth(request);
+  const user = await requireCookieAuth(request);
+  requireAdmin(user);
   return formAction({
     request,
     schema,

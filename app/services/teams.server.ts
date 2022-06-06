@@ -1,65 +1,65 @@
 import type { Team } from '@prisma/client';
 import { removeTeamUndescore } from '~/mapper/team';
+import type { TeamDetail } from '~/types/prisma';
 import type { OrderBy } from '~/utils/sort';
 import { client } from './prismaClient.server';
 
-export async function getTeams(skip: number, take: number, orderBy: OrderBy[]): Promise<Team[]> {
-  try {
-    await client.$connect();
-    return await client.team.findMany({
-      where: {
-        isDeleted: false,
-      },
-      skip,
-      take,
-      orderBy,
-    });
-  } finally {
-    await client.$disconnect();
-  }
+export async function getTeams(skip: number, take: number, orderBy: OrderBy[], search: string): Promise<Team[]> {
+  return await client.team.findMany({
+    where: {
+      isDeleted: false,
+      OR: [
+        {
+          name: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        },
+        {
+          slug: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        },
+      ],
+    },
+    skip,
+    take,
+    orderBy,
+  });
 }
 
 export async function getTeamsCount(): Promise<number> {
-  try {
-    await client.$connect();
-    return await client.team.count({
-      where: {
-        isDeleted: false,
-      },
-    });
-  } finally {
-    await client.$disconnect();
-  }
+  return await client.team.count({
+    where: {
+      isDeleted: false,
+    },
+  });
 }
 
 export async function getUserTeams(userId: string, limit: number, since = new Date(Date.UTC(0, 0, 0)), until = new Date(Date.UTC(3000, 0, 0))): Promise<Team[]> {
-  try {
-    await client.$connect();
-    return await client.team.findMany({
-      where: {
-        members: {
-          some: {
-            user: {
-              id: userId,
-            },
-          },
-        },
-        AND: {
-          creationDate: {
-            gt: since,
-          },
-          AND: {
-            creationDate: {
-              lt: until,
-            },
+  return await client.team.findMany({
+    where: {
+      members: {
+        some: {
+          user: {
+            id: userId,
           },
         },
       },
-      take: limit,
-    });
-  } finally {
-    await client.$disconnect();
-  }
+      AND: {
+        creationDate: {
+          gt: since,
+        },
+        AND: {
+          creationDate: {
+            lt: until,
+          },
+        },
+      },
+    },
+    take: limit,
+  });
 }
 
 export async function getTeamFromRequest(request: Request): Promise<Team | null> {
@@ -70,125 +70,99 @@ export async function getTeamFromRequest(request: Request): Promise<Team | null>
   }
   const teamId = url.searchParams.get('teamId');
   if (teamId) {
-    return getTeam(removeTeamUndescore(teamId));
+    return getTeamBySlug(removeTeamUndescore(teamId));
   }
   return null;
 }
 
 export async function getTeam(id: string): Promise<Team> {
-  try {
-    await client.$connect();
-    return await client.team.findUnique({ where: { id } });
-  } finally {
-    await client.$disconnect();
-  }
+  return await client.team.findUnique({ where: { id } });
 }
 
 export async function getTeamDetail(id: string) {
-  try {
-    await client.$connect();
-    return await client.team.findUnique({
-      where: { id },
-      include: {
-        members: {
-          include: {
-            user: true,
-          },
+  return await client.team.findUnique({
+    where: { id },
+    include: {
+      members: {
+        include: {
+          user: true,
         },
       },
-    });
-  } finally {
-    await client.$disconnect();
-  }
+    },
+  });
 }
 
 export async function getTeamBySlug(slug: string): Promise<Team> {
-  try {
-    await client.$connect();
-    return await client.team.findUnique({ where: { slug } });
-  } finally {
-    await client.$disconnect();
-  }
+  return await client.team.findUnique({ where: { slug } });
+}
+
+export async function getTeamDetailBySlug(slug: string): Promise<TeamDetail> {
+  return await client.team.findUnique({
+    where: { slug },
+    include: {
+      members: {
+        include: {
+          user: true,
+        },
+      },
+    },
+  });
 }
 
 export async function createTeam(team: Pick<Team, 'name' | 'slug'>): Promise<Team> {
-  try {
-    await client.$connect();
-    return await client.team.create({
-      data: {
-        name: team.name,
-        slug: team.slug,
-      },
-    });
-  } finally {
-    await client.$disconnect();
-  }
+  return await client.team.create({
+    data: {
+      name: team.name,
+      slug: team.slug,
+    },
+  });
 }
 
-export async function updateTeam(id: string, team: Pick<Team, 'name' | 'slug'>): Promise<Team> {
-  try {
-    await client.$connect();
-    return await client.team.update({ where: { id }, data: team });
-  } finally {
-    await client.$disconnect();
-  }
+export async function updateTeam(id: string, team: Pick<Team, 'name'>): Promise<Team> {
+  return await client.team.update({ where: { id }, data: team });
 }
+
 export async function addUserToTteam(teamId: string, userId: string, role: string) {
-  try {
-    await client.$connect();
-    return await client.team.update({
-      where: { id: teamId },
-      data: {
-        members: {
-          create: {
-            userId,
-            role,
-          },
+  return await client.team.update({
+    where: { id: teamId },
+    data: {
+      members: {
+        create: {
+          userId,
+          role,
         },
       },
-    });
-  } finally {
-    await client.$disconnect();
-  }
+    },
+  });
 }
 export async function removeUserFromTeam(teamId: string, userId: string) {
-  try {
-    await client.$connect();
-    return await client.team.update({
-      where: { id: teamId },
-      data: {
-        members: {
-          deleteMany: {
-            userId,
-          },
+  return await client.team.update({
+    where: { id: teamId },
+    data: {
+      members: {
+        deleteMany: {
+          userId,
         },
       },
-    });
-  } finally {
-    await client.$disconnect();
-  }
+    },
+  });
 }
 
 export async function deleteTeam(teamId: string): Promise<void> {
-  try {
-    await client.$connect();
-    await client.team.update({
-      where: {
-        id: teamId,
-      },
-      data: {
-        name: '[Deleted Team]',
-        slug: teamId,
-        avatar: null,
-        isDeleted: true,
-        members: {
-          deleteMany: {
-            teamId,
-          },
+  await client.team.update({
+    where: {
+      id: teamId,
+    },
+    data: {
+      name: '[Deleted Team]',
+      slug: teamId,
+      avatar: null,
+      isDeleted: true,
+      members: {
+        deleteMany: {
+          teamId,
         },
       },
-    });
-  } finally {
-    await client.$disconnect();
-  }
+    },
+  });
 }

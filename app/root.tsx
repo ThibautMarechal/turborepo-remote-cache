@@ -1,4 +1,4 @@
-import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData } from 'remix';
+import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useCatch, useLoaderData } from 'remix';
 import type { MetaFunction, LinksFunction, LoaderFunction } from 'remix';
 import tailwind from './tailwind.css';
 import { authenticator } from './services/authentication.server';
@@ -6,6 +6,7 @@ import { getUserDetail } from './services/users.server';
 import { CurrentUserProvider } from './context/CurrentUser';
 import Navigation from './component/Navigation';
 import fullturboStyle from '~/styles/fullturbo.css';
+import type { UserDetail } from './types/prisma';
 
 export const meta: MetaFunction = () => ({
   charset: 'utf-8',
@@ -29,7 +30,7 @@ export const links: LinksFunction = () => [
 ];
 
 export default function Root() {
-  const { user } = useLoaderData<{ user: Awaited<ReturnType<typeof getUserDetail>> }>();
+  const { user } = useLoaderData<{ user: UserDetail | null }>();
 
   return (
     <CurrentUserProvider user={user}>
@@ -49,3 +50,23 @@ export default function Root() {
     </CurrentUserProvider>
   );
 }
+
+export const CatchBoundary = () => {
+  const caught = useCatch();
+  console.log(caught);
+  return (
+    <html lang="en" className="bg-base-300" data-theme="turbo">
+      <head>
+        <Meta />
+        <Links />
+      </head>
+      <body>
+        <Navigation />
+        <div className="text-error text-4xl text-center m-20">{caught.status}</div>
+        <ScrollRestoration />
+        <Scripts />
+        <LiveReload />
+      </body>
+    </html>
+  );
+};

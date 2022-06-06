@@ -3,45 +3,39 @@ import { useLoaderData, type LoaderFunction } from 'remix';
 import { formAction } from 'remix-forms';
 import { z } from 'zod';
 import { requireCookieAuth } from '~/services/authentication.server';
-import { getUser, updateUser } from '~/services/users.server';
 import { makeDomainFunction } from 'remix-domains';
 import { Form } from '~/component/Form';
+import { getTeamBySlug, updateTeam } from '~/services/teams.server';
 
 const schema = z.object({
-  id: z.string(),
-  username: z.string().min(1).max(50),
-  email: z.string().min(1).email(),
   name: z.string().min(1).max(50),
 });
 
-const mutation = makeDomainFunction(schema)(async ({ id, ...user }) => await updateUser(id, user));
-
 export const loader: LoaderFunction = async ({ request, params }) => {
   await requireCookieAuth(request);
-  return getUser(params.id as string);
+  return await getTeamBySlug(params.teamSlug as string);
 };
 
 export const action: ActionFunction = async ({ request, params, context }) => {
   await requireCookieAuth(request);
+  const team = await getTeamBySlug(params.teamSlug as string);
+  const mutation = makeDomainFunction(schema)(async ({ name }) => await updateTeam(team.id, { name }));
   return formAction({
     request,
     schema,
     mutation,
-    successPath: `/users/${params.id}`,
+    successPath: `/teams/${team.slug}`,
   });
 };
 
 export default function Edit() {
-  const user = useLoaderData();
+  const team = useLoaderData();
   return (
     <div className="flex justify-center">
-      <Form schema={schema} values={user} hiddenFields={['id']}>
+      <Form schema={schema} values={team}>
         {({ Field, Button }) => (
           <>
-            <Field name="username" />
             <Field name="name" />
-            <Field name="email" />
-            <Field name="id" />
             <Button>Update</Button>
           </>
         )}

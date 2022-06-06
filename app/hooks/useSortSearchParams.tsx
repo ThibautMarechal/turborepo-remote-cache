@@ -10,12 +10,12 @@ export function useSortSearchParams(): {
   const orderBy = JSON.parse(searchParams.get('orderBy') || '[]') as OrderBy[];
   const restOfParams = createSearchParams();
   searchParams.forEach((value, key) => {
-    if (key !== 'orderBy' && key !== 'take' && key !== 'skip') {
+    if (key !== 'orderBy') {
       restOfParams.set(key, value);
     }
   });
   return {
     orderBy,
-    setOrderBy: (newOrderBy: OrderBy[]) => setSearchParams(createSearchParams([['orderBy', JSON.stringify(newOrderBy)]])),
+    setOrderBy: (newOrderBy: OrderBy[]) => setSearchParams(createSearchParams([...restOfParams.entries(), ['orderBy', JSON.stringify(newOrderBy)]])),
   };
 }

@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { hash } from '../app/utils/hash';
 import { v4 as newGuid } from 'uuid';
-import { ServerRole } from '../app/types/roles';
+import { ServerRole } from '~/roles/ServerRole';
 
 async function main() {
   const { ADMIN_USERNAME = 'admin', ADMIN_NAME = 'Admin', ADMIN_PASSWORD = 'turbo', ADMIN_EMAIL } = process.env;
@@ -16,6 +16,7 @@ async function main() {
       },
     });
     if (adminExist) {
+      console.log(`🔌 Admin already created`);
       return;
     }
     const adminId = newGuid();
@@ -29,11 +30,12 @@ async function main() {
         role: ServerRole.ADMIN,
         password: {
           create: {
-            passwordHash: hash(ADMIN_PASSWORD),
+            passwordHash: await hash(ADMIN_PASSWORD),
           },
         },
       },
     });
+    console.log(`🔌 Admin created`);
   } finally {
     await client.$disconnect();
   }

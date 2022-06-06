@@ -3,12 +3,12 @@ import TimeSavedStats from '~/component/TimeSavedStats';
 import UserCard from '~/component/UserCard';
 import UserStats from '~/component/UserStats';
 import { useCurrentUser } from '~/context/CurrentUser';
-import { getArtifactsCountByUser } from '~/services/artifact.server';
+import { getArtifactsCount } from '~/services/artifact.server';
 import { requireCookieAuth } from '~/services/authentication.server';
 import type { TimeSavedByMonth } from '~/services/events.server';
 import { getTimeSavedByMonth } from '~/services/events.server';
-import { getSessionsByUserCount } from '~/services/session.server';
-import { getTokensByUserCount } from '~/services/tokens.server';
+import { getSessionsCount } from '~/services/session.server';
+import { getTokensCount } from '~/services/tokens.server';
 import { getUserDetail } from '~/services/users.server';
 import { SourceType } from '~/types/vercel/turborepo';
 
@@ -16,9 +16,9 @@ export const loader: LoaderFunction = async ({ request, params, context }) => {
   const { id: userId } = await requireCookieAuth(request);
   const [user, sessions, artifacts, tokens, savedLocally, savedRemotely] = await Promise.all([
     getUserDetail(userId),
-    getSessionsByUserCount(userId),
-    getArtifactsCountByUser(userId),
-    getTokensByUserCount(userId),
+    getSessionsCount({ userId }),
+    getArtifactsCount({ userId }),
+    getTokensCount({ userId }),
     getTimeSavedByMonth(SourceType.LOCAL, { userId }),
     getTimeSavedByMonth(SourceType.REMOTE, { userId }),
   ]);

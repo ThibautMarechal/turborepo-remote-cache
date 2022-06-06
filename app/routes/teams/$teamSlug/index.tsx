@@ -1,7 +1,7 @@
 import { Link, useLoaderData, type LoaderFunction } from 'remix';
 import { requireCookieAuth } from '~/services/authentication.server';
 import PencilIcon from '@heroicons/react/outline/PencilIcon';
-import { getTeamDetail } from '~/services/teams.server';
+import { getTeamDetailBySlug } from '~/services/teams.server';
 import Stats from '~/component/Stats';
 import Stat from '~/component/Stat';
 import ArchiveIcon from '@heroicons/react/outline/ArchiveIcon';
@@ -12,17 +12,19 @@ import type { TimeSavedByMonth } from '~/services/events.server';
 import { getTimeSavedByMonth } from '~/services/events.server';
 import { SourceType } from '~/types/vercel/turborepo';
 import type { TeamDetail } from '~/types/prisma';
-import { getSessionsByTeamCount } from '~/services/session.server';
-import { getArtifactsByTeamCount } from '~/services/artifact.server';
+import { getSessionsCount } from '~/services/session.server';
+import { getArtifactsCount } from '~/services/artifact.server';
+import { isTeamOwner } from '~/roles/rights';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  await requireCookieAuth(request);
-  const [team, sessions, artifacts, savedLocally, savedRemotely] = await Promise.all([
-    getTeamDetail(params.id as string),
-    getSessionsByTeamCount(params.id as string),
-    getArtifactsByTeamCount(params.id as string),
-    getTimeSavedByMonth(SourceType.LOCAL, { teamId: params.id as string }),
-    getTimeSavedByMonth(SourceType.REMOTE, { teamId: params.id as string }),
+  const user = await requireCookieAuth(request);
+  const team = await getTeamDetailBySlug(params.teamSlug as string);
+  const isOwner = isTeamOwner(user, team.id);
+  const [sessions, artifacts, savedLocally, savedRemotely] = await Promise.all([
+    isOwner ? getSessionsCount({ teamId: team.id }) : 0,
+    isOwner ? getArtifactsCount({ teamId: team.id }) : 0,
+    getTimeSavedByMonth(SourceType.LOCAL, { teamId: team.id }),
+    getTimeSavedByMonth(SourceType.REMOTE, { teamId: team.id }),
   ]);
   return { team, sessions, artifacts, savedLocally, savedRemotely };
 };

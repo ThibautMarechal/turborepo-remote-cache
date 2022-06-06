@@ -4,13 +4,15 @@ import { Link } from 'remix';
 import PencilIcon from '@heroicons/react/outline/PencilIcon';
 import type { UserDetail } from '~/types/prisma';
 import HasRights from './HasRights';
+import { requireAdmin } from '~/roles/rights';
 
 type Props = {
   user: UserDetail;
   children?: React.ReactNode;
+  editable?: boolean;
 };
 
-export const UserCard = ({ user, children }: Props) => {
+export const UserCard = ({ user, children, editable }: Props) => {
   return (
     <div className="card w-96 bg-base-100 shadow-xl">
       <div className="card-body">
@@ -21,11 +23,13 @@ export const UserCard = ({ user, children }: Props) => {
             </div>
           </div>
           {user.name}
-          <HasRights predicate={(u) => u.isSuperAdmin || user.id === u.id}>
-            <Link to={`/users/${user.id}/edit`} prefetch="intent" className="btn btn-xs absolute top-0 right-0">
-              <PencilIcon className="h-4 w-4" />
-            </Link>
-          </HasRights>
+          {editable && (
+            <HasRights predicate={(u) => requireAdmin(u) || u.id === user.id}>
+              <Link to={`/users/${user.username}/edit`} prefetch="intent" className="btn btn-xs absolute top-0 right-0">
+                <PencilIcon className="h-4 w-4" />
+              </Link>
+            </HasRights>
+          )}
         </h2>
         <div>
           <span className="font-bold mr-2">Name:</span>

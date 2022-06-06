@@ -1,7 +1,7 @@
 import * as React from 'react';
 import type { UserDetail } from '~/types/prisma';
 
-type ContextType = null | UserDetail;
+type ContextType = UserDetail | null;
 
 const Context = React.createContext<ContextType>(null);
 Context.displayName = 'CurrentUserProvider';

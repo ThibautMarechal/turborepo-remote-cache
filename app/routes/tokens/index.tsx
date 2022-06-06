@@ -4,28 +4,32 @@ import { Link } from 'remix';
 import { TablePage } from '~/component/TablePage';
 import { useTokensTable } from '~/hooks/table/useTokensTable';
 import { useTablePageLoaderData } from '~/hooks/useTablePageLoaderData';
+import { requireAdmin } from '~/roles/rights';
 import { requireCookieAuth } from '~/services/authentication.server';
 import { getTokens, getTokensCount, revokeToken } from '~/services/tokens.server';
+import type { TokenDetail } from '~/types/prisma';
 import { getPaginationFromRequest } from '~/utils/pagination';
 import { getOrderByFromRequest } from '~/utils/sort';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  await requireCookieAuth(request);
+  const user = await requireCookieAuth(request);
+  requireAdmin(user);
   const orderBy = getOrderByFromRequest(request);
   const { skip, take } = getPaginationFromRequest(request);
-  const [items, count] = await Promise.all([getTokens(skip, take, orderBy), getTokensCount()]);
+  const [items, count] = await Promise.all([getTokens({ skip, take, orderBy }), getTokensCount()]);
   return { items, count };
 };
 
 export const action: ActionFunction = async ({ request, params, context }) => {
-  await requireCookieAuth(request);
+  const user = await requireCookieAuth(request);
+  requireAdmin(user);
   const formData = await request.formData();
   await revokeToken(formData.get('id') as string);
   return null;
 };
 
 export default function Tokens() {
-  const { items, count } = useTablePageLoaderData<Awaited<ReturnType<typeof getTokens>>[number]>();
+  const { items, count } = useTablePageLoaderData<TokenDetail>();
   const { paginationProps, tableProps } = useTokensTable(items, count);
   return (
     <>

@@ -3,43 +3,44 @@ import { useLoaderData, type LoaderFunction } from 'remix';
 import { formAction } from 'remix-forms';
 import { z } from 'zod';
 import { requireCookieAuth } from '~/services/authentication.server';
+import { getUserByUsername, updateUser } from '~/services/users.server';
 import { makeDomainFunction } from 'remix-domains';
 import { Form } from '~/component/Form';
-import { getTeam, updateTeam } from '~/services/teams.server';
+import { requireAdmin } from '~/roles/rights';
 
 const schema = z.object({
-  id: z.string(),
+  email: z.string().min(1).email(),
   name: z.string().min(1).max(50),
-  slug: z.string().min(1).max(10),
 });
 
-const mutation = makeDomainFunction(schema)(async ({ id, ...team }) => await updateTeam(id, team));
-
 export const loader: LoaderFunction = async ({ request, params }) => {
-  await requireCookieAuth(request);
-  return await getTeam(params.id as string);
+  const user = await requireCookieAuth(request);
+  requireAdmin(user);
+  return getUserByUsername(params.username as string);
 };
 
 export const action: ActionFunction = async ({ request, params, context }) => {
-  await requireCookieAuth(request);
+  const currentUser = await requireCookieAuth(request);
+  requireAdmin(currentUser);
+  const user = await getUserByUsername(params.username as string);
+  const mutation = makeDomainFunction(schema)(async ({ name, email }) => await updateUser(user.id, { name, email }));
   return formAction({
     request,
     schema,
     mutation,
-    successPath: `/teams/${params.id}`,
+    successPath: `/users/${user.username}`,
   });
 };
 
 export default function Edit() {
-  const team = useLoaderData();
+  const user = useLoaderData();
   return (
     <div className="flex justify-center">
-      <Form schema={schema} values={team} hiddenFields={['id']}>
+      <Form schema={schema} values={user}>
         {({ Field, Button }) => (
           <>
             <Field name="name" />
-            <Field name="slug" />
-            <Field name="id" />
+            <Field name="email" />
             <Button>Update</Button>
           </>
         )}
