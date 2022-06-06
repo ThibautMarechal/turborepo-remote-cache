@@ -1,3 +1,5 @@
-import faker from '@faker-js/faker';
-
-describe('smoke tests', () => {});
+describe('smoke tests', () => {
+  it('dummy test', () => {
+    expect(true).to.eq(true);
+  });
+});
