@@ -1,12 +1,12 @@
 import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useCatch, useLoaderData } from 'remix';
 import type { MetaFunction, LinksFunction, LoaderFunction } from 'remix';
-import tailwind from './tailwind.css';
-import { authenticator } from './services/authentication.server';
-import { getUserDetail } from './services/users.server';
-import { CurrentUserProvider } from './context/CurrentUser';
-import Navigation from './component/Navigation';
+import { authenticator } from '~/services/authentication.server';
+import { getUserDetail } from '~/services/users.server';
+import { CurrentUserProvider } from '~/context/CurrentUser';
+import Navigation from '~/component/Navigation';
+import type { UserDetail } from '~/types/prisma';
+import tailwind from '~/styles/tailwind.css';
 import fullturboStyle from '~/styles/fullturbo.css';
-import type { UserDetail } from './types/prisma';
 
 export const meta: MetaFunction = () => ({
   charset: 'utf-8',

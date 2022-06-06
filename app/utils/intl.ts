@@ -17,7 +17,7 @@ export function formatSize(contentLength: number) {
   return `${Number(size.toFixed(2))} ${units[quotient]}`;
 }
 
-export function formatDuration(durationMs: number, locale = 'en-gb', long: boolean = false) {
+export function formatDuration(durationMs: number, locale = 'en-gb') {
   const timeFormatter = new Intl.RelativeTimeFormat(locale);
   const seconds = durationMs / 1000;
   if (seconds < 60) {

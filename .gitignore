@@ -1,7 +1,12 @@
 node_modules
-/data
-/.cache
+
 /build
 /public/build
-/app/tailwind.css
+/app/styles/tailwind.css
+
+/cypress/screenshots
+/cypress/videos
+
+/data
+/.cache
 yarn-error.log

@@ -1,49 +1,54 @@
 # base node image
 FROM node:16-bullseye-slim as base
 
+# set for base and all layer that inherit from it
+ENV NODE_ENV production
+
+# Install openssl for Prisma
+RUN apt-get update && apt-get install -y openssl
+
 # Install all node_modules, including dev dependencies
 FROM base as deps
 
-WORKDIR /app
+WORKDIR /myapp
 
-ADD package.json yarn.lock ./
-RUN yarn install
+ADD package.json package-lock.json ./
+RUN npm install --production=false
 
 # Setup production node_modules
 FROM base as production-deps
 
-WORKDIR /app
+WORKDIR /myapp
 
-COPY --from=deps /app/node_modules /app/node_modules
-ADD package.json yarn.lock ./
-RUN yarn install --production
+COPY --from=deps /myapp/node_modules /myapp/node_modules
+ADD package.json package-lock.json ./
+RUN npm prune --production
 
 # Build the app
 FROM base as build
 
-WORKDIR /app
+WORKDIR /myapp
 
-COPY --from=deps /app/node_modules /app/node_modules
-ENV NODE_ENV production
-COPY . .
-RUN yarn prisma generate
-RUN yarn build
+COPY --from=deps /myapp/node_modules /myapp/node_modules
+
+ADD prisma .
+RUN npx prisma generate
+
+ADD . .
+RUN npm run build
 
 # Finally, build the production image with minimal footprint
 FROM base
 
-WORKDIR /app
+WORKDIR /myapp
 
-COPY --from=production-deps /app/node_modules /app/node_modules
-COPY --from=build /app/node_modules/.prisma /app/node_modules/.prisma
+COPY --from=production-deps /myapp/node_modules /myapp/node_modules
+COPY --from=build /myapp/node_modules/.prisma /myapp/node_modules/.prisma
 
-COPY --from=build /app/build /app/build
-COPY --from=build /app/public /app/public
-COPY --from=build /app/prisma /app/prisma
-COPY --from=build /app/app /app/app
-COPY --from=build /app/package.json /app/package.json
+COPY --from=build /myapp/build /myapp/build
+COPY --from=build /myapp/public /myapp/public
+ADD . .
 
-ENV NODE_ENV="production"
 # Postgres configuration
 ENV DATABASE_URL=
 
@@ -75,4 +80,4 @@ ENV STORAGE_AZURE_STORAGE_ACCOUNT=
 ENV STORAGE_AZURE_STORAGE_ACCESS_KEY=
 ENV STORAGE_AZURE_STORAGE_CONTAINER=
 
-CMD ["yarn", "start"]
+CMD ["npm", "start"]
