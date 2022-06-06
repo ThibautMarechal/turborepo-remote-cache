@@ -29,7 +29,7 @@
     "typecheck": "tsc -b && tsc -b cypress",
     "validate": "run-p \"test -- --run\" lint typecheck test:e2e:run",
     "prestart": "prisma migrate deploy",
-    "start": "cross-env NODE_ENV=production node ./build/server.js"
+    "start": "cross-env NODE_ENV=production remix start"
   },
   "dependencies": {
     "@heroicons/react": "^1.0.6",
