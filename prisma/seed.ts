@@ -4,7 +4,7 @@ import { v4 as newGuid } from 'uuid';
 import { ServerRole } from '~/roles/ServerRole';
 
 async function main() {
-  const { ADMIN_USERNAME = 'admin', ADMIN_NAME = 'Admin', ADMIN_PASSWORD = 'turbo', ADMIN_EMAIL } = process.env;
+  const { ADMIN_USERNAME, ADMIN_NAME, ADMIN_PASSWORD, ADMIN_EMAIL } = process.env;
 
   const client = new PrismaClient();
 
@@ -23,14 +23,14 @@ async function main() {
     await client.user.create({
       data: {
         id: adminId,
-        name: ADMIN_NAME,
-        username: ADMIN_USERNAME,
-        email: ADMIN_EMAIL ?? adminId,
+        name: ADMIN_NAME || 'Admin',
+        username: ADMIN_USERNAME || 'admin',
+        email: ADMIN_EMAIL || adminId,
         isSuperAdmin: true,
         role: ServerRole.ADMIN,
         password: {
           create: {
-            passwordHash: await hash(ADMIN_PASSWORD),
+            passwordHash: await hash(ADMIN_PASSWORD || 'turbo'),
           },
         },
       },
