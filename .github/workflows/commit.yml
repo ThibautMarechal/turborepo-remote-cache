@@ -84,7 +84,6 @@ jobs:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
 
-
       - name: ⎔ Setup node
         uses: actions/setup-node@v3
         with:
@@ -96,14 +95,15 @@ jobs:
       - name: 🐳 Docker compose
         # the sleep is just there to give time for postgres to get started
         run: docker-compose -f docker-compose.db.yml up -d && sleep 3
-        env:
-          DATABASE_URL: "postgresql://postgres:example@localhost:5432/postgres"
+
+      - name: ⚙️ Build
+        run: npm run build
 
       - name: 🛠 Setup Database
         run: npx prisma migrate reset --force
 
-      - name: ⚙️ Build
-        run: npm run build
+      - name: 🛠 Seeding Database
+        run: npx prisma db seed
 
       - name: 🌳 Cypress run
         uses: cypress-io/github-action@v3
@@ -112,6 +112,7 @@ jobs:
           wait-on: "http://localhost:8811"
         env:
           PORT: "8811"
+          DATABASE_URL: "postgresql://postgres:example@localhost:5432/postgres"
 
   build:
     name: 🐳 Build
