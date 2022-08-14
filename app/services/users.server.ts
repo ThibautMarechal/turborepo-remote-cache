@@ -120,12 +120,13 @@ export async function createUser(user: Pick<User, 'email' | 'name' | 'username' 
   });
 }
 
-export async function updateUser(id: string, user: Pick<User, 'email' | 'name'>): Promise<User> {
+export async function updateUser(id: string, user: Pick<User, 'email' | 'name' | 'role'>): Promise<User> {
   return await client.user.update({
     where: { id },
     data: {
       email: user.email,
       name: user.name,
+      role: user.role,
     },
   });
 }
@@ -181,4 +182,20 @@ export async function getUserByUsernameAndPassword(username: string, password: s
     return user;
   }
   throw new Error('User with password not found');
+}
+
+export async function updateUserPassword(userId: string, password: string): Promise<void> {
+  await client.$transaction([
+    client.password.deleteMany({
+      where: {
+        userId,
+      },
+    }),
+    client.password.create({
+      data: {
+        userId,
+        passwordHash: await hash(password),
+      },
+    }),
+  ]);
 }

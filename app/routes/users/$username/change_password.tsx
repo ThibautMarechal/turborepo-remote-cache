@@ -3,17 +3,15 @@ import { useLoaderData, type LoaderFunction } from 'remix';
 import { formAction } from 'remix-forms';
 import { z } from 'zod';
 import { requireCookieAuth } from '~/services/authentication.server';
-import { getUserByUsername, updateUser } from '~/services/users.server';
+import { getUserByUsername, updateUserPassword } from '~/services/users.server';
 import { makeDomainFunction } from 'remix-domains';
 import { Form } from '~/component/Form';
 import { requireAdmin } from '~/roles/rights';
-import { ServerRole } from '~/roles/ServerRole';
-import { forbidden } from '~/utils/response';
+import { forbidden, unprocessableEntity } from '~/utils/response';
 
 const schema = z.object({
-  email: z.string().min(1).email(),
-  name: z.string().min(1).max(50),
-  role: z.enum([ServerRole.DEVELOPER, ServerRole.ADMIN]),
+  password: z.string().min(1),
+  repeatedPassword: z.string().min(1),
 });
 
 export const loader: LoaderFunction = async ({ request, params }) => {
@@ -21,7 +19,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   requireAdmin(currentUser);
   const user = await getUserByUsername(params.username as string);
   if (user.isSuperAdmin) {
-    throw forbidden("Cannot update super-admin's informations");
+    throw forbidden("Cannot update super-admin's password");
   }
   return user;
 };
@@ -31,10 +29,14 @@ export const action: ActionFunction = async ({ request, params }) => {
   requireAdmin(currentUser);
   const user = await getUserByUsername(params.username as string);
   if (user.isSuperAdmin) {
-    throw forbidden("Cannot update super-admin's informations");
+    throw forbidden("Cannot update super-admin's password");
   }
-  const mutation = makeDomainFunction(schema)(async ({ name, email, role }) => {
-    await updateUser(user.id, { name, email, role });
+  const mutation = makeDomainFunction(schema)(async ({ password, repeatedPassword }) => {
+    if (password !== repeatedPassword) {
+      throw unprocessableEntity("passwords doesn't match");
+    }
+    await updateUserPassword(user.id, password);
+    console.log('here');
   });
   return formAction({
     request,
@@ -51,9 +53,8 @@ export default function Edit() {
       <Form schema={schema} values={user}>
         {({ Field, Button }) => (
           <>
-            <Field name="name" />
-            <Field name="email" />
-            <Field name="role" />
+            <Field name="password" type="password" />
+            <Field name="repeatedPassword" type="password" />
             <Button>Update</Button>
           </>
         )}

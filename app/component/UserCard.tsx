@@ -2,17 +2,19 @@ import * as React from 'react';
 import Gravatar from 'react-gravatar';
 import { Link } from 'remix';
 import PencilIcon from '@heroicons/react/outline/PencilIcon';
+import KeyIcon from '@heroicons/react/outline/KeyIcon';
 import type { UserDetail } from '~/types/prisma';
 import HasRights from './HasRights';
-import { requireAdmin } from '~/roles/rights';
+import { isAdmin } from '~/roles/rights';
 
 type Props = {
   user: UserDetail;
   children?: React.ReactNode;
   editable?: boolean;
+  baseRoute?: string;
 };
 
-export const UserCard = ({ user, children, editable }: Props) => {
+export const UserCard = ({ user, children, editable, baseRoute }: Props) => {
   return (
     <div className="card w-96 bg-base-100 shadow-xl">
       <div className="card-body">
@@ -23,11 +25,16 @@ export const UserCard = ({ user, children, editable }: Props) => {
             </div>
           </div>
           {user.name}
-          {editable && (
-            <HasRights predicate={(u) => requireAdmin(u) || u.id === user.id}>
-              <Link to={`/users/${user.username}/edit`} prefetch="intent" className="btn btn-xs absolute top-0 right-0">
-                <PencilIcon className="h-4 w-4" />
-              </Link>
+          {editable && !user.isSuperAdmin && (
+            <HasRights predicate={(u) => isAdmin(u) || u.id === user.id}>
+              <div className="absolute top-1 right-1">
+                <Link to={`${baseRoute}/edit`} prefetch="intent" title="Edit user" className="btn btn-xs mx-1">
+                  <PencilIcon className="h-4 w-4" />
+                </Link>
+                <Link to={`${baseRoute}/change_password`} prefetch="intent" title="Change password" className="btn btn-xs">
+                  <KeyIcon className="h-4 w-4" />
+                </Link>
+              </div>
             </HasRights>
           )}
         </h2>

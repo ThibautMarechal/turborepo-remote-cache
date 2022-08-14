@@ -1,6 +1,6 @@
 import { type LoaderFunction, type ActionFunction, Link } from 'remix';
 import { requireCookieAuth } from '~/services/authentication.server';
-import { deleteUser, getUsers, getUsersCount } from '~/services/users.server';
+import { deleteUser, getUser, getUsers, getUsersCount } from '~/services/users.server';
 import type { User } from '@prisma/client';
 import { useUsersTable } from '~/hooks/table/useUsersTable';
 import PlusIcon from '@heroicons/react/outline/PlusIcon';
@@ -11,6 +11,7 @@ import { useTablePageLoaderData } from '~/hooks/useTablePageLoaderData';
 import HasRights from '~/component/HasRights';
 import { requireAdmin } from '~/roles/rights';
 import { getSearchFromRequest } from '~/utils/search';
+import { forbidden } from '~/utils/response';
 
 export const loader: LoaderFunction = async ({ request }) => {
   await requireCookieAuth(request);
@@ -24,7 +25,12 @@ export const loader: LoaderFunction = async ({ request }) => {
 export const action: ActionFunction = async ({ request, params, context }) => {
   await requireCookieAuth(request);
   const formData = await request.formData();
-  await deleteUser(formData.get('id') as string);
+  const userId = formData.get('id') as string;
+  const user = await getUser(userId);
+  if (user.isSuperAdmin) {
+    throw forbidden('Cannot delete super-admin');
+  }
+  await deleteUser(userId);
   return null;
 };
 

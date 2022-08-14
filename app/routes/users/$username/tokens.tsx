@@ -6,7 +6,7 @@ import { useTablePageLoaderData } from '~/hooks/useTablePageLoaderData';
 import { requireAdmin } from '~/roles/rights';
 import { requireCookieAuth } from '~/services/authentication.server';
 import { getTokens, getTokensCount } from '~/services/tokens.server';
-import { getUser } from '~/services/users.server';
+import { getUserByUsername } from '~/services/users.server';
 import type { TokenDetail } from '~/types/prisma';
 import { getPaginationFromRequest } from '~/utils/pagination';
 import { getOrderByFromRequest } from '~/utils/sort';
@@ -16,7 +16,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   requireAdmin(currentUser);
   const { skip, take } = getPaginationFromRequest(request);
   const orderBy = getOrderByFromRequest(request);
-  const user = await getUser(params.username as string);
+  const user = await getUserByUsername(params.username as string);
   const [items, count] = await Promise.all([getTokens({ userId: user.id, skip, take, orderBy }), getTokensCount({ userId: user.id })]);
   return {
     user,

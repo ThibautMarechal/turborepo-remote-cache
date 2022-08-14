@@ -13,6 +13,7 @@ import { SourceType } from '~/types/vercel/turborepo';
 import { getArtifactsCount } from '~/services/artifact.server';
 import { isAdmin, requireAdmin } from '~/roles/rights';
 import HasRights from '~/component/HasRights';
+import { useCurrentUser } from '~/context/CurrentUser';
 
 export const loader: LoaderFunction = async ({ request, params, context }) => {
   const currentUser = await requireCookieAuth(request);
@@ -37,6 +38,7 @@ export const loader: LoaderFunction = async ({ request, params, context }) => {
 };
 
 export default function User() {
+  const currentUser = useCurrentUser();
   const { user, sessions, artifacts, tokens, savedLocally, savedRemotely } = useLoaderData<{
     user: UserDetail;
     sessions: number;
@@ -47,7 +49,7 @@ export default function User() {
   }>();
   return (
     <div className="flex w-full justify-center items-center flex-col gap-5 mt-5">
-      <UserCard user={user} />
+      <UserCard user={user} editable={isAdmin(currentUser!) || user.id === currentUser!.id} baseRoute={`/users/${user.username}`} />
       <HasRights predicate={(u) => requireAdmin(u)}>
         <UserStats userId={user.id} sessions={sessions} artifacts={artifacts} tokens={tokens} />
         <TimeSavedStats local={savedLocally} remote={savedRemotely} />

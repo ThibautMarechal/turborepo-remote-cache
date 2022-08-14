@@ -4,7 +4,6 @@ import { Form, Link } from 'remix';
 import DateCell from '~/component/DateCell';
 import { createTable } from '@tanstack/react-table';
 
-import * as React from 'react';
 import SearchIcon from '@heroicons/react/outline/SearchIcon';
 import PencilIcon from '@heroicons/react/outline/PencilIcon';
 import { usePaginateSortingTable } from './usePaginateSortingTable';

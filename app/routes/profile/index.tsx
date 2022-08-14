@@ -46,7 +46,7 @@ export default function Index() {
   }
   return (
     <div className="flex w-full justify-center items-center flex-col gap-5 mt-5">
-      <UserCard user={user} />
+      <UserCard user={user} editable baseRoute={`/profile`} />
       <UserStats userId={user.id} sessions={sessions} artifacts={artifacts} tokens={tokens} />
       <TimeSavedStats local={savedLocally} remote={savedRemotely} />
     </div>

@@ -6,6 +6,7 @@ import { createTable } from '@tanstack/react-table';
 import Gravatar from 'react-gravatar';
 import SearchIcon from '@heroicons/react/outline/SearchIcon';
 import PencilIcon from '@heroicons/react/outline/PencilIcon';
+import KeyIcon from '@heroicons/react/outline/KeyIcon';
 import { usePaginateSortingTable } from './usePaginateSortingTable';
 import cn from 'classnames';
 import type { ActionSubmission } from '@remix-run/react/transition';
@@ -48,17 +49,20 @@ const defaultColumns = [
       const isDeleting = state === 'submitting' && (submission as ActionSubmission).formData.get('id') === user.id;
       return (
         <div className="flex gap-1">
-          <Link to={`/users/${user.username}`} prefetch="intent" className="btn btn-xs btn-square">
+          <Link to={`/users/${user.username}`} prefetch="intent" title="Show user" className="btn btn-xs btn-square">
             <SearchIcon className="h-4 w-4" />
           </Link>
-          <HasRights predicate={(u) => requireAdmin(u)}>
-            <Link to={`/users/${user.username}/edit`} prefetch="intent" className="btn btn-xs btn-square">
+          <HasRights predicate={(u) => requireAdmin(u) && !user.isSuperAdmin}>
+            <Link to={`/users/${user.username}/edit`} prefetch="intent" title="Edit user" className="btn btn-xs btn-square">
               <PencilIcon className="h-4 w-4" />
             </Link>
-          </HasRights>
-          <HasRights predicate={(u) => requireAdmin(u) && !user.isSuperAdmin}>
+            <Link to={`/users/${user.username}/change_password`} prefetch="intent" title="Change password" className="btn btn-xs btn-square">
+              <KeyIcon className="h-4 w-4" />
+            </Link>
             <Form method="post">
-              <button className={cn('btn btn-xs btn-square', { loading: isDeleting })}>{!isDeleting && <TrashIcon className="h-4 w-4" />}</button>
+              <button className={cn('btn btn-xs btn-square', { loading: isDeleting })} title="Delete user">
+                {!isDeleting && <TrashIcon className="h-4 w-4" />}
+              </button>
               <input name="id" value={user.id} type="hidden" />
             </Form>
           </HasRights>
