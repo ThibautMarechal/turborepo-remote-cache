@@ -1,4 +1,5 @@
 import { METHOD, allowMethods } from './method';
+import { expect } from 'vitest';
 
 it(`allow ${METHOD.OPTIONS} by default`, () => {
   try {
