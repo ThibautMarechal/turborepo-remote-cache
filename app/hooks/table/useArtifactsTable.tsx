@@ -73,7 +73,6 @@ const defaultColumns = [
       const isDeleting = state === 'submitting' && submission.formData.get('id') === artifact.id;
       return (
         <div className="flex gap-1">
-          {/* TODO rights based on route */}
           <HasRights predicate={(u) => isAdmin(u)}>
             <Form method="post">
               <input name="id" value={artifact.id} type="hidden" />
