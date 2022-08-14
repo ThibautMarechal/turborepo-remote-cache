@@ -1,4 +1,4 @@
-import { useSearchParams } from 'remix';
+import { useSearchParams } from '@remix-run/react';
 import { createSearchParams } from 'react-router-dom';
 
 export function usePaginateSearchParams() {

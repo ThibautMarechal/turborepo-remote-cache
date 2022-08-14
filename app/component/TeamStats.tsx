@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ArchiveIcon from '@heroicons/react/outline/ArchiveIcon';
 import LightningBoltIcon from '@heroicons/react/outline/LightningBoltIcon';
-import { Link } from 'remix';
+import { Link } from '@remix-run/react';
 import Stat from './Stat';
 import Stats from './Stats';
 import UserGroupIcon from '@heroicons/react/outline/UserGroupIcon';

@@ -1,16 +1,17 @@
 import type { User } from '@prisma/client';
-import type { ActionFunction } from 'remix';
-import { useLoaderData, type LoaderFunction } from 'remix';
+import type { ActionFunction, LoaderFunction } from '@remix-run/node';
+
 import { makeDomainFunction } from 'remix-domains';
 import { formAction } from 'remix-forms';
 import { z } from 'zod';
 import { Form } from '~/component/Form';
-import { requireTeamOwner } from '~/roles/rights';
+import { isTeamMember, requireTeamOwner } from '~/roles/rights';
 import { TeamRole } from '~/roles/TeamRole';
 import { requireCookieAuth } from '~/services/authentication.server';
 import { addUserToTteam, getTeamDetailBySlug } from '~/services/teams.server';
 import { getUsers } from '~/services/users.server';
 import type { TeamDetail } from '~/types/prisma';
+import { json, useLoaderData } from '~/utils/superjson';
 
 const schema = z.object({
   userId: z.string().uuid(),
@@ -21,10 +22,10 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const user = await requireCookieAuth(request);
   const team = await getTeamDetailBySlug(params.teamSlug as string);
   requireTeamOwner(user, team.id);
-  return {
+  return json({
     team,
     users: await getUsers(),
-  };
+  });
 };
 
 export const action: ActionFunction = async ({ request, params, context }) => {

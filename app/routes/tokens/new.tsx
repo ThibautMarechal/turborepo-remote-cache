@@ -1,5 +1,6 @@
-import type { ActionFunction } from 'remix';
-import { type LoaderFunction, useActionData } from 'remix';
+import type { ActionFunction, LoaderFunction } from '@remix-run/node';
+
+import { useActionData } from '@remix-run/react';
 import { formAction } from 'remix-forms';
 import copy from 'copy-to-clipboard';
 import { z } from 'zod';

@@ -1,4 +1,5 @@
-import { type LoaderFunction, json } from 'remix';
+import type { LoaderFunction } from '@remix-run/node';
+import { json } from '@remix-run/node';
 import { ToVercelTeam } from '~/mapper/team';
 import { requireTokenAuth } from '~/services/authentication.server';
 import { getUserTeams } from '~/services/teams.server';

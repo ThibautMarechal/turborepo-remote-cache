@@ -1,4 +1,6 @@
-import { useSearchParams, type ActionFunction, type LoaderFunction, redirect } from 'remix';
+import type { ActionFunction, LoaderFunction } from '@remix-run/node';
+import { redirect } from '@remix-run/node';
+import { useSearchParams } from '@remix-run/react';
 import { z } from 'zod';
 import { Form } from '~/component/Form';
 import { authenticator } from '~/services/authentication.server';

@@ -1,6 +1,6 @@
 import type { Team } from '@prisma/client';
 import * as React from 'react';
-import { Link } from 'remix';
+import { Link } from '@remix-run/react';
 
 type Props = {
   team: Team;

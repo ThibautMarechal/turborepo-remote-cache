@@ -1,4 +1,4 @@
-import { useLoaderData, type LoaderFunction } from 'remix';
+import type { LoaderFunction } from '@remix-run/node';
 import { requireCookieAuth } from '~/services/authentication.server';
 import { getUserDetailByUsername } from '~/services/users.server';
 import UserStats from '~/component/UserStats';
@@ -11,9 +11,10 @@ import type { TimeSavedByMonth } from '~/services/events.server';
 import { getTimeSavedByMonth } from '~/services/events.server';
 import { SourceType } from '~/types/vercel/turborepo';
 import { getArtifactsCount } from '~/services/artifact.server';
-import { isAdmin, requireAdmin } from '~/roles/rights';
+import { isAdmin } from '~/roles/rights';
 import HasRights from '~/component/HasRights';
 import { useCurrentUser } from '~/context/CurrentUser';
+import { json, useLoaderData } from '~/utils/superjson';
 
 export const loader: LoaderFunction = async ({ request, params, context }) => {
   const currentUser = await requireCookieAuth(request);
@@ -27,14 +28,14 @@ export const loader: LoaderFunction = async ({ request, params, context }) => {
     isAdministrator ? getTimeSavedByMonth(SourceType.REMOTE, { userId: user.id as string }) : [],
   ]);
 
-  return {
+  return json({
     user,
     sessions,
     artifacts,
     tokens,
     savedLocally,
     savedRemotely,
-  };
+  });
 };
 
 export default function User() {
@@ -49,8 +50,8 @@ export default function User() {
   }>();
   return (
     <div className="flex w-full justify-center items-center flex-col gap-5 mt-5">
-      <UserCard user={user} editable={isAdmin(currentUser!) || user.id === currentUser!.id} baseRoute={`/users/${user.username}`} />
-      <HasRights predicate={(u) => requireAdmin(u)}>
+      <UserCard user={user} editable={isAdmin(currentUser!)} baseRoute={`/users/${user.username}`} />
+      <HasRights predicate={(u) => isAdmin(u)}>
         <UserStats userId={user.id} sessions={sessions} artifacts={artifacts} tokens={tokens} />
         <TimeSavedStats local={savedLocally} remote={savedRemotely} />
       </HasRights>

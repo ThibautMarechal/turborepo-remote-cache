@@ -1,4 +1,4 @@
-import { type LoaderFunction } from 'remix';
+import type { LoaderFunction } from '@remix-run/node';
 import { TablePage } from '~/component/TablePage';
 import { useArtifactsTable } from '~/hooks/table/useArtifactsTable';
 import { useTablePageLoaderData } from '~/hooks/useTablePageLoaderData';
@@ -7,16 +7,17 @@ import { requireCookieAuth } from '~/services/authentication.server';
 import type { ArtifactDetail } from '~/types/prisma';
 import { getPaginationFromRequest } from '~/utils/pagination';
 import { getOrderByFromRequest } from '~/utils/sort';
+import { json } from '~/utils/superjson';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const user = await requireCookieAuth(request);
   const orderBy = getOrderByFromRequest(request);
   const { skip, take } = getPaginationFromRequest(request);
   const [items, count] = await Promise.all([getArtifacts({ userId: user.id, skip, take, orderBy }), getArtifactsCount({ userId: user.id })]);
-  return {
+  return json({
     items,
     count,
-  };
+  });
 };
 
 export default function Artifacts() {

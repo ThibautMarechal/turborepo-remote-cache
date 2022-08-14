@@ -1,6 +1,6 @@
 import { renderToString } from 'react-dom/server';
-import { RemixServer } from 'remix';
-import type { EntryContext, HandleDataRequestFunction } from 'remix';
+import type { EntryContext, HandleDataRequestFunction } from '@remix-run/node';
+import { RemixServer } from '@remix-run/react';
 import { cors } from 'remix-utils';
 import type { Headers } from '@remix-run/web-fetch';
 

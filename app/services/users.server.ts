@@ -5,29 +5,32 @@ import type { OrderBy } from '~/utils/sort';
 import { DEFAULT_ORDER_BY } from '~/utils/sort';
 
 export async function getUsers(skip: number = 0, take: number = 100, orderBy?: OrderBy[], search?: string): Promise<User[]> {
+  console.log(arguments, skip, take, orderBy, search);
   return await client.user.findMany({
     where: {
       isDeleted: false,
-      OR: [
-        {
-          email: {
-            contains: search,
-            mode: 'insensitive',
-          },
-        },
-        {
-          name: {
-            contains: search,
-            mode: 'insensitive',
-          },
-        },
-        {
-          username: {
-            contains: search,
-            mode: 'insensitive',
-          },
-        },
-      ],
+      OR: search
+        ? [
+            {
+              email: {
+                contains: search,
+                mode: 'insensitive',
+              },
+            },
+            {
+              name: {
+                contains: search,
+                mode: 'insensitive',
+              },
+            },
+            {
+              username: {
+                contains: search,
+                mode: 'insensitive',
+              },
+            },
+          ]
+        : undefined,
     },
     skip,
     take,
@@ -71,15 +74,15 @@ export async function getUsersByTeamCount(teamId: string) {
 }
 
 export async function getUser(id: string): Promise<User> {
-  return await client.user.findUnique({ where: { id } });
+  return await client.user.findUniqueOrThrow({ where: { id } });
 }
 
 export async function getUserByUsername(username: string): Promise<User> {
-  return await client.user.findUnique({ where: { username } });
+  return await client.user.findUniqueOrThrow({ where: { username } });
 }
 
 export async function getUserDetail(id: string) {
-  return await client.user.findUnique({
+  return await client.user.findUniqueOrThrow({
     where: { id },
     include: {
       memberships: {
@@ -92,7 +95,7 @@ export async function getUserDetail(id: string) {
 }
 
 export async function getUserDetailByUsername(username: string): Promise<User> {
-  return await client.user.findUnique({
+  return await client.user.findUniqueOrThrow({
     where: { username },
     include: {
       memberships: {
@@ -132,7 +135,7 @@ export async function updateUser(id: string, user: Pick<User, 'email' | 'name' |
 }
 
 export async function deleteUser(userId: string) {
-  const { isSuperAdmin } = await client.user.findUnique({
+  const { isSuperAdmin } = await client.user.findUniqueOrThrow({
     where: { id: userId },
     select: { isSuperAdmin: true },
   });
@@ -168,12 +171,12 @@ export async function deleteUser(userId: string) {
 }
 
 export async function getUserByUsernameAndPassword(username: string, password: string): Promise<User> {
-  const user = await client.user.findUnique({
+  const user = await client.user.findUniqueOrThrow({
     where: {
       username,
     },
   });
-  const { passwordHash } = await client.password.findFirst({
+  const { passwordHash } = await client.password.findFirstOrThrow({
     where: {
       userId: user.id,
     },

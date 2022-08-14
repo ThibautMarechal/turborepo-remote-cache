@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Gravatar from 'react-gravatar';
-import { Link } from 'remix';
+import { Link } from '@remix-run/react';
 import PencilIcon from '@heroicons/react/outline/PencilIcon';
 import KeyIcon from '@heroicons/react/outline/KeyIcon';
 import type { UserDetail } from '~/types/prisma';

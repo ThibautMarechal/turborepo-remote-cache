@@ -1,24 +1,19 @@
-import type { ColumnDef, ReactTableGenerics, Table } from '@tanstack/react-table';
-import { getCoreRowModel, useTableInstance } from '@tanstack/react-table';
+import type { TableOptions } from '@tanstack/react-table';
+import { useReactTable, getCoreRowModel } from '@tanstack/react-table';
 import { orderByToSortingState, sortingStateToOrderBy } from '~/utils/sort';
 import { useSortSearchParams } from '~/hooks/useSortSearchParams';
 import { usePaginateSearchParams } from '../usePaginateSearchParams';
-import { useFetcher } from 'remix';
+import { useFetcher } from '@remix-run/react';
 import * as React from 'react';
 
-export function usePaginateSortingTable<TableElement extends ReactTableGenerics>(
-  table: Table<TableElement>,
-  columns: ColumnDef<TableElement>[],
-  data: TableElement['Row'][],
-  count: number,
-) {
+export function usePaginateSortingTable<TableElement>(tableOptions: Omit<TableOptions<TableElement>, 'getCoreRowModel'>, count: number) {
   const { orderBy, setOrderBy } = useSortSearchParams();
 
-  const [pagedData, setPagedData] = React.useState(data);
+  const [pagedData, setPagedData] = React.useState(tableOptions.data);
 
   React.useEffect(() => {
-    setPagedData(data);
-  }, [data]);
+    setPagedData(tableOptions.data);
+  }, [tableOptions.data]);
 
   const fetcher = useFetcher();
 
@@ -33,20 +28,19 @@ export function usePaginateSortingTable<TableElement extends ReactTableGenerics>
   const { skip, take, nextUrl, previousUrl, getUrlAtPage } = usePaginateSearchParams();
 
   return {
-    tableProps: {
-      ...useTableInstance(table, {
-        data: pagedData,
-        columns,
-        state: {
-          sorting,
-        },
-        onSortingChange: (s) => {
-          const newSorting = typeof s === 'function' ? s(sorting) : s;
-          setOrderBy(sortingStateToOrderBy(newSorting));
-        },
-        getCoreRowModel: getCoreRowModel(),
-      }),
-    },
+    tableProps: useReactTable({
+      ...tableOptions,
+      data: pagedData,
+      state: {
+        sorting,
+      },
+      onSortingChange: (s) => {
+        const newSorting = typeof s === 'function' ? s(sorting) : s;
+        setOrderBy(sortingStateToOrderBy(newSorting));
+      },
+      getCoreRowModel: getCoreRowModel(),
+    }),
+
     paginationProps: {
       skip,
       take,

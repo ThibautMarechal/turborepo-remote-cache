@@ -1,5 +1,4 @@
-import type { ActionFunction } from 'remix';
-import { useLoaderData, type LoaderFunction } from 'remix';
+import type { ActionFunction, LoaderFunction } from '@remix-run/node';
 import { formAction } from 'remix-forms';
 import { z } from 'zod';
 import { requireCookieAuth } from '~/services/authentication.server';
@@ -9,6 +8,8 @@ import { Form } from '~/component/Form';
 import { requireAdmin } from '~/roles/rights';
 import { ServerRole } from '~/roles/ServerRole';
 import { forbidden } from '~/utils/response';
+import { json, useLoaderData } from '~/utils/superjson';
+import type { User } from '@prisma/client';
 
 const schema = z.object({
   email: z.string().min(1).email(),
@@ -23,7 +24,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   if (user.isSuperAdmin) {
     throw forbidden("Cannot update super-admin's informations");
   }
-  return user;
+  return json(user);
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
@@ -45,7 +46,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 };
 
 export default function Edit() {
-  const user = useLoaderData();
+  const user = useLoaderData<User>();
   return (
     <div className="flex justify-center">
       <Form schema={schema} values={user}>

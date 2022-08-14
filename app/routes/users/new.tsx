@@ -1,5 +1,5 @@
-import type { ActionFunction } from 'remix';
-import { type LoaderFunction } from 'remix';
+import type { ActionFunction, LoaderFunction } from '@remix-run/node';
+
 import { formAction } from 'remix-forms';
 import { z } from 'zod';
 import { requireCookieAuth } from '~/services/authentication.server';

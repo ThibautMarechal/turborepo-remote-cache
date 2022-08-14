@@ -1,4 +1,4 @@
-import { type LoaderFunction } from 'remix';
+import type { LoaderFunction } from '@remix-run/node';
 import { useSessionsTable } from '~/hooks/table/useSessionsTable';
 import { requireCookieAuth } from '~/services/authentication.server';
 
@@ -11,6 +11,7 @@ import { TablePage } from '~/component/TablePage';
 import type { SessionDetail } from '~/types/prisma';
 import { getSessions, getSessionsCount } from '~/services/session.server';
 import { requireAdmin } from '~/roles/rights';
+import { json } from '~/utils/superjson';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const currentUser = await requireCookieAuth(request);
@@ -19,11 +20,11 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const orderBy = getOrderByFromRequest(request);
   const user = await getUser(params.username as string);
   const [items, count] = await Promise.all([getSessions({ userId: user.id, skip, take, orderBy }), getSessionsCount({ userId: user.id })]);
-  return {
+  return json({
     user,
     items,
     count,
-  };
+  });
 };
 
 export default function Sessions() {

@@ -1,4 +1,4 @@
-import type { ActionFunction, LoaderFunction } from 'remix';
+import type { ActionFunction, LoaderFunction } from '@remix-run/node';
 import invariant from 'tiny-invariant';
 import { TablePage } from '~/component/TablePage';
 import { useArtifactsTable } from '~/hooks/table/useArtifactsTable';
@@ -10,6 +10,7 @@ import { CacheStorage } from '~/services/storage.server';
 import type { ArtifactDetail } from '~/types/prisma';
 import { getPaginationFromRequest } from '~/utils/pagination';
 import { getOrderByFromRequest } from '~/utils/sort';
+import { json } from '~/utils/superjson';
 
 export const loader: LoaderFunction = async ({ request, params, context }) => {
   const user = await requireCookieAuth(request);
@@ -17,10 +18,10 @@ export const loader: LoaderFunction = async ({ request, params, context }) => {
   const orderBy = getOrderByFromRequest(request);
   const { skip, take } = getPaginationFromRequest(request);
   const [items, count] = await Promise.all([getArtifacts({ skip, take, orderBy }), getArtifactsCount()]);
-  return {
+  return json({
     items,
     count,
-  };
+  });
 };
 
 export const action: ActionFunction = async ({ request, params, context }) => {

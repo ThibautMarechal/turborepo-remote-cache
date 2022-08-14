@@ -1,6 +1,5 @@
-import * as React from 'react';
 import Gravatar from 'react-gravatar';
-import { Link, NavLink, useLocation } from 'remix';
+import { Link, NavLink, useLocation } from '@remix-run/react';
 import LogoutIcon from '@heroicons/react/outline/LogoutIcon';
 import UserIcon from '@heroicons/react/outline/UserIcon';
 import UsersIcon from '@heroicons/react/outline/UsersIcon';
@@ -11,7 +10,7 @@ import FingerPrintIcon from '@heroicons/react/outline/FingerPrintIcon';
 import cn from 'classnames';
 import { useCurrentUser } from '~/context/CurrentUser';
 import HasRights from './HasRights';
-import { requireAdmin } from '~/roles/rights';
+import { isAdmin } from '~/roles/rights';
 
 export const Navigation = () => {
   const user = useCurrentUser();
@@ -42,7 +41,7 @@ export const Navigation = () => {
               </NavLink>
             </li>
             <li>
-              <HasRights predicate={(u) => requireAdmin(u)}>
+              <HasRights predicate={(u) => isAdmin(u)}>
                 <NavLink to="/sessions" className="text-primary-content hover:text-red-50">
                   <LightningBoltIcon className={cn('h-5', { 'text-primary': !pathname.startsWith('/sessions'), 'text-secondary': pathname.startsWith('/sessions') })} />
                   Sessions
@@ -50,14 +49,14 @@ export const Navigation = () => {
               </HasRights>
             </li>
             <li>
-              <HasRights predicate={(u) => requireAdmin(u)}>
+              <HasRights predicate={(u) => isAdmin(u)}>
                 <NavLink to="/artifacts" className="text-primary-content">
                   <ArchiveIcon className={cn('h-5', { 'text-primary': !pathname.startsWith('/artifacts'), 'text-secondary': pathname.startsWith('/artifacts') })} />
                   Artifacts
                 </NavLink>
               </HasRights>
             </li>
-            <HasRights predicate={(u) => requireAdmin(u)}>
+            <HasRights predicate={(u) => isAdmin(u)}>
               <li>
                 <NavLink to="/tokens" className="text-primary-content">
                   <FingerPrintIcon className={cn('h-5', { 'text-primary': !pathname.startsWith('/tokens'), 'text-secondary': pathname.startsWith('/tokens') })} />

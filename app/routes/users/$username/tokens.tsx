@@ -1,5 +1,5 @@
 import type { User } from '@prisma/client';
-import { type LoaderFunction } from 'remix';
+import type { LoaderFunction } from '@remix-run/node';
 import { TablePage } from '~/component/TablePage';
 import { useTokensTable } from '~/hooks/table/useTokensTable';
 import { useTablePageLoaderData } from '~/hooks/useTablePageLoaderData';
@@ -10,6 +10,7 @@ import { getUserByUsername } from '~/services/users.server';
 import type { TokenDetail } from '~/types/prisma';
 import { getPaginationFromRequest } from '~/utils/pagination';
 import { getOrderByFromRequest } from '~/utils/sort';
+import { json } from '~/utils/superjson';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const currentUser = await requireCookieAuth(request);
@@ -18,11 +19,11 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const orderBy = getOrderByFromRequest(request);
   const user = await getUserByUsername(params.username as string);
   const [items, count] = await Promise.all([getTokens({ userId: user.id, skip, take, orderBy }), getTokensCount({ userId: user.id })]);
-  return {
+  return json({
     user,
     items,
     count,
-  };
+  });
 };
 
 export default function Tokens() {

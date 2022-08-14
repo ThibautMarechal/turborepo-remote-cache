@@ -3,7 +3,8 @@ import FingerPrintIcon from '@heroicons/react/outline/FingerPrintIcon';
 import LightningBoltIcon from '@heroicons/react/outline/LightningBoltIcon';
 import UserGroupIcon from '@heroicons/react/outline/UserGroupIcon';
 import UsersIcon from '@heroicons/react/outline/UsersIcon';
-import { Link, useLoaderData, type LoaderFunction } from 'remix';
+import type { LoaderFunction } from '@remix-run/node';
+import { Link } from '@remix-run/react';
 import HasRights from '~/component/HasRights';
 import { Stat } from '~/component/Stat';
 import { Stats } from '~/component/Stats';
@@ -17,7 +18,8 @@ import type { TimeSavedByMonth } from '~/services/events.server';
 import { getTimeSavedByMonth } from '~/services/events.server';
 import { SourceType } from '~/types/vercel/turborepo';
 import TimeSavedStats from '~/component/TimeSavedStats';
-import { requireAdmin } from '~/roles/rights';
+import { isAdmin } from '~/roles/rights';
+import { json, useLoaderData } from '~/utils/superjson';
 
 export const loader: LoaderFunction = async ({ request, params, context }) => {
   const user = await requireCookieAuth(request);
@@ -30,7 +32,7 @@ export const loader: LoaderFunction = async ({ request, params, context }) => {
     getTimeSavedByMonth(SourceType.LOCAL, { userId: user.id }),
     getTimeSavedByMonth(SourceType.REMOTE, { userId: user.id }),
   ]);
-  return {
+  return json({
     users,
     teams,
     sessions,
@@ -38,7 +40,7 @@ export const loader: LoaderFunction = async ({ request, params, context }) => {
     tokens,
     savedLocally,
     savedRemotely,
-  };
+  });
 };
 
 export default function DashBoard() {
@@ -72,7 +74,7 @@ export default function DashBoard() {
           }
           value={teams}
         />
-        <HasRights predicate={(u) => requireAdmin(u)}>
+        <HasRights predicate={(u) => isAdmin(u)}>
           <Stat
             icon={<LightningBoltIcon className="w-8 h-8" />}
             title={

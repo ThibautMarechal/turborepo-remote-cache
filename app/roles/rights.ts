@@ -12,11 +12,11 @@ export function requireAdmin(user: UserDetail): boolean {
   if (isAdmin(user)) {
     return true;
   }
-  throw forbidden();
+  throw forbidden('You are not an admin');
 }
 
 export function isTeamOwner(user: UserDetail, teamId: string): boolean {
-  return user.memberships.some((m) => m.teamId === teamId && m.role === TeamRole.OWNER);
+  return isAdmin(user) || user.memberships.some((m) => m.teamId === teamId && m.role === TeamRole.OWNER);
 }
 
 export function requireTeamOwner(user: UserDetail, teamId: string): boolean {
@@ -26,7 +26,7 @@ export function requireTeamOwner(user: UserDetail, teamId: string): boolean {
   if (isTeamOwner(user, teamId)) {
     return true;
   }
-  throw forbidden();
+  throw forbidden('You are not team owner');
 }
 
 export function isTeamMember(user: UserDetail, teamId: string): boolean {
@@ -40,7 +40,7 @@ export function requireTeamMember(user: UserDetail, teamId: string): boolean {
   if (isTeamMember(user, teamId)) {
     return true;
   }
-  throw forbidden();
+  throw forbidden('You are not team member');
 }
 
 export function isArtifactOwner(user: UserDetail, artifact: Artifact): boolean {

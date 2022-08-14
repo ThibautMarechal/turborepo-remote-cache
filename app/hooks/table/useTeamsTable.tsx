@@ -1,8 +1,8 @@
 import TrashIcon from '@heroicons/react/outline/TrashIcon';
 import type { Team } from '@prisma/client';
-import { Form, Link } from 'remix';
+import { Form, Link } from '@remix-run/react';
 import DateCell from '~/component/DateCell';
-import { createTable } from '@tanstack/react-table';
+import { createColumnHelper } from '@tanstack/react-table';
 
 import SearchIcon from '@heroicons/react/outline/SearchIcon';
 import PencilIcon from '@heroicons/react/outline/PencilIcon';
@@ -10,28 +10,28 @@ import { usePaginateSortingTable } from './usePaginateSortingTable';
 import HasRights from '~/component/HasRights';
 import { requireTeamOwner } from '~/roles/rights';
 
-const table = createTable().setRowType<Team>();
+const columnHelper = createColumnHelper<Team>();
 
 const defaultColumns = [
-  table.createDataColumn((team) => team.name, {
+  columnHelper.accessor((team) => team.name, {
     id: 'name',
     header: 'Name',
   }),
-  table.createDataColumn((team) => team.slug, {
+  columnHelper.accessor((team) => team.slug, {
     id: 'slug',
     header: 'Slug',
   }),
 
-  table.createDataColumn((team) => team.creationDate, {
+  columnHelper.accessor((team) => team.creationDate, {
     id: 'creationDate',
     header: 'Creation date',
     cell: ({ getValue }) => <DateCell date={getValue()} />,
   }),
-  table.createDataColumn((team) => team, {
+  columnHelper.display({
     id: 'actions',
     enableSorting: false,
-    cell: ({ getValue }) => {
-      const team = getValue();
+    cell: ({ row }) => {
+      const team = row.original;
       return (
         <div className="flex gap-1">
           <Link to={`/teams/${team.slug}`} prefetch="intent" className="btn btn-xs btn-square">
@@ -53,4 +53,4 @@ const defaultColumns = [
     },
   }),
 ];
-export const useTeamsTable = (data: Team[], count: number) => usePaginateSortingTable(table, defaultColumns, data, count);
+export const useTeamsTable = (data: Team[], count: number) => usePaginateSortingTable({ data, columns: defaultColumns }, count);

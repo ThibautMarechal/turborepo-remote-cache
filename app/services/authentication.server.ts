@@ -1,4 +1,4 @@
-import { redirect } from 'remix';
+import { redirect } from '@remix-run/node';
 import { Authenticator } from 'remix-auth';
 import { FormStrategy } from 'remix-auth-form';
 import invariant from 'tiny-invariant';

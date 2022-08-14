@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Form, useLocation } from 'remix';
+import { Form, useLocation } from '@remix-run/react';
 
 export const Search = () => {
   const location = useLocation();

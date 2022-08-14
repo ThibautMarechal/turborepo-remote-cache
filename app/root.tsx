@@ -1,5 +1,7 @@
-import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useCatch, useLoaderData } from 'remix';
-import type { MetaFunction, LinksFunction, LoaderFunction } from 'remix';
+import type { LinksFunction, LoaderFunction, MetaFunction } from '@remix-run/node';
+
+import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useCatch } from '@remix-run/react';
+
 import { authenticator } from '~/services/authentication.server';
 import { getUserDetail } from '~/services/users.server';
 import { CurrentUserProvider } from '~/context/CurrentUser';
@@ -7,6 +9,7 @@ import Navigation from '~/component/Navigation';
 import type { UserDetail } from '~/types/prisma';
 import tailwind from '~/styles/tailwind.css';
 import fullturboStyle from '~/styles/fullturbo.css';
+import { json, useLoaderData } from '~/utils/superjson';
 
 export const meta: MetaFunction = () => ({
   charset: 'utf-8',
@@ -14,12 +17,12 @@ export const meta: MetaFunction = () => ({
   viewport: 'width=device-width,initial-scale=1',
 });
 
-export const loader: LoaderFunction = async ({ request, params, context }) => {
+export const loader: LoaderFunction = async ({ request }) => {
   const userFromCookie = await authenticator.isAuthenticated(request);
   try {
-    return { user: userFromCookie ? await getUserDetail(userFromCookie) : null };
+    return json({ user: userFromCookie ? await getUserDetail(userFromCookie) : null });
   } catch (e) {
-    return { user: null };
+    return json({ user: null });
   }
 };
 
@@ -63,6 +66,7 @@ export const CatchBoundary = () => {
       <body>
         <Navigation />
         <div className="text-error text-4xl text-center m-20">{caught.status}</div>
+        <div className="text-error text-lg text-center m-0">{caught.data}</div>
         <ScrollRestoration />
         <Scripts />
         <LiveReload />

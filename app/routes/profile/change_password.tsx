@@ -1,5 +1,5 @@
-import type { ActionFunction } from 'remix';
-import { useLoaderData, type LoaderFunction } from 'remix';
+import type { ActionFunction, LoaderFunction } from '@remix-run/node';
+
 import { formAction } from 'remix-forms';
 import { z } from 'zod';
 import { requireCookieAuth } from '~/services/authentication.server';
@@ -18,7 +18,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   if (currentUser.isSuperAdmin) {
     throw forbidden("Cannot update super-admin's password");
   }
-  return currentUser;
+  return null;
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
@@ -31,7 +31,6 @@ export const action: ActionFunction = async ({ request, params }) => {
       throw unprocessableEntity("passwords doesn't match");
     }
     await updateUserPassword(currentUser.id, password);
-    console.log('here');
   });
   return formAction({
     request,
@@ -42,10 +41,9 @@ export const action: ActionFunction = async ({ request, params }) => {
 };
 
 export default function Edit() {
-  const user = useLoaderData();
   return (
     <div className="flex justify-center">
-      <Form schema={schema} values={user}>
+      <Form schema={schema}>
         {({ Field, Button }) => (
           <>
             <Field name="password" type="password" />

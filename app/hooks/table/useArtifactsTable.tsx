@@ -1,23 +1,22 @@
 import TrashIcon from '@heroicons/react/outline/TrashIcon';
 import DownloadIcon from '@heroicons/react/outline/DownloadIcon';
 import type { Artifact, Team, User } from '@prisma/client';
-import { Form, useTransition } from 'remix';
+import { Form, useTransition } from '@remix-run/react';
 import DateCell from '~/component/DateCell';
 import TeamCell from '~/component/TeamCell';
 import UserCell from '~/component/UserCell';
-import { createTable } from '@tanstack/react-table';
+import { createColumnHelper } from '@tanstack/react-table';
 
 import { formatDuration, formatSize } from '~/utils/intl';
 import { usePaginateSortingTable } from './usePaginateSortingTable';
 import HasRights from '~/component/HasRights';
-import type { ActionSubmission } from '@remix-run/react/transition';
 import cn from 'classnames';
-import { requireAdmin } from '~/roles/rights';
+import { isAdmin } from '~/roles/rights';
 
-const table = createTable().setRowType<Artifact & { user: User; team: Team | null }>();
+const columnHelper = createColumnHelper<Artifact & { user: User; team: Team | null }>();
 
 const defaultColumns = [
-  table.createDataColumn((artifact) => artifact.team, {
+  columnHelper.accessor((artifact) => artifact.team, {
     id: 'team',
     header: 'Team',
     cell: ({ getValue }) => {
@@ -25,27 +24,28 @@ const defaultColumns = [
       return team ? <TeamCell team={team} /> : <div className="opacity-50">No Team</div>;
     },
   }),
-  table.createDataColumn((artifact) => artifact.user, {
+  columnHelper.accessor((artifact) => artifact.user, {
     id: 'user',
+
     header: 'User',
     cell: ({ getValue }) => <UserCell user={getValue()} />,
   }),
-  table.createDataColumn((artifact) => artifact.duration, {
+  columnHelper.accessor((artifact) => artifact.duration, {
     id: 'duration',
     header: 'Duration',
     cell: ({ getValue }) => formatDuration(getValue()),
   }),
-  table.createDataColumn((artifact) => artifact.contentLength, {
+  columnHelper.accessor((artifact) => artifact.contentLength, {
     id: 'contentLength',
     header: 'Size',
     cell: ({ getValue }) => formatSize(getValue()),
   }),
-  table.createDataColumn((artifact) => artifact.creationDate, {
+  columnHelper.accessor((artifact) => artifact.creationDate, {
     id: 'creationDate',
     header: 'Creation date',
     cell: ({ getValue }) => <DateCell date={getValue()} />,
   }),
-  table.createDataColumn((artifact) => artifact.lastHitDate, {
+  columnHelper.accessor((artifact) => artifact.lastHitDate, {
     id: 'lastHitDate',
     header: 'Last hit date',
     cell: ({ getValue }) => {
@@ -53,28 +53,28 @@ const defaultColumns = [
       return value ? <DateCell date={value} /> : <div className="opacity-50">Never</div>;
     },
   }),
-  table.createDataColumn((artifact) => artifact.hitCount, {
+  columnHelper.accessor((artifact) => artifact.hitCount, {
     id: 'hitCount',
     header: 'Hit count',
   }),
-  table.createDataColumn((artifact) => artifact.hitCount * artifact.duration, {
+  columnHelper.accessor((artifact) => artifact.hitCount * artifact.duration, {
     id: 'timeSaved',
     header: 'Time saved',
     enableSorting: false,
     cell: ({ getValue }) => formatDuration(getValue()),
   }),
-  table.createDataColumn((artifact) => artifact, {
+  columnHelper.display({
     id: 'actions',
     enableSorting: false,
-    cell: ({ getValue }) => {
-      const artifact = getValue();
+    cell: ({ row }) => {
+      const artifact = row.original;
       // eslint-disable-next-line react-hooks/rules-of-hooks
       const { state, submission } = useTransition();
-      const isDeleting = state === 'submitting' && (submission as ActionSubmission).formData.get('id') === artifact.id;
+      const isDeleting = state === 'submitting' && submission.formData.get('id') === artifact.id;
       return (
         <div className="flex gap-1">
           {/* TODO rights based on route */}
-          <HasRights predicate={(u) => requireAdmin(u)}>
+          <HasRights predicate={(u) => isAdmin(u)}>
             <Form method="post">
               <input name="id" value={artifact.id} type="hidden" />
               <button className={cn('btn btn-xs btn-square', { loading: isDeleting })}>{!isDeleting && <TrashIcon className="h-4 w-4" />}</button>
@@ -89,4 +89,4 @@ const defaultColumns = [
   }),
 ];
 
-export const useArtifactsTable = (data: Array<Artifact & { user: User; team: Team | null }>, count: number) => usePaginateSortingTable(table, defaultColumns, data, count);
+export const useArtifactsTable = (data: Array<Artifact & { user: User; team: Team | null }>, count: number) => usePaginateSortingTable({ data, columns: defaultColumns }, count);

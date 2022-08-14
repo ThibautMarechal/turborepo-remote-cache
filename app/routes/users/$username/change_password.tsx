@@ -1,5 +1,4 @@
-import type { ActionFunction } from 'remix';
-import { useLoaderData, type LoaderFunction } from 'remix';
+import type { ActionFunction, LoaderFunction } from '@remix-run/node';
 import { formAction } from 'remix-forms';
 import { z } from 'zod';
 import { requireCookieAuth } from '~/services/authentication.server';
@@ -8,6 +7,8 @@ import { makeDomainFunction } from 'remix-domains';
 import { Form } from '~/component/Form';
 import { requireAdmin } from '~/roles/rights';
 import { forbidden, unprocessableEntity } from '~/utils/response';
+import { useLoaderData, json } from '~/utils/superjson';
+import type { User } from '@prisma/client';
 
 const schema = z.object({
   password: z.string().min(1),
@@ -21,7 +22,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   if (user.isSuperAdmin) {
     throw forbidden("Cannot update super-admin's password");
   }
-  return user;
+  return null;
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
@@ -36,7 +37,6 @@ export const action: ActionFunction = async ({ request, params }) => {
       throw unprocessableEntity("passwords doesn't match");
     }
     await updateUserPassword(user.id, password);
-    console.log('here');
   });
   return formAction({
     request,
@@ -47,10 +47,9 @@ export const action: ActionFunction = async ({ request, params }) => {
 };
 
 export default function Edit() {
-  const user = useLoaderData();
   return (
     <div className="flex justify-center">
-      <Form schema={schema} values={user}>
+      <Form schema={schema}>
         {({ Field, Button }) => (
           <>
             <Field name="password" type="password" />

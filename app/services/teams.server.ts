@@ -76,11 +76,11 @@ export async function getTeamFromRequest(request: Request): Promise<Team | null>
 }
 
 export async function getTeam(id: string): Promise<Team> {
-  return await client.team.findUnique({ where: { id } });
+  return await client.team.findUniqueOrThrow({ where: { id } });
 }
 
 export async function getTeamDetail(id: string) {
-  return await client.team.findUnique({
+  return await client.team.findUniqueOrThrow({
     where: { id },
     include: {
       members: {
@@ -93,11 +93,11 @@ export async function getTeamDetail(id: string) {
 }
 
 export async function getTeamBySlug(slug: string): Promise<Team> {
-  return await client.team.findUnique({ where: { slug } });
+  return await client.team.findUniqueOrThrow({ where: { slug } });
 }
 
 export async function getTeamDetailBySlug(slug: string): Promise<TeamDetail> {
-  return await client.team.findUnique({
+  return await client.team.findUniqueOrThrow({
     where: { slug },
     include: {
       members: {

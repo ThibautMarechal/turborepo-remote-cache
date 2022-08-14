@@ -1,4 +1,5 @@
-import { Link, useLoaderData, type LoaderFunction } from 'remix';
+import type { LoaderFunction } from '@remix-run/node';
+import { Link } from '@remix-run/react';
 import { requireCookieAuth } from '~/services/authentication.server';
 import PencilIcon from '@heroicons/react/outline/PencilIcon';
 import { getTeamDetailBySlug } from '~/services/teams.server';
@@ -15,6 +16,8 @@ import type { TeamDetail } from '~/types/prisma';
 import { getSessionsCount } from '~/services/session.server';
 import { getArtifactsCount } from '~/services/artifact.server';
 import { isTeamOwner } from '~/roles/rights';
+import { json, useLoaderData } from '~/utils/superjson';
+import HasRights from '~/component/HasRights';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const user = await requireCookieAuth(request);
@@ -26,7 +29,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     getTimeSavedByMonth(SourceType.LOCAL, { teamId: team.id }),
     getTimeSavedByMonth(SourceType.REMOTE, { teamId: team.id }),
   ]);
-  return { team, sessions, artifacts, savedLocally, savedRemotely };
+  return json({ team, sessions, artifacts, savedLocally, savedRemotely });
 };
 
 export default function Team() {
@@ -43,9 +46,11 @@ export default function Team() {
         <div className="card-body">
           <h2 className="card-title">
             {team.name}
-            <Link to="./edit" prefetch="intent" className="btn btn-xs absolute top-0 right-0">
-              <PencilIcon className="h-4 w-4" />
-            </Link>
+            <HasRights predicate={(u) => isTeamOwner(u, team.id)}>
+              <Link to="./edit" prefetch="intent" className="btn btn-xs absolute top-1 right-1">
+                <PencilIcon className="h-4 w-4" />
+              </Link>
+            </HasRights>
           </h2>
           <div>
             <span className="font-bold mr-2">Name:</span>

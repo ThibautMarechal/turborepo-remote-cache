@@ -1,4 +1,5 @@
-import { type LoaderFunction, type ActionFunction, Link } from 'remix';
+import type { ActionFunction, LoaderFunction } from '@remix-run/node';
+import { Link } from '@remix-run/react';
 import { requireCookieAuth } from '~/services/authentication.server';
 import { deleteUser, getUser, getUsers, getUsersCount } from '~/services/users.server';
 import type { User } from '@prisma/client';
@@ -9,9 +10,10 @@ import { getPaginationFromRequest } from '~/utils/pagination';
 import TablePage from '~/component/TablePage';
 import { useTablePageLoaderData } from '~/hooks/useTablePageLoaderData';
 import HasRights from '~/component/HasRights';
-import { requireAdmin } from '~/roles/rights';
+import { isAdmin } from '~/roles/rights';
 import { getSearchFromRequest } from '~/utils/search';
 import { forbidden } from '~/utils/response';
+import { json } from '~/utils/superjson';
 
 export const loader: LoaderFunction = async ({ request }) => {
   await requireCookieAuth(request);
@@ -19,7 +21,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   const orderBy = getOrderByFromRequest(request);
   const search = getSearchFromRequest(request);
   const [items, count] = await Promise.all([getUsers(skip, take, orderBy, search), getUsersCount()]);
-  return { items, count };
+  return json({ items, count });
 };
 
 export const action: ActionFunction = async ({ request, params, context }) => {
@@ -40,7 +42,7 @@ export default function Users() {
   return (
     <>
       <TablePage title="Users" count={count} tableProps={tableProps} paginationProps={paginationProps} searchable />
-      <HasRights predicate={(u) => requireAdmin(u)}>
+      <HasRights predicate={(u) => isAdmin(u)}>
         <Link to="./new" className="btn btn-circle btn-primary fixed bottom-5 right-5">
           <PlusIcon className="w-8" />
         </Link>

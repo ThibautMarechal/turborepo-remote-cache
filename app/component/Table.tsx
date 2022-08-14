@@ -1,5 +1,5 @@
-import * as React from 'react';
-import type { TableInstance } from '@tanstack/react-table';
+import type { Table as TableInstance } from '@tanstack/react-table';
+import { flexRender } from '@tanstack/react-table';
 import cn from 'classnames';
 
 export type TableProps<TableElement> = TableInstance<TableElement> & {
@@ -20,7 +20,7 @@ export function Table<TableElement>({ getHeaderGroups, getRowModel, getFooterGro
                   className={cn({ 'cursor-pointer select-none': header.column.getCanSort() })}
                   onClick={header.column.getToggleSortingHandler()}
                 >
-                  {header.isPlaceholder ? null : (header.renderHeader() as React.ReactNode)}
+                  {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                   {{
                     asc: ' 🔼',
                     desc: ' 🔽',
@@ -36,7 +36,7 @@ export function Table<TableElement>({ getHeaderGroups, getRowModel, getFooterGro
             return (
               <tr key={row.id}>
                 {row.getVisibleCells().map((cell) => {
-                  return <td key={cell.id}>{cell.renderCell() as React.ReactNode}</td>;
+                  return <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>;
                 })}
               </tr>
             );
@@ -48,7 +48,7 @@ export function Table<TableElement>({ getHeaderGroups, getRowModel, getFooterGro
               <tr key={footerGroup.id}>
                 {footerGroup.headers.map((header) => (
                   <th key={header.id} colSpan={header.colSpan}>
-                    {header.isPlaceholder ? null : (header.renderFooter() as React.ReactNode)}
+                    {header.isPlaceholder ? null : flexRender(header.column.columnDef.footer, header.getContext())}
                   </th>
                 ))}
               </tr>

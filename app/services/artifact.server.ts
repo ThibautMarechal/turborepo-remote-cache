@@ -40,7 +40,7 @@ export async function hitArtifact(id: string) {
 }
 
 export async function getArtifact(id: string) {
-  return client.artifact.findUnique({
+  return client.artifact.findUniqueOrThrow({
     where: {
       id,
     },

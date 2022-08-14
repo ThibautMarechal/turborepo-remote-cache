@@ -1,4 +1,4 @@
-import { type LoaderFunction, type ActionFunction } from 'remix';
+import type { ActionFunction, LoaderFunction } from '@remix-run/node';
 import { Readable } from 'stream';
 import { CacheStorage } from '~/services/storage.server';
 import { DURATION_HEADER, getTurboContext, turboContextToMeta } from '~/utils/turboContext';

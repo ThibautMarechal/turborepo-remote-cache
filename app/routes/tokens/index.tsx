@@ -1,6 +1,6 @@
 import PlusIcon from '@heroicons/react/outline/PlusIcon';
-import type { ActionFunction, LoaderFunction } from 'remix';
-import { Link } from 'remix';
+import type { ActionFunction, LoaderFunction } from '@remix-run/node';
+import { Link } from '@remix-run/react';
 import { TablePage } from '~/component/TablePage';
 import { useTokensTable } from '~/hooks/table/useTokensTable';
 import { useTablePageLoaderData } from '~/hooks/useTablePageLoaderData';
@@ -10,6 +10,7 @@ import { getTokens, getTokensCount, revokeToken } from '~/services/tokens.server
 import type { TokenDetail } from '~/types/prisma';
 import { getPaginationFromRequest } from '~/utils/pagination';
 import { getOrderByFromRequest } from '~/utils/sort';
+import { json } from '~/utils/superjson';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const user = await requireCookieAuth(request);
@@ -17,7 +18,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const orderBy = getOrderByFromRequest(request);
   const { skip, take } = getPaginationFromRequest(request);
   const [items, count] = await Promise.all([getTokens({ skip, take, orderBy }), getTokensCount()]);
-  return { items, count };
+  return json({ items, count });
 };
 
 export const action: ActionFunction = async ({ request, params, context }) => {

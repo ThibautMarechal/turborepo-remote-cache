@@ -1,4 +1,5 @@
-import { type LoaderFunction, type ActionFunction, Link } from 'remix';
+import type { ActionFunction, LoaderFunction } from '@remix-run/node';
+import { Link } from '@remix-run/react';
 import { requireCookieAuth } from '~/services/authentication.server';
 import type { Team } from '@prisma/client';
 import { deleteTeam, getTeams, getTeamsCount } from '~/services/teams.server';
@@ -9,8 +10,9 @@ import { getOrderByFromRequest } from '~/utils/sort';
 import { useTablePageLoaderData } from '~/hooks/useTablePageLoaderData';
 import { TablePage } from '~/component/TablePage';
 import HasRights from '~/component/HasRights';
-import { requireAdmin } from '~/roles/rights';
+import { isAdmin } from '~/roles/rights';
 import { getSearchFromRequest } from '~/utils/search';
+import { json } from '~/utils/superjson';
 
 export const loader: LoaderFunction = async ({ request }) => {
   await requireCookieAuth(request);
@@ -18,7 +20,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   const orderBy = getOrderByFromRequest(request);
   const search = getSearchFromRequest(request);
   const [items, count] = await Promise.all([getTeams(skip, take, orderBy, search), getTeamsCount()]);
-  return { items, count };
+  return json({ items, count });
 };
 
 export const action: ActionFunction = async ({ request, params, context }) => {
@@ -34,7 +36,7 @@ export default function Teams() {
   return (
     <>
       <TablePage title="Teams" count={count} tableProps={tableProps} paginationProps={paginationProps} searchable />
-      <HasRights predicate={(u) => requireAdmin(u)}>
+      <HasRights predicate={(u) => isAdmin(u)}>
         <Link to="./new" className="btn btn-circle btn-primary fixed bottom-5 right-5">
           <PlusIcon className="w-8" />
         </Link>

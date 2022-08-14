@@ -1,4 +1,4 @@
-import { useLoaderData, type LoaderFunction } from 'remix';
+import type { LoaderFunction } from '@remix-run/node';
 import TimeSavedStats from '~/component/TimeSavedStats';
 import UserCard from '~/component/UserCard';
 import UserStats from '~/component/UserStats';
@@ -11,6 +11,7 @@ import { getSessionsCount } from '~/services/session.server';
 import { getTokensCount } from '~/services/tokens.server';
 import { getUserDetail } from '~/services/users.server';
 import { SourceType } from '~/types/vercel/turborepo';
+import { json, useLoaderData } from '~/utils/superjson';
 
 export const loader: LoaderFunction = async ({ request, params, context }) => {
   const { id: userId } = await requireCookieAuth(request);
@@ -22,14 +23,14 @@ export const loader: LoaderFunction = async ({ request, params, context }) => {
     getTimeSavedByMonth(SourceType.LOCAL, { userId }),
     getTimeSavedByMonth(SourceType.REMOTE, { userId }),
   ]);
-  return {
+  return json({
     user,
     sessions,
     artifacts,
     tokens,
     savedLocally,
     savedRemotely,
-  };
+  });
 };
 
 export default function Index() {

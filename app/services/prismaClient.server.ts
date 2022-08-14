@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import invariant from 'tiny-invariant';
 
-let client: PrismaClient<{ rejectOnNotFound: true }>;
+let client: PrismaClient;
 
 declare global {
   // eslint-disable-next-line no-var
@@ -38,7 +38,6 @@ function getClient() {
         url: databaseUrl.toString(),
       },
     },
-    rejectOnNotFound: true,
   });
   // connect eagerly
   client.$connect();

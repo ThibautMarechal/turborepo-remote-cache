@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Link, useLocation, useMatches } from 'remix';
+import { Link, useLocation, useMatches } from '@remix-run/react';
 import cn from 'classnames';
 import { useInView } from 'react-intersection-observer';
 import NoSsr from './NoSsr';

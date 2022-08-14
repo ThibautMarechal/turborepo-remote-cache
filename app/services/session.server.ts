@@ -43,7 +43,7 @@ export async function upsertSession(session: Omit<Session, 'creationDate'>) {
 }
 
 export async function getSession(id: string) {
-  return await client.session.findUnique({
+  return await client.session.findUniqueOrThrow({
     where: {
       id,
     },

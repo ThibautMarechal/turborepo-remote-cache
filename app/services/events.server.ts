@@ -15,7 +15,7 @@ export async function getEvents() {
 }
 
 export async function getEvent(id: string) {
-  return await client.event.findUnique({
+  return await client.event.findUniqueOrThrow({
     where: {
       id,
     },
@@ -23,7 +23,7 @@ export async function getEvent(id: string) {
 }
 
 export async function getEventDetail(id: string) {
-  return await client.event.findUnique({
+  return await client.event.findUniqueOrThrow({
     where: {
       id,
     },

@@ -1,5 +1,5 @@
-import type { LoaderFunction } from 'remix';
-import { type ActionFunction } from 'remix';
+import type { LoaderFunction, ActionFunction } from '@remix-run/node';
+
 import { requireTokenAuth } from '~/services/authentication.server';
 import { insertEvents } from '~/services/events.server';
 import type { TurboEvent } from '~/types/vercel/turborepo';
