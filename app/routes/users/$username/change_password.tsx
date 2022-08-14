@@ -7,8 +7,6 @@ import { makeDomainFunction } from 'remix-domains';
 import { Form } from '~/component/Form';
 import { requireAdmin } from '~/roles/rights';
 import { forbidden, unprocessableEntity } from '~/utils/response';
-import { useLoaderData, json } from '~/utils/superjson';
-import type { User } from '@prisma/client';
 
 const schema = z.object({
   password: z.string().min(1),

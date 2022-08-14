@@ -5,7 +5,7 @@ import { makeDomainFunction } from 'remix-domains';
 import { formAction } from 'remix-forms';
 import { z } from 'zod';
 import { Form } from '~/component/Form';
-import { isTeamMember, requireTeamOwner } from '~/roles/rights';
+import { requireTeamOwner } from '~/roles/rights';
 import { TeamRole } from '~/roles/TeamRole';
 import { requireCookieAuth } from '~/services/authentication.server';
 import { addUserToTteam, getTeamDetailBySlug } from '~/services/teams.server';
