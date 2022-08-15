@@ -1,5 +1,5 @@
 {
-  "name": "turborepo-remote-cache-remix",
+  "name": "@thimar/turborepo-remote-cache",
   "version": "1.1.0",
   "description": "Self hosted Turborepo remote cache",
   "sideEffects": false,
@@ -28,7 +28,8 @@
     "typecheck": "tsc -b && tsc -b cypress",
     "validate": "run-p \"test -- --run\" lint typecheck test:e2e:run",
     "prestart": "prisma migrate deploy && prisma db seed",
-    "start": "cross-env NODE_ENV=production remix-serve build"
+    "start": "cross-env NODE_ENV=production remix-serve build",
+    "get:version": "node -e \"console.log(require('./package.json').version);\""
   },
   "dependencies": {
     "@heroicons/react": "1.0.6",

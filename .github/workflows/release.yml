@@ -22,12 +22,12 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: New version
-      run: | 
+      run: |
         git config --global user.email "github@thibautmarechal.be"
         git config --global user.name "Thibaut Maréchal"
         yarn version --${{ github.event.inputs.release_type }}
     - name: Get new generated version
-      run: echo "VERSION=$(yarn version -v)" >> $GITHUB_ENV
+      run: echo "VERSION=$(yarn get:version)" >> $GITHUB_ENV
     - name: Build the Docker image
       run: docker build . --tag thibmarechal/turborepo-remote-cache:${{ env.VERSION }}
     - name: Docker login
