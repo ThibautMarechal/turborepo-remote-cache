@@ -1,0 +1,39 @@
+name: Release
+on:
+  workflow_dispatch:
+    inputs:
+      release_type:
+        description: "Type of release"
+        default: 'patch'
+        required: false
+        type: choice
+        options:
+          - "major"
+          - "minor"
+          - "patch"
+          - "premajor"
+          - "preminor"
+          - "prepatch"
+          - "prerelease"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: New version
+      run: | 
+        git config --global user.email "github@thibautmarechal.be"
+        git config --global user.name "Thibaut Maréchal"
+        yarn version ${{ github.event.inputs.release_type }}
+    - name: Get new generated version
+      run: echo "VERSION=$(yarn version -v)" >> $GITHUB_ENV
+    - name: Build the Docker image
+      run: docker build . --tag thibmarechal/turborepo-remote-cache:${{ env.VERSION }}
+    - name: Docker login7
+      env: 
+        DOCKER_USER: ${{ secrets.DOCKER_USER }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      run: docker login -u ${{ env.DOCKER_USER }} -p ${{ env.DOCKER_PASSWORD }}
+    - name: Docker Push
+      run: docker push thibmarechal/turborepo-remote-cache:${{ env.VERSION }}
