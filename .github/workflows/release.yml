@@ -25,6 +25,6 @@ jobs:
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       run: docker login -u ${{ env.DOCKER_USER }} -p ${{ env.DOCKER_PASSWORD }}
     - name: Docker Push
-      run: docker push thibmarechal/turborepo-remote-cache:${{ env.VERSION }}
+      run: docker push thibmarechal/turborepo-remote-cache:${{ github.event.inputs.new_version }}
     - name: Commit version
       run: git push
