@@ -28,7 +28,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   });
 };
 
-export const action: ActionFunction = async ({ request, params, context }) => {
+export const action: ActionFunction = async ({ request, params }) => {
   const user = await requireCookieAuth(request);
   const team = await getTeamDetailBySlug(params.teamSlug as string);
   requireTeamOwner(user, team.id);
@@ -41,7 +41,7 @@ export const action: ActionFunction = async ({ request, params, context }) => {
   });
 };
 
-export default function Users() {
+export default function Add() {
   const { team, users } = useLoaderData<{ users: User[]; team: TeamDetail }>();
   return (
     <div className="flex justify-center">

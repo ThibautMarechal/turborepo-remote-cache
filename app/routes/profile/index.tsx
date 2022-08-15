@@ -13,7 +13,7 @@ import { getUserDetail } from '~/services/users.server';
 import { SourceType } from '~/types/vercel/turborepo';
 import { json, useLoaderData } from '~/utils/superjson';
 
-export const loader: LoaderFunction = async ({ request, params, context }) => {
+export const loader: LoaderFunction = async ({ request }) => {
   const { id: userId } = await requireCookieAuth(request);
   const [user, sessions, artifacts, tokens, savedLocally, savedRemotely] = await Promise.all([
     getUserDetail(userId),
@@ -33,7 +33,7 @@ export const loader: LoaderFunction = async ({ request, params, context }) => {
   });
 };
 
-export default function Index() {
+export default function Profile() {
   const { sessions, artifacts, tokens, savedLocally, savedRemotely } = useLoaderData<{
     sessions: number;
     artifacts: number;

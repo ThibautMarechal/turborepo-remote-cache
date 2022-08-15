@@ -28,7 +28,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   });
 };
 
-export const action: ActionFunction = async ({ request, params, context }) => {
+export const action: ActionFunction = async ({ request, params }) => {
   const user = await requireCookieAuth(request);
   const team = await getTeamBySlug(params.teamSlug as string);
   requireTeamOwner(user, team.id);

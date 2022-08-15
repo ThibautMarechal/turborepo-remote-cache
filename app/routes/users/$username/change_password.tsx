@@ -44,7 +44,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   });
 };
 
-export default function Edit() {
+export default function ChangePassword() {
   return (
     <div className="flex justify-center">
       <Form schema={schema}>

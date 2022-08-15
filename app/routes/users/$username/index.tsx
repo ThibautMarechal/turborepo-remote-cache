@@ -16,7 +16,7 @@ import HasRights from '~/component/HasRights';
 import { useCurrentUser } from '~/context/CurrentUser';
 import { json, useLoaderData } from '~/utils/superjson';
 
-export const loader: LoaderFunction = async ({ request, params, context }) => {
+export const loader: LoaderFunction = async ({ request, params }) => {
   const currentUser = await requireCookieAuth(request);
   const isAdministrator = isAdmin(currentUser);
   const user = await getUserDetailByUsername(params.username as string);

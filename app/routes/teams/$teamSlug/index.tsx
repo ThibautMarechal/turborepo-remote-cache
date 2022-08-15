@@ -65,26 +65,6 @@ export default function Team() {
       <Stats>
         <Stat
           title={
-            <Link to="./sessions" prefetch="intent">
-              Sessions
-            </Link>
-          }
-          icon={<LightningBoltIcon className="w-8 h-8" />}
-          value={sessions}
-          description={'Number of "turbo run <command>"'}
-        />
-        <Stat
-          title={
-            <Link to="./artifacts" prefetch="intent">
-              Artifacts
-            </Link>
-          }
-          icon={<ArchiveIcon className="w-8 h-8" />}
-          value={artifacts}
-          description={'Artifacts linked to the team'}
-        />
-        <Stat
-          title={
             <Link to="./users" prefetch="intent">
               Users
             </Link>
@@ -93,6 +73,28 @@ export default function Team() {
           value={team.members.length}
           description={'Users in the team'}
         />
+        <HasRights predicate={(u) => isTeamOwner(u, team.id)}>
+          <Stat
+            title={
+              <Link to="./sessions" prefetch="intent">
+                Sessions
+              </Link>
+            }
+            icon={<LightningBoltIcon className="w-8 h-8" />}
+            value={sessions}
+            description={'Number of "turbo run <command>"'}
+          />
+          <Stat
+            title={
+              <Link to="./artifacts" prefetch="intent">
+                Artifacts
+              </Link>
+            }
+            icon={<ArchiveIcon className="w-8 h-8" />}
+            value={artifacts}
+            description={'Artifacts linked to the team'}
+          />
+        </HasRights>
       </Stats>
       <TimeSavedStats local={savedLocally} remote={savedRemotely} />
     </div>

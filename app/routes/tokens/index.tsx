@@ -12,7 +12,7 @@ import { getPaginationFromRequest } from '~/utils/pagination';
 import { getOrderByFromRequest } from '~/utils/sort';
 import { json } from '~/utils/superjson';
 
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader: LoaderFunction = async ({ request }) => {
   const user = await requireCookieAuth(request);
   requireAdmin(user);
   const orderBy = getOrderByFromRequest(request);
@@ -21,7 +21,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   return json({ items, count });
 };
 
-export const action: ActionFunction = async ({ request, params, context }) => {
+export const action: ActionFunction = async ({ request }) => {
   const user = await requireCookieAuth(request);
   requireAdmin(user);
   const formData = await request.formData();

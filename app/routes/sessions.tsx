@@ -10,7 +10,7 @@ import { requireAdmin } from '~/roles/rights';
 import type { SessionDetail } from '~/types/prisma';
 import { json } from '~/utils/superjson';
 
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader: LoaderFunction = async ({ request }) => {
   const user = await requireCookieAuth(request);
   requireAdmin(user);
   const { skip, take } = getPaginationFromRequest(request);

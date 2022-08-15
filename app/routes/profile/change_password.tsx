@@ -13,7 +13,7 @@ const schema = z.object({
   repeatedPassword: z.string().min(1),
 });
 
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader: LoaderFunction = async ({ request }) => {
   const currentUser = await requireCookieAuth(request);
   if (currentUser.isSuperAdmin) {
     throw forbidden("Cannot update super-admin's password");
@@ -21,7 +21,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   return null;
 };
 
-export const action: ActionFunction = async ({ request, params }) => {
+export const action: ActionFunction = async ({ request }) => {
   const currentUser = await requireCookieAuth(request);
   if (currentUser.isSuperAdmin) {
     throw forbidden("Cannot update super-admin's password");
@@ -40,7 +40,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   });
 };
 
-export default function Edit() {
+export default function CHangePasswords() {
   return (
     <div className="flex justify-center">
       <Form schema={schema}>

@@ -21,7 +21,7 @@ import TimeSavedStats from '~/component/TimeSavedStats';
 import { isAdmin } from '~/roles/rights';
 import { json, useLoaderData } from '~/utils/superjson';
 
-export const loader: LoaderFunction = async ({ request, params, context }) => {
+export const loader: LoaderFunction = async ({ request }) => {
   const user = await requireCookieAuth(request);
   const [users, teams, sessions, artifacts, tokens, savedLocally, savedRemotely] = await Promise.all([
     getUsersCount(),

@@ -21,7 +21,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   return null;
 };
 
-export const action: ActionFunction = async ({ request, params, context }) => {
+export const action: ActionFunction = async ({ request }) => {
   const user = await requireCookieAuth(request);
   requireAdmin(user);
   const mutation = makeDomainFunction(schema)(async ({ name }) => await generateToken(user.id, name).then(([token]) => token));

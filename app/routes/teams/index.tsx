@@ -23,7 +23,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   return json({ items, count });
 };
 
-export const action: ActionFunction = async ({ request, params, context }) => {
+export const action: ActionFunction = async ({ request }) => {
   await requireCookieAuth(request);
   const formData = await request.formData();
   await deleteTeam(formData.get('id') as string);
