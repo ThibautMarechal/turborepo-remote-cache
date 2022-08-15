@@ -28,8 +28,7 @@
     "typecheck": "tsc -b && tsc -b cypress",
     "validate": "run-p \"test -- --run\" lint typecheck test:e2e:run",
     "prestart": "prisma migrate deploy && prisma db seed",
-    "start": "cross-env NODE_ENV=production remix-serve build",
-    "get:version": "node -e \"console.log(require('./package.json').version);\""
+    "start": "cross-env NODE_ENV=production remix-serve build"
   },
   "dependencies": {
     "@heroicons/react": "1.0.6",
