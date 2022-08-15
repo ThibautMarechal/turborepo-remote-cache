@@ -25,7 +25,7 @@ jobs:
       run: | 
         git config --global user.email "github@thibautmarechal.be"
         git config --global user.name "Thibaut Maréchal"
-        yarn version ${{ github.event.inputs.release_type }}
+        yarn version --${{ github.event.inputs.release_type }}
     - name: Get new generated version
       run: echo "VERSION=$(yarn version -v)" >> $GITHUB_ENV
     - name: Build the Docker image
