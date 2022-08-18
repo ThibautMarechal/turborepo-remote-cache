@@ -40,7 +40,7 @@
     "@tanstack/react-table": "8.5.11",
     "@types/uuid": "8.3.4",
     "abstract-blob-store": "3.3.5",
-    "aws-sdk": "2.1194.0",
+    "aws-sdk": "2.1197.0",
     "azure-blob-storage": "4.2.5",
     "azure-blob-store": "1.0.7",
     "classnames": "2.3.1",
