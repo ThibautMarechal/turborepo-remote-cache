@@ -5,6 +5,7 @@ import type { SourceType } from '~/types/vercel/turborepo';
 import { EventType } from '~/types/vercel/turborepo';
 import { client } from './prismaClient.server';
 import { validate } from 'uuid';
+import type { Decimal } from '@prisma/client/runtime';
 
 export async function insertEvents(events: Omit<Event, 'id' | 'creationDate'>[]) {
   return await client.event.createMany({ data: events });
@@ -71,7 +72,7 @@ export async function getTimeSavedByMonth(sourceType: SourceType, { userId, team
 
   const query = `
 SELECT
-  SUM("${Prisma.EventScalarFieldEnum.duration}") as "timeSaved",
+  SUM("${Prisma.EventScalarFieldEnum.duration}") / 1000 as "timeSaved",
   extract(month from "${Prisma.EventScalarFieldEnum.creationDate}") as month,
   extract(year from "${Prisma.EventScalarFieldEnum.creationDate}") as year
 FROM "${Prisma.ModelName.Event}"
@@ -79,5 +80,19 @@ WHERE ${conditions.join('\nAND ')}
 GROUP BY month, year
 ORDER BY year ASC, month ASC;
 `;
-  return await client.$queryRawUnsafe<TimeSavedByMonth[]>(query);
+  return await client
+    .$queryRawUnsafe<
+      Array<{
+        timeSaved: bigint;
+        month: Decimal;
+        year: Decimal;
+      }>
+    >(query)
+    .then((tsm) => {
+      return tsm.map<TimeSavedByMonth>((tsm) => ({
+        timeSaved: Number(tsm.timeSaved),
+        month: tsm.month.toNumber(),
+        year: tsm.year.toNumber(),
+      }));
+    });
 }
