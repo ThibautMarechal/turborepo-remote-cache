@@ -91,7 +91,7 @@
     "@types/react-table": "7.7.12",
     "@types/readable-stream": "2.3.14",
     "@vitejs/plugin-react": "2.0.1",
-    "@vitest/coverage-c8": "^0.22.1",
+    "@vitest/coverage-c8": "0.22.1",
     "c8": "7.12.0",
     "cypress": "10.6.0",
     "daisyui": "2.24.0",
@@ -99,9 +99,9 @@
     "happy-dom": "6.0.4",
     "start-server-and-test": "1.14.0",
     "tailwindcss": "3.1.8",
-    "vite": "^3.0.9",
+    "vite": "3.0.9",
     "vite-tsconfig-paths": "3.5.0",
-    "vitest": "^0.22.1"
+    "vitest": "0.22.1"
   },
   "resolutions": {
     "react-charts/@types/react": "^18.0.9",
