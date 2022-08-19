@@ -57,6 +57,11 @@ Self-host your [turborepo remote cache](https://turborepo.org/docs/features/remo
   "loginUrl": "http://localhost:8080/turbo/login"
 }
 ```
+// Link the repository to this remote server caching
+```
+npx turbo login
+npx turbo link
+```
 
 ## Development
 
