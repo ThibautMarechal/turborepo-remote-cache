@@ -5,7 +5,6 @@ import type { OrderBy } from '~/utils/sort';
 import { DEFAULT_ORDER_BY } from '~/utils/sort';
 
 export async function getUsers(skip: number = 0, take: number = 100, orderBy?: OrderBy[], search?: string): Promise<User[]> {
-  console.log(arguments, skip, take, orderBy, search);
   return await client.user.findMany({
     where: {
       isDeleted: false,
