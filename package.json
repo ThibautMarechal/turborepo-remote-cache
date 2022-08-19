@@ -100,7 +100,7 @@
     "tailwindcss": "3.1.8",
     "vite": "3.0.7",
     "vite-tsconfig-paths": "3.5.0",
-    "vitest": "0.21.1"
+    "vitest": "0.22.1"
   },
   "resolutions": {
     "react-charts/@types/react": "^18.0.9",
