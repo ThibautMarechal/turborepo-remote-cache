@@ -37,7 +37,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   if (artifact.teamId !== team.id) {
     throw forbidden("Artifact doesn't elong to the team");
   }
-  await Promise.all([storage.removeMeta(artifact), storage.removeArtifact(artifact), deleteArtifact(artifactId)]);
+  await Promise.all([storage.removeArtifact(artifact), deleteArtifact(artifactId)]);
 };
 
 export default function Artifacts() {

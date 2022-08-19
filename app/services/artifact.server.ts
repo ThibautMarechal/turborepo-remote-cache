@@ -51,6 +51,16 @@ export async function getArtifact(id: string) {
   });
 }
 
+export async function getArtifactDuration(id: string) {
+  return client.artifact
+    .findUniqueOrThrow({
+      where: {
+        id,
+      },
+    })
+    .then((artifact) => artifact.duration);
+}
+
 export async function getArtifacts({ userId, teamId, skip, take, orderBy }: { userId?: string; teamId?: string; skip: number; take: number; orderBy: OrderBy[] }) {
   return client.artifact.findMany({
     orderBy: mapOrderBy(orderBy.length ? orderBy : DEFAULT_ORDER_BY),

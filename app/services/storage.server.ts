@@ -65,10 +65,6 @@ export class CacheStorage {
     return `${path.join(turboCtx.team?.id ?? turboCtx.user.id, turboCtx.hash)}.tar.gz`;
   }
 
-  private getCacheMetadataKey(turboCtx: TurboContext): string {
-    return `${this.getArtifactKey(turboCtx)}-meta.json`;
-  }
-
   private async read(key: string): Promise<Readable> {
     if (await this.exist(key)) {
       return this.blobStore.createReadStream(key);
@@ -78,10 +74,6 @@ export class CacheStorage {
 
   async readArtifact(turboCtx: TurboContext): Promise<Readable> {
     return this.read(this.getArtifactKey(turboCtx));
-  }
-
-  async readMeta(turboCtx: TurboContext): Promise<Readable> {
-    return this.read(this.getCacheMetadataKey(turboCtx));
   }
 
   private write(key: string, stream: Readable): Promise<void> {
@@ -102,10 +94,6 @@ export class CacheStorage {
     return this.write(this.getArtifactKey(turboCtx), artifactStream);
   }
 
-  writeMetadata(turboCtx: TurboContext, metaStream: Readable): Promise<void> {
-    return this.write(this.getCacheMetadataKey(turboCtx), metaStream);
-  }
-
   private exist(key: string): Promise<boolean> {
     return new Promise((resolve, reject) =>
       this.blobStore.exists(key, (err, exist) => {
@@ -122,10 +110,6 @@ export class CacheStorage {
     return this.exist(this.getArtifactKey(turboCtx));
   }
 
-  existMeta(turboCtx: TurboContext): Promise<boolean> {
-    return this.exist(this.getCacheMetadataKey(turboCtx));
-  }
-
   private remove(key: string): Promise<void> {
     return new Promise((resolve, reject) =>
       this.blobStore.remove(key, (err) => {
@@ -140,9 +124,5 @@ export class CacheStorage {
 
   removeArtifact(turboCtx: TurboContext): Promise<void> {
     return this.remove(this.getArtifactKey(turboCtx));
-  }
-
-  removeMeta(turboCtx: TurboContext): Promise<void> {
-    return this.remove(this.getCacheMetadataKey(turboCtx));
   }
 }

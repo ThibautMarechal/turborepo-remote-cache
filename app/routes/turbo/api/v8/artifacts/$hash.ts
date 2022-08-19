@@ -1,13 +1,12 @@
 import type { ActionFunction, LoaderFunction } from '@remix-run/node';
 import { Readable } from 'stream';
 import { CacheStorage } from '~/services/storage.server';
-import { DURATION_HEADER, getTurboContext, turboContextToMeta } from '~/utils/turboContext';
-import { streamToString, stringToStream } from '~/utils/stream';
+import { DURATION_HEADER, getTurboContext } from '~/utils/turboContext';
 import { requireCookieAuth, requireTokenAuth } from '~/services/authentication.server';
 import { getTeamFromRequest } from '~/services/teams.server';
 import { allowMethods, METHOD } from '~/utils/method';
 import { accepted, unprocessableEntity, internalServerError, notFound } from '~/utils/response';
-import { getArtifactId, hitArtifact, insertArtifact } from '~/services/artifact.server';
+import { getArtifactDuration, getArtifactId, hitArtifact, insertArtifact } from '~/services/artifact.server';
 import type { User } from '@prisma/client';
 
 export const loader: LoaderFunction = async ({ request, params, context }) => {
@@ -26,12 +25,10 @@ export const loader: LoaderFunction = async ({ request, params, context }) => {
     throw notFound();
   }
   await hitArtifact(getArtifactId(turboCtx));
-  const meta = JSON.parse(await streamToString(await storage.readMeta(turboCtx)));
+  const artifactDuration = await getArtifactDuration(getArtifactId(turboCtx));
   const headers = new Headers();
   headers.set('Content-Type', 'application/octet-stream');
-  if (meta) {
-    headers.set(DURATION_HEADER, meta.duration.toString());
-  }
+  headers.set(DURATION_HEADER, artifactDuration.toString());
   // Cast as ReadableStream because Response actually accept Readable as BodyInit
   return new Response((await storage.readArtifact(turboCtx)) as unknown as ReadableStream, {
     status: 200,
@@ -55,7 +52,6 @@ export const action: ActionFunction = async ({ request, params, context }) => {
     await Promise.all([
       // The real type of request.body is ReadableStream. Somehow ReadableStream can be used as AsyncIterator
       storage.writeArtifact(turboCtx, Readable.from(request.body as unknown as AsyncIterable<any>)),
-      storage.writeMetadata(turboCtx, stringToStream(JSON.stringify(turboContextToMeta(turboCtx)))),
       insertArtifact({
         id: getArtifactId(turboCtx),
         hash: turboCtx.hash!,

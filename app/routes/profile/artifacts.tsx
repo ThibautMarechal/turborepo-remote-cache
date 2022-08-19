@@ -36,7 +36,7 @@ export const action: ActionFunction = async ({ request }) => {
   if (artifact.teamId) {
     throw forbidden('Artifact belong to the team');
   }
-  await Promise.all([storage.removeMeta(artifact), storage.removeArtifact(artifact), deleteArtifact(artifactId)]);
+  await Promise.all([storage.removeArtifact(artifact), deleteArtifact(artifactId)]);
 };
 
 export default function Artifacts() {

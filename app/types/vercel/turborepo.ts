@@ -16,11 +16,6 @@ export type TurboEvent = {
   source: SourceType;
 };
 
-export type CacheMetadata = {
-  hash: string;
-  duration: number;
-};
-
 export enum CachingStatus {
   ENABLED = 'enabled',
   DISABLED = 'disabled',

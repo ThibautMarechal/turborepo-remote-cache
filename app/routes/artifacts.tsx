@@ -32,7 +32,7 @@ export const action: ActionFunction = async ({ request }) => {
   invariant(typeof artifactId === 'string', 'artifactId must be a string');
   const storage = new CacheStorage();
   const artifact = await getArtifact(artifactId);
-  await Promise.all([storage.removeMeta(artifact), storage.removeArtifact(artifact), deleteArtifact(artifactId)]);
+  await Promise.all([storage.removeArtifact(artifact), deleteArtifact(artifactId)]);
   return null;
 };
 
