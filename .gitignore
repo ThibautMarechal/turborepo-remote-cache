@@ -9,4 +9,5 @@ node_modules
 
 /data
 /.cache
+/coverage
 yarn-error.log
