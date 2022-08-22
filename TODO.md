@@ -1,0 +1,1 @@
+- User & Managemeent handled by external source (OpenIdConnect)
