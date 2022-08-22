@@ -8,7 +8,7 @@ import { Link } from '@remix-run/react';
 import HasRights from '~/component/HasRights';
 import { Stat } from '~/component/Stat';
 import { Stats } from '~/component/Stats';
-import { getArtifactsCount } from '~/services/artifact.server';
+import { getArtifactsCount, getArtifactsSize } from '~/services/artifact.server';
 import { requireCookieAuth } from '~/services/authentication.server';
 import { getSessionsCount } from '~/services/session.server';
 import { getTeamsCount } from '~/services/teams.server';
@@ -20,23 +20,26 @@ import { SourceType } from '~/types/vercel/turborepo';
 import TimeSavedStats from '~/component/TimeSavedStats';
 import { isAdmin } from '~/roles/rights';
 import { json, useLoaderData } from '~/utils/superjson';
+import StorageStats from '~/component/StorageStats';
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const user = await requireCookieAuth(request);
-  const [users, teams, sessions, artifacts, tokens, savedLocally, savedRemotely] = await Promise.all([
+  await requireCookieAuth(request);
+  const [users, teams, sessions, artifacts, artifactsSize, tokens, savedLocally, savedRemotely] = await Promise.all([
     getUsersCount(),
     getTeamsCount(),
     getSessionsCount(),
     getArtifactsCount(),
+    getArtifactsSize(),
     getTokensCount(),
-    getTimeSavedByMonth(SourceType.LOCAL, { userId: user.id }),
-    getTimeSavedByMonth(SourceType.REMOTE, { userId: user.id }),
+    getTimeSavedByMonth(SourceType.LOCAL),
+    getTimeSavedByMonth(SourceType.REMOTE),
   ]);
   return json({
     users,
     teams,
     sessions,
     artifacts,
+    artifactsSize,
     tokens,
     savedLocally,
     savedRemotely,
@@ -44,11 +47,12 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 export default function DashBoard() {
-  const { users, teams, sessions, artifacts, tokens, savedLocally, savedRemotely } = useLoaderData<{
+  const { users, teams, sessions, artifacts, artifactsSize, tokens, savedLocally, savedRemotely } = useLoaderData<{
     users: number;
     teams: number;
     sessions: number;
     artifacts: number;
+    artifactsSize: number;
     tokens: number;
     savedLocally: TimeSavedByMonth[];
     savedRemotely: TimeSavedByMonth[];
@@ -106,6 +110,7 @@ export default function DashBoard() {
           />
         </HasRights>
       </Stats>
+      <StorageStats size={artifactsSize} />
       <TimeSavedStats local={savedLocally} remote={savedRemotely} />
     </div>
   );

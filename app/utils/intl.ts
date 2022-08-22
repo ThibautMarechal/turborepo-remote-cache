@@ -1,20 +1,16 @@
 export function formatSize(contentLength: number) {
-  let size = Math.abs(contentLength);
+  const size = Math.abs(contentLength);
 
   if (Number.isNaN(size)) {
     return 'Invalid file size';
   }
 
   if (size === 0) {
-    return '0 bytes';
+    return '0 B';
   }
 
-  const units = ['bytes', 'kB', 'MB', 'GB', 'TB'];
-  let quotient = Math.floor(Math.log10(size) / 3);
-  quotient = quotient < units.length ? quotient : units.length - 1;
-  size /= 1000 ** quotient;
-
-  return `${Number(size.toFixed(2))} ${units[quotient]}`;
+  const i = Math.floor(Math.log(size) / Math.log(1024));
+  return `${Number((size / Math.pow(1024, i)).toFixed(2))} ${['B', 'kB', 'MB', 'GB', 'TB', 'PB'][i]}`;
 }
 
 export function formatDuration(seconds: number, locale = 'en-gb') {

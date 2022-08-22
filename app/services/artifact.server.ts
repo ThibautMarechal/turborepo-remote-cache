@@ -68,6 +68,10 @@ export async function getArtifacts({ userId, teamId, skip, take, orderBy }: { us
       user: true,
       team: true,
     },
+    where: {
+      userId,
+      teamId,
+    },
     skip,
     take,
   });
@@ -88,4 +92,18 @@ export async function deleteArtifact(id: string) {
       id,
     },
   });
+}
+
+export async function getArtifactsSize({ userId, teamId }: { userId?: string; teamId?: string } = {}) {
+  return await client.artifact
+    .aggregate({
+      _sum: {
+        contentLength: true,
+      },
+      where: {
+        userId,
+        teamId,
+      },
+    })
+    .then((res) => res._sum.contentLength ?? 0);
 }

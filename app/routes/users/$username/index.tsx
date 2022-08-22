@@ -10,28 +10,31 @@ import TimeSavedStats from '~/component/TimeSavedStats';
 import type { TimeSavedByMonth } from '~/services/events.server';
 import { getTimeSavedByMonth } from '~/services/events.server';
 import { SourceType } from '~/types/vercel/turborepo';
-import { getArtifactsCount } from '~/services/artifact.server';
+import { getArtifactsCount, getArtifactsSize } from '~/services/artifact.server';
 import { isAdmin } from '~/roles/rights';
 import HasRights from '~/component/HasRights';
 import { useCurrentUser } from '~/context/CurrentUser';
 import { json, useLoaderData } from '~/utils/superjson';
+import StorageStats from '~/component/StorageStats';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const currentUser = await requireCookieAuth(request);
   const isAdministrator = isAdmin(currentUser);
   const user = await getUserDetailByUsername(params.username as string);
-  const [sessions, artifacts, tokens, savedLocally, savedRemotely] = await Promise.all([
+  const [sessions, artifacts, artifactsSize, tokens, savedLocally, savedRemotely] = await Promise.all([
     isAdministrator ? getSessionsCount({ userId: user.id }) : 0,
     isAdministrator ? getArtifactsCount({ userId: user.id }) : 0,
+    isAdministrator ? getArtifactsSize({ userId: user.id }) : 0,
     isAdministrator ? getTokensCount({ userId: user.id }) : 0,
-    isAdministrator ? getTimeSavedByMonth(SourceType.LOCAL, { userId: user.id as string }) : [],
-    isAdministrator ? getTimeSavedByMonth(SourceType.REMOTE, { userId: user.id as string }) : [],
+    isAdministrator ? getTimeSavedByMonth(SourceType.LOCAL, { userId: user.id }) : [],
+    isAdministrator ? getTimeSavedByMonth(SourceType.REMOTE, { userId: user.id }) : [],
   ]);
 
   return json({
     user,
     sessions,
     artifacts,
+    artifactsSize,
     tokens,
     savedLocally,
     savedRemotely,
@@ -40,10 +43,11 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
 export default function User() {
   const currentUser = useCurrentUser();
-  const { user, sessions, artifacts, tokens, savedLocally, savedRemotely } = useLoaderData<{
+  const { user, sessions, artifacts, artifactsSize, tokens, savedLocally, savedRemotely } = useLoaderData<{
     user: UserDetail;
     sessions: number;
     artifacts: number;
+    artifactsSize: number;
     tokens: number;
     savedLocally: TimeSavedByMonth[];
     savedRemotely: TimeSavedByMonth[];
@@ -53,6 +57,7 @@ export default function User() {
       <UserCard user={user} editable={isAdmin(currentUser!)} baseRoute={`/users/${user.username}`} />
       <HasRights predicate={(u) => isAdmin(u)}>
         <UserStats userId={user.id} sessions={sessions} artifacts={artifacts} tokens={tokens} />
+        <StorageStats size={artifactsSize} />
         <TimeSavedStats local={savedLocally} remote={savedRemotely} />
       </HasRights>
     </div>

@@ -1,7 +1,6 @@
 import PlusIcon from '@heroicons/react/outline/PlusIcon';
 import type { Team, User } from '@prisma/client';
 import type { ActionFunction, LoaderFunction } from '@remix-run/node';
-
 import { Link } from '@remix-run/react';
 import HasRights from '~/component/HasRights';
 import { TablePage } from '~/component/TablePage';

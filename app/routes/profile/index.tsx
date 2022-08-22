@@ -1,9 +1,10 @@
 import type { LoaderFunction } from '@remix-run/node';
+import StorageStats from '~/component/StorageStats';
 import TimeSavedStats from '~/component/TimeSavedStats';
 import UserCard from '~/component/UserCard';
 import UserStats from '~/component/UserStats';
 import { useCurrentUser } from '~/context/CurrentUser';
-import { getArtifactsCount } from '~/services/artifact.server';
+import { getArtifactsCount, getArtifactsSize } from '~/services/artifact.server';
 import { requireCookieAuth } from '~/services/authentication.server';
 import type { TimeSavedByMonth } from '~/services/events.server';
 import { getTimeSavedByMonth } from '~/services/events.server';
@@ -15,10 +16,11 @@ import { json, useLoaderData } from '~/utils/superjson';
 
 export const loader: LoaderFunction = async ({ request }) => {
   const { id: userId } = await requireCookieAuth(request);
-  const [user, sessions, artifacts, tokens, savedLocally, savedRemotely] = await Promise.all([
+  const [user, sessions, artifacts, artifactsSize, tokens, savedLocally, savedRemotely] = await Promise.all([
     getUserDetail(userId),
     getSessionsCount({ userId }),
     getArtifactsCount({ userId }),
+    getArtifactsSize({ userId }),
     getTokensCount({ userId }),
     getTimeSavedByMonth(SourceType.LOCAL, { userId }),
     getTimeSavedByMonth(SourceType.REMOTE, { userId }),
@@ -27,6 +29,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     user,
     sessions,
     artifacts,
+    artifactsSize,
     tokens,
     savedLocally,
     savedRemotely,
@@ -34,10 +37,11 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 export default function Profile() {
-  const { sessions, artifacts, tokens, savedLocally, savedRemotely } = useLoaderData<{
+  const { sessions, artifacts, tokens, artifactsSize, savedLocally, savedRemotely } = useLoaderData<{
     sessions: number;
     artifacts: number;
     tokens: number;
+    artifactsSize: number;
     savedLocally: TimeSavedByMonth[];
     savedRemotely: TimeSavedByMonth[];
   }>();
@@ -49,6 +53,7 @@ export default function Profile() {
     <div className="flex w-full justify-center items-center flex-col gap-5 mt-5">
       <UserCard user={user} editable baseRoute={`/profile`} />
       <UserStats userId={user.id} sessions={sessions} artifacts={artifacts} tokens={tokens} />
+      <StorageStats size={artifactsSize} />
       <TimeSavedStats local={savedLocally} remote={savedRemotely} />
     </div>
   );

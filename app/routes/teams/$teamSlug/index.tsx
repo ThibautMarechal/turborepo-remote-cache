@@ -14,29 +14,32 @@ import { getTimeSavedByMonth } from '~/services/events.server';
 import { SourceType } from '~/types/vercel/turborepo';
 import type { TeamDetail } from '~/types/prisma';
 import { getSessionsCount } from '~/services/session.server';
-import { getArtifactsCount } from '~/services/artifact.server';
+import { getArtifactsCount, getArtifactsSize } from '~/services/artifact.server';
 import { isTeamOwner } from '~/roles/rights';
 import { json, useLoaderData } from '~/utils/superjson';
 import HasRights from '~/component/HasRights';
+import StorageStats from '~/component/StorageStats';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const user = await requireCookieAuth(request);
   const team = await getTeamDetailBySlug(params.teamSlug as string);
   const isOwner = isTeamOwner(user, team.id);
-  const [sessions, artifacts, savedLocally, savedRemotely] = await Promise.all([
+  const [sessions, artifacts, artifactsSize, savedLocally, savedRemotely] = await Promise.all([
     isOwner ? getSessionsCount({ teamId: team.id }) : 0,
     isOwner ? getArtifactsCount({ teamId: team.id }) : 0,
+    isOwner ? getArtifactsSize({ teamId: team.id }) : 0,
     getTimeSavedByMonth(SourceType.LOCAL, { teamId: team.id }),
     getTimeSavedByMonth(SourceType.REMOTE, { teamId: team.id }),
   ]);
-  return json({ team, sessions, artifacts, savedLocally, savedRemotely });
+  return json({ team, sessions, artifacts, artifactsSize, savedLocally, savedRemotely });
 };
 
 export default function Team() {
-  const { team, sessions, artifacts, savedLocally, savedRemotely } = useLoaderData<{
+  const { team, sessions, artifacts, artifactsSize, savedLocally, savedRemotely } = useLoaderData<{
     team: TeamDetail;
     sessions: number;
     artifacts: number;
+    artifactsSize: number;
     savedLocally: TimeSavedByMonth[];
     savedRemotely: TimeSavedByMonth[];
   }>();
@@ -96,7 +99,10 @@ export default function Team() {
           />
         </HasRights>
       </Stats>
-      <TimeSavedStats local={savedLocally} remote={savedRemotely} />
+      <HasRights predicate={(u) => isTeamOwner(u, team.id)}>
+        <StorageStats size={artifactsSize} />
+        <TimeSavedStats local={savedLocally} remote={savedRemotely} />
+      </HasRights>
     </div>
   );
 }
