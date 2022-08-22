@@ -88,11 +88,38 @@ ORDER BY year ASC, month ASC;
         year: Decimal;
       }>
     >(query)
-    .then((tsm) => {
-      return tsm.map<TimeSavedByMonth>((tsm) => ({
-        timeSaved: Number(tsm.timeSaved),
-        month: tsm.month.toNumber(),
-        year: tsm.year.toNumber(),
+    .then((dbResult) => {
+      const timeSavedStats = dbResult.map<TimeSavedByMonth>(({ timeSaved, month, year }) => ({
+        timeSaved: Number(timeSaved),
+        month: month.toNumber(),
+        year: year.toNumber(),
       }));
+      if (!timeSavedStats.length) {
+        return timeSavedStats;
+      }
+      // Fill month value with no stats.
+      // We could do it in the pg query (https://stackoverflow.com/questions/24156202/postgresql-group-month-wise-with-missing-values)
+      // We also fill the blanks months from the years presents in our stats to have a better looking graph
+      // eslint-disable-next-line prefer-destructuring
+      const start = timeSavedStats[0];
+      const end = timeSavedStats[timeSavedStats.length - 1];
+      const startingYear = start.year;
+      const endingYear = end.year;
+      return new Array(endingYear - startingYear + 1)
+        .fill(0)
+        .map((_, i) => i + startingYear)
+        .reduce<Array<TimeSavedByMonth>>((acc, year) => {
+          for (const month of new Array(12).fill(0).map((_, i) => i + 1)) {
+            const stat = timeSavedStats.find((existingStat) => existingStat.year === year && existingStat.month === month);
+            acc.push(
+              stat ?? {
+                timeSaved: 0,
+                month,
+                year,
+              },
+            );
+          }
+          return acc;
+        }, []);
     });
 }

@@ -4,7 +4,9 @@ import Stat from './Stat';
 import Stats from './Stats';
 import type { TimeSavedByMonth } from '~/services/events.server';
 import type { UserSerie } from 'react-charts';
-import { Chart } from 'react-charts';
+import React, { Fragment, Suspense } from 'react';
+
+const LazyChart = React.lazy(() => import('react-charts').then(({ Chart }) => ({ default: Chart })));
 
 type Props = {
   local: TimeSavedByMonth[];
@@ -33,39 +35,41 @@ export const TimeSavedStats = ({ local, remote }: Props) => {
       {(totalRemote > 0 || totalLocal > 0) && (
         <div className="w-full px-20 h-80 flex justify-center animate-appear">
           <div className="w-full">
-            <Chart
-              options={{
-                data,
-                primaryAxis: {
-                  getValue: ({ month, year }) => new Date(year, month - 1).toISOString(),
-                  formatters: {
-                    cursor: (time: any) => formatMonth(time),
-                    scale: (time: any) => formatMonth(time),
-                    tooltip: (time: any) => formatMonth(time),
-                  },
-                  padBandRange: true,
-                },
-                secondaryAxes: [
-                  {
-                    getValue: ({ timeSaved }) => timeSaved,
+            <Suspense fallback={<Fragment />}>
+              <LazyChart
+                options={{
+                  data,
+                  primaryAxis: {
+                    getValue: ({ month, year }: any) => new Date(year, month - 1).toISOString(),
                     formatters: {
-                      cursor: (value: number) => formatDuration(value),
-                      scale: (value: number) => formatDuration(value),
-                      tooltip: (value: number) => formatDuration(value),
+                      cursor: (time: any) => formatMonth(time),
+                      scale: (time: any) => formatMonth(time),
+                      tooltip: (time: any) => formatMonth(time),
                     },
-                    elementType: 'bar',
-                    show: false,
-                    min: 0,
-                    stacked: true,
+                    padBandRange: true,
                   },
-                ],
-                defaultColors: ['hsl(var(--p))', 'hsl(var(--pc))'],
-                dark: true,
-                primaryCursor: {
-                  showLine: false,
-                },
-              }}
-            />
+                  secondaryAxes: [
+                    {
+                      getValue: ({ timeSaved }: any) => timeSaved,
+                      formatters: {
+                        cursor: (value: number) => formatDuration(value),
+                        scale: (value: number) => formatDuration(value),
+                        tooltip: (value: number) => formatDuration(value),
+                      },
+                      elementType: 'bar',
+                      show: false,
+                      min: 0,
+                      stacked: true,
+                    },
+                  ],
+                  defaultColors: ['hsl(var(--p))', 'hsl(var(--pc))'],
+                  dark: true,
+                  primaryCursor: {
+                    showLine: false,
+                  },
+                }}
+              />
+            </Suspense>
           </div>
         </div>
       )}
