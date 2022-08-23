@@ -38,7 +38,7 @@
     "@remix-run/react": "1.6.8",
     "@remix-run/serve": "1.6.8",
     "@tanstack/react-table": "8.5.11",
-    "@types/node": "^18.7.11",
+    "@types/node": "18.7.11",
     "@types/uuid": "8.3.4",
     "abstract-blob-store": "3.3.5",
     "aws-sdk": "2.1200.0",
