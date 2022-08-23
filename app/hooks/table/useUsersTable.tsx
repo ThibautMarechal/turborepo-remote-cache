@@ -1,12 +1,12 @@
-import TrashIcon from '@heroicons/react/outline/TrashIcon';
+import TrashIcon from '@heroicons/react/24/outline/TrashIcon';
 import type { User } from '@prisma/client';
 import { Form, Link, useTransition } from '@remix-run/react';
 import DateCell from '~/component/DateCell';
 import { createColumnHelper } from '@tanstack/react-table';
 import Gravatar from 'react-gravatar';
-import SearchIcon from '@heroicons/react/outline/SearchIcon';
-import PencilIcon from '@heroicons/react/outline/PencilIcon';
-import KeyIcon from '@heroicons/react/outline/KeyIcon';
+import MagnifyingGlassIcon from '@heroicons/react/24/outline/MagnifyingGlassIcon';
+import PencilIcon from '@heroicons/react/24/outline/PencilIcon';
+import KeyIcon from '@heroicons/react/24/outline/KeyIcon';
 import { usePaginateSortingTable } from './usePaginateSortingTable';
 import cn from 'classnames';
 import HasRights from '~/component/HasRights';
@@ -48,7 +48,7 @@ const defaultColumns = [
       return (
         <div className="flex gap-1">
           <Link to={`/users/${user.username}`} prefetch="intent" title="Show user" className="btn btn-xs btn-square">
-            <SearchIcon className="h-4 w-4" />
+            <MagnifyingGlassIcon className="h-4 w-4" />
           </Link>
           <HasRights predicate={(u) => isAdmin(u) && !user.isSuperAdmin}>
             <Link to={`/users/${user.username}/edit`} prefetch="intent" title="Edit user" className="btn btn-xs btn-square">

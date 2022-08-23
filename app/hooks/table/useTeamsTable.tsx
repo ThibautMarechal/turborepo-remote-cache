@@ -1,11 +1,11 @@
-import TrashIcon from '@heroicons/react/outline/TrashIcon';
+import TrashIcon from '@heroicons/react/24/outline/TrashIcon';
 import type { Team } from '@prisma/client';
 import { Form, Link } from '@remix-run/react';
 import DateCell from '~/component/DateCell';
 import { createColumnHelper } from '@tanstack/react-table';
 
-import SearchIcon from '@heroicons/react/outline/SearchIcon';
-import PencilIcon from '@heroicons/react/outline/PencilIcon';
+import MagnifyingGlassIcon from '@heroicons/react/24/outline/MagnifyingGlassIcon';
+import PencilIcon from '@heroicons/react/24/outline/PencilIcon';
 import { usePaginateSortingTable } from './usePaginateSortingTable';
 import HasRights from '~/component/HasRights';
 import { requireTeamOwner } from '~/roles/rights';
@@ -35,7 +35,7 @@ const defaultColumns = [
       return (
         <div className="flex gap-1">
           <Link to={`/teams/${team.slug}`} prefetch="intent" className="btn btn-xs btn-square">
-            <SearchIcon className="h-4 w-4" />
+            <MagnifyingGlassIcon className="h-4 w-4" />
           </Link>
           <HasRights predicate={(u) => requireTeamOwner(u, team.id)}>
             <Link to={`/teams/${team.slug}/edit`} prefetch="intent" className="btn btn-xs btn-square">

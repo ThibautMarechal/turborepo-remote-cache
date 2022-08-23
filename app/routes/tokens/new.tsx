@@ -8,7 +8,7 @@ import { requireCookieAuth } from '~/services/authentication.server';
 import { makeDomainFunction } from 'remix-domains';
 import { Form } from '~/component/Form';
 import { generateToken } from '~/services/tokens.server';
-import ClipboardCopyIcon from '@heroicons/react/outline/ClipboardCopyIcon';
+import ClipboardDocumentIcon from '@heroicons/react/24/outline/ClipboardDocumentIcon';
 import { requireAdmin } from '~/roles/rights';
 
 const schema = z.object({
@@ -48,7 +48,7 @@ export default function New() {
           </p>
           <input className="input w-full text-center" value={data} readOnly />
           <button type="button" className="btn w-full btn-primary" onClick={() => copy(data)}>
-            <ClipboardCopyIcon className="text-secondary w-6 h-6 mr-2" />
+            <ClipboardDocumentIcon className="text-secondary w-6 h-6 mr-2" />
             Copy to clipboard
           </button>
         </div>

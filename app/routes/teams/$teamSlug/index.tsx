@@ -1,13 +1,13 @@
 import type { LoaderFunction } from '@remix-run/node';
 import { Link } from '@remix-run/react';
 import { requireCookieAuth } from '~/services/authentication.server';
-import PencilIcon from '@heroicons/react/outline/PencilIcon';
+import PencilIcon from '@heroicons/react/24/outline/PencilIcon';
 import { getTeamDetailBySlug } from '~/services/teams.server';
 import Stats from '~/component/Stats';
 import Stat from '~/component/Stat';
-import ArchiveIcon from '@heroicons/react/outline/ArchiveIcon';
-import LightningBoltIcon from '@heroicons/react/outline/LightningBoltIcon';
-import UserGroupIcon from '@heroicons/react/outline/UserGroupIcon';
+import ArchiveBoxIcon from '@heroicons/react/24/outline/ArchiveBoxIcon';
+import BoltIcon from '@heroicons/react/24/outline/BoltIcon';
+import UserGroupIcon from '@heroicons/react/24/outline/UserGroupIcon';
 import TimeSavedStats from '~/component/TimeSavedStats';
 import type { TimeSavedByMonth } from '~/services/events.server';
 import { getTimeSavedByMonth } from '~/services/events.server';
@@ -83,7 +83,7 @@ export default function Team() {
                 Sessions
               </Link>
             }
-            icon={<LightningBoltIcon className="w-8 h-8" />}
+            icon={<BoltIcon className="w-8 h-8" />}
             value={sessions}
             description={'Number of "turbo run <command>"'}
           />
@@ -93,7 +93,7 @@ export default function Team() {
                 Artifacts
               </Link>
             }
-            icon={<ArchiveIcon className="w-8 h-8" />}
+            icon={<ArchiveBoxIcon className="w-8 h-8" />}
             value={artifacts}
             description={'Artifacts linked to the team'}
           />

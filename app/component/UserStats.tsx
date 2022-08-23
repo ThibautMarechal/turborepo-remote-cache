@@ -1,7 +1,7 @@
 import * as React from 'react';
-import ArchiveIcon from '@heroicons/react/outline/ArchiveIcon';
-import FingerPrintIcon from '@heroicons/react/outline/FingerPrintIcon';
-import LightningBoltIcon from '@heroicons/react/outline/LightningBoltIcon';
+import ArchiveBoxIcon from '@heroicons/react/24/outline/ArchiveBoxIcon';
+import FingerPrintIcon from '@heroicons/react/24/outline/FingerPrintIcon';
+import BoltIcon from '@heroicons/react/24/outline/BoltIcon';
 import { Link } from '@remix-run/react';
 import Stat from './Stat';
 import Stats from './Stats';
@@ -19,7 +19,7 @@ export const UserStats = ({ userId, sessions, artifacts, tokens }: Props) => {
   return (
     <Stats>
       <Stat
-        icon={<LightningBoltIcon className="w-8 h-8" />}
+        icon={<BoltIcon className="w-8 h-8" />}
         title={
           <Link to="./sessions" prefetch="intent">
             Sessions
@@ -29,7 +29,7 @@ export const UserStats = ({ userId, sessions, artifacts, tokens }: Props) => {
         description={'Number of "turbo run <command>"'}
       />
       <Stat
-        icon={<ArchiveIcon className="w-8 h-8" />}
+        icon={<ArchiveBoxIcon className="w-8 h-8" />}
         title={
           <Link to="./artifacts" prefetch="intent">
             Artifacts

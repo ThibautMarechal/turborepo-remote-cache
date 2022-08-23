@@ -1,5 +1,5 @@
-import TrashIcon from '@heroicons/react/outline/TrashIcon';
-import DownloadIcon from '@heroicons/react/outline/DownloadIcon';
+import TrashIcon from '@heroicons/react/24/outline/TrashIcon';
+import ArrowDownTrayIcon from '@heroicons/react/24/outline/ArrowDownTrayIcon';
 import type { Artifact, Team, User } from '@prisma/client';
 import { Form, useTransition } from '@remix-run/react';
 import DateCell from '~/component/DateCell';
@@ -80,7 +80,7 @@ const defaultColumns = [
             </Form>
           </HasRights>
           <a className="btn btn-square btn-xs" href={`/turbo/api/v8/artifacts/${artifact.hash}`} download>
-            <DownloadIcon className="h-4 w-4" />
+            <ArrowDownTrayIcon className="h-4 w-4" />
           </a>
         </div>
       );

@@ -1,12 +1,12 @@
 import Gravatar from 'react-gravatar';
 import { Link, NavLink, useLocation } from '@remix-run/react';
-import LogoutIcon from '@heroicons/react/outline/LogoutIcon';
-import UserIcon from '@heroicons/react/outline/UserIcon';
-import UsersIcon from '@heroicons/react/outline/UsersIcon';
-import UserGroup from '@heroicons/react/outline/UserGroupIcon';
-import LightningBoltIcon from '@heroicons/react/outline/LightningBoltIcon';
-import ArchiveIcon from '@heroicons/react/outline/ArchiveIcon';
-import FingerPrintIcon from '@heroicons/react/outline/FingerPrintIcon';
+import ArrowRightOnRectangleIcon from '@heroicons/react/24/outline/ArrowRightOnRectangleIcon';
+import UserIcon from '@heroicons/react/24/outline/UserIcon';
+import UsersIcon from '@heroicons/react/24/outline/UsersIcon';
+import UserGroup from '@heroicons/react/24/outline/UserGroupIcon';
+import BoltIcon from '@heroicons/react/24/outline/BoltIcon';
+import ArchiveBoxIcon from '@heroicons/react/24/outline/ArchiveBoxIcon';
+import FingerPrintIcon from '@heroicons/react/24/outline/FingerPrintIcon';
 import cn from 'classnames';
 import { useCurrentUser } from '~/context/CurrentUser';
 import HasRights from './HasRights';
@@ -43,7 +43,7 @@ export const Navigation = () => {
             <li>
               <HasRights predicate={(u) => isAdmin(u)}>
                 <NavLink to="/sessions" className="text-primary-content hover:text-red-50">
-                  <LightningBoltIcon className={cn('h-5', { 'text-primary': !pathname.startsWith('/sessions'), 'text-secondary': pathname.startsWith('/sessions') })} />
+                  <BoltIcon className={cn('h-5', { 'text-primary': !pathname.startsWith('/sessions'), 'text-secondary': pathname.startsWith('/sessions') })} />
                   Sessions
                 </NavLink>
               </HasRights>
@@ -51,7 +51,7 @@ export const Navigation = () => {
             <li>
               <HasRights predicate={(u) => isAdmin(u)}>
                 <NavLink to="/artifacts" className="text-primary-content">
-                  <ArchiveIcon className={cn('h-5', { 'text-primary': !pathname.startsWith('/artifacts'), 'text-secondary': pathname.startsWith('/artifacts') })} />
+                  <ArchiveBoxIcon className={cn('h-5', { 'text-primary': !pathname.startsWith('/artifacts'), 'text-secondary': pathname.startsWith('/artifacts') })} />
                   Artifacts
                 </NavLink>
               </HasRights>
@@ -78,7 +78,7 @@ export const Navigation = () => {
                 <li className="w-full">
                   <Link className="flex justify-between w-full" to="/logout">
                     Logout
-                    <LogoutIcon className="h-5 text-primary" />
+                    <ArrowRightOnRectangleIcon className="h-5 text-primary" />
                   </Link>
                 </li>
               </ul>
