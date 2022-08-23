@@ -1,8 +1,8 @@
 import * as React from 'react';
 import Gravatar from 'react-gravatar';
 import { Link } from '@remix-run/react';
-import PencilIcon from '@heroicons/react/outline/PencilIcon';
-import KeyIcon from '@heroicons/react/outline/KeyIcon';
+import PencilIcon from '@heroicons/react/24/outline/PencilIcon';
+import KeyIcon from '@heroicons/react/24/outline/KeyIcon';
 import type { UserDetail } from '~/types/prisma';
 import HasRights from './HasRights';
 import { isAdmin } from '~/roles/rights';

@@ -4,7 +4,7 @@ import { requireCookieAuth } from '~/services/authentication.server';
 import type { Team } from '@prisma/client';
 import { deleteTeam, getTeams, getTeamsCount } from '~/services/teams.server';
 import { useTeamsTable } from '~/hooks/table/useTeamsTable';
-import PlusIcon from '@heroicons/react/outline/PlusIcon';
+import PlusIcon from '@heroicons/react/24/outline/PlusIcon';
 import { getPaginationFromRequest } from '~/utils/pagination';
 import { getOrderByFromRequest } from '~/utils/sort';
 import { useTablePageLoaderData } from '~/hooks/useTablePageLoaderData';

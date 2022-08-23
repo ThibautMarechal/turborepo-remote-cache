@@ -1,4 +1,4 @@
-import DatabaseIcon from '@heroicons/react/outline/DatabaseIcon';
+import CircleStackIcon from '@heroicons/react/24/outline/CircleStackIcon';
 import { formatSize } from '~/utils/intl';
 import Stat from './Stat';
 import Stats from './Stats';
@@ -11,7 +11,7 @@ export const StorageStats = ({ size }: Props) => {
   return (
     <>
       <Stats>
-        <Stat icon={<DatabaseIcon className="w-8 h-8" />} title="Artifacts size" value={formatSize(size)} description={'Total size of the cached artifacts'} />
+        <Stat icon={<CircleStackIcon className="w-8 h-8" />} title="Artifacts size" value={formatSize(size)} description={'Total size of the cached artifacts'} />
       </Stats>
     </>
   );

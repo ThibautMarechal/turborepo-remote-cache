@@ -1,4 +1,4 @@
-import PlusIcon from '@heroicons/react/outline/PlusIcon';
+import PlusIcon from '@heroicons/react/24/outline/PlusIcon';
 import type { ActionFunction, LoaderFunction } from '@remix-run/node';
 import { Link } from '@remix-run/react';
 import { TablePage } from '~/component/TablePage';

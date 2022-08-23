@@ -1,10 +1,10 @@
 import * as React from 'react';
-import ArchiveIcon from '@heroicons/react/outline/ArchiveIcon';
-import LightningBoltIcon from '@heroicons/react/outline/LightningBoltIcon';
+import ArchiveBoxIcon from '@heroicons/react/24/outline/ArchiveBoxIcon';
+import BoltIcon from '@heroicons/react/24/outline/BoltIcon';
 import { Link } from '@remix-run/react';
 import Stat from './Stat';
 import Stats from './Stats';
-import UserGroupIcon from '@heroicons/react/outline/UserGroupIcon';
+import UserGroupIcon from '@heroicons/react/24/outline/UserGroupIcon';
 import type { TeamDetail } from '~/types/prisma';
 import HasRights from './HasRights';
 import { requireTeamOwner } from '~/roles/rights';
@@ -25,7 +25,7 @@ export const TeamStats = ({ team, sessions, artifacts }: Props) => {
               Sessions
             </Link>
           }
-          icon={<LightningBoltIcon className="w-8 h-8" />}
+          icon={<BoltIcon className="w-8 h-8" />}
           value={sessions}
           description={'Number of "turbo run <command>"'}
         />
@@ -35,7 +35,7 @@ export const TeamStats = ({ team, sessions, artifacts }: Props) => {
               Artifacts
             </Link>
           }
-          icon={<ArchiveIcon className="w-8 h-8" />}
+          icon={<ArchiveBoxIcon className="w-8 h-8" />}
           value={artifacts}
           description={'Artifacts linked to the team'}
         />

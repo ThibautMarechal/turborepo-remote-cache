@@ -1,4 +1,4 @@
-import TrashIcon from '@heroicons/react/outline/TrashIcon';
+import TrashIcon from '@heroicons/react/24/outline/TrashIcon';
 import type { Token, User } from '@prisma/client';
 import { createColumnHelper } from '@tanstack/react-table';
 import { Form, useTransition } from '@remix-run/react';

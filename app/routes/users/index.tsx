@@ -4,7 +4,7 @@ import { requireCookieAuth } from '~/services/authentication.server';
 import { deleteUser, getUser, getUsers, getUsersCount } from '~/services/users.server';
 import type { User } from '@prisma/client';
 import { useUsersTable } from '~/hooks/table/useUsersTable';
-import PlusIcon from '@heroicons/react/outline/PlusIcon';
+import PlusIcon from '@heroicons/react/24/outline/PlusIcon';
 import { getOrderByFromRequest } from '~/utils/sort';
 import { getPaginationFromRequest } from '~/utils/pagination';
 import TablePage from '~/component/TablePage';

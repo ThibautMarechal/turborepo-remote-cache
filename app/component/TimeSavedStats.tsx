@@ -1,4 +1,4 @@
-import ClockIcon from '@heroicons/react/outline/ClockIcon';
+import ClockIcon from '@heroicons/react/24/outline/ClockIcon';
 import { formatDuration, formatMonth } from '~/utils/intl';
 import Stat from './Stat';
 import Stats from './Stats';
