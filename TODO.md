@@ -1,1 +1,3 @@
 - User & Managemeent handled by external source (OpenIdConnect)
+- Automatic tests
+- Form error handling
