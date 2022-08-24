@@ -28,5 +28,4 @@ jobs:
       run: docker push thibmarechal/turborepo-remote-cache:${{ github.event.inputs.new_version }}
     - name: Commit version
       run: |
-        git push
-        git push origin v${{ github.event.inputs.new_version }}
+        git push --follow-tags
