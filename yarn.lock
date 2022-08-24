@@ -1154,10 +1154,10 @@
   dependencies:
     "@hapi/hoek" "^9.0.0"
 
-"@heroicons/react@2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@heroicons/react/-/react-2.0.0.tgz#6188c661d8b70e9aa303a4b2efc08f6582e37845"
-  integrity sha512-d5zPCD+lXQdGxsVf6H5s8RDHUzvUsDAt7w6i9FJAHg4jc3lcbyshkpwaxqL/iEFHqqT0/Y6YbW7rTudX3Aw8Rw==
+"@heroicons/react@2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@heroicons/react/-/react-2.0.1.tgz#4794a9fec3580c0157bbc5764daa63eb4e9b8846"
+  integrity sha512-81PZVKt/wlkB/F/0vdXyQQ+IzfsneD+Mslvkl+xU5sn6UkPfHLL0HquL4WTJyw5TQeIpRu69wSYDs3LkolSHjw==
 
 "@hookform/resolvers@^2.8.8":
   version "2.9.7"
