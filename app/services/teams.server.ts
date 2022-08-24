@@ -70,7 +70,13 @@ export async function getTeamFromRequest(request: Request): Promise<Team | null>
   }
   const teamId = url.searchParams.get('teamId');
   if (teamId) {
-    return getTeamBySlug(removeTeamUndescore(teamId));
+    // Even if it's called teamId, linking a repo with the command 'turbo link', the teamId become 'team_{teamSlug}'
+    // But we allow teamId to be 'team_{teamId}'
+    try {
+      return await getTeamBySlug(removeTeamUndescore(teamId));
+    } catch (e) {
+      return getTeam(removeTeamUndescore(teamId));
+    }
   }
   return null;
 }

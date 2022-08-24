@@ -19,12 +19,12 @@ export function isTeamOwner(user: UserDetail, teamId: string): boolean {
   return isAdmin(user) || user.memberships.some((m) => m.teamId === teamId && m.role === TeamRole.OWNER);
 }
 
-export function requireTeamOwner(user: UserDetail, teamId: string): boolean {
+export function requireTeamOwner(user: UserDetail, teamId: string) {
   if (isAdmin(user)) {
-    return true;
+    return;
   }
   if (isTeamOwner(user, teamId)) {
-    return true;
+    return;
   }
   throw forbidden('You are not team owner');
 }
@@ -33,12 +33,12 @@ export function isTeamMember(user: UserDetail, teamId: string): boolean {
   return user.memberships.some((m) => m.teamId === teamId);
 }
 
-export function requireTeamMember(user: UserDetail, teamId: string): boolean {
+export function requireTeamMember(user: UserDetail, teamId: string) {
   if (isAdmin(user)) {
-    return true;
+    return;
   }
   if (isTeamMember(user, teamId)) {
-    return true;
+    return;
   }
   throw forbidden('You are not team member');
 }

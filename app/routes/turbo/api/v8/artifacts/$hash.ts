@@ -8,6 +8,7 @@ import { allowMethods, METHOD } from '~/utils/method';
 import { accepted, unprocessableEntity, internalServerError, notFound } from '~/utils/response';
 import { getArtifactDuration, getArtifactId, hitArtifact, insertArtifact } from '~/services/artifact.server';
 import type { User } from '@prisma/client';
+import { requireTeamMember } from '~/roles/rights';
 
 export const loader: LoaderFunction = async ({ request, params, context }) => {
   allowMethods(request, METHOD.GET, METHOD.PUT);
@@ -40,6 +41,11 @@ export const action: ActionFunction = async ({ request, params, context }) => {
   allowMethods(request, METHOD.GET, METHOD.PUT);
   const user = await requireTokenAuth(request);
   const team = await getTeamFromRequest(request);
+
+  if (team) {
+    requireTeamMember(user, team.id);
+  }
+
   const turboCtx = getTurboContext({ request, params, context }, user, team);
 
   if (!request.body) {
