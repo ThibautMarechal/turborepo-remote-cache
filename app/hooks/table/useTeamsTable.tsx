@@ -8,7 +8,7 @@ import MagnifyingGlassIcon from '@heroicons/react/24/outline/MagnifyingGlassIcon
 import PencilIcon from '@heroicons/react/24/outline/PencilIcon';
 import { usePaginateSortingTable } from './usePaginateSortingTable';
 import HasRights from '~/component/HasRights';
-import { requireTeamOwner } from '~/roles/rights';
+import { isTeamOwner } from '~/roles/rights';
 
 const columnHelper = createColumnHelper<Team>();
 
@@ -37,7 +37,7 @@ const defaultColumns = [
           <Link to={`/teams/${team.slug}`} prefetch="intent" className="btn btn-xs btn-square">
             <MagnifyingGlassIcon className="h-4 w-4" />
           </Link>
-          <HasRights predicate={(u) => requireTeamOwner(u, team.id)}>
+          <HasRights predicate={(u) => isTeamOwner(u, team.id)}>
             <Link to={`/teams/${team.slug}/edit`} prefetch="intent" className="btn btn-xs btn-square">
               <PencilIcon className="h-4 w-4" />
             </Link>

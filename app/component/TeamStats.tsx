@@ -7,7 +7,7 @@ import Stats from './Stats';
 import UserGroupIcon from '@heroicons/react/24/outline/UserGroupIcon';
 import type { TeamDetail } from '~/types/prisma';
 import HasRights from './HasRights';
-import { requireTeamOwner } from '~/roles/rights';
+import { isTeamOwner } from '~/roles/rights';
 
 type Props = {
   sessions: number;
@@ -18,7 +18,7 @@ type Props = {
 export const TeamStats = ({ team, sessions, artifacts }: Props) => {
   return (
     <Stats>
-      <HasRights predicate={(u) => requireTeamOwner(u, team.id)}>
+      <HasRights predicate={(u) => isTeamOwner(u, team.id)}>
         <Stat
           title={
             <Link to="./sessions" prefetch="intent">
