@@ -31,7 +31,7 @@
     "start": "cross-env NODE_ENV=production remix-serve build"
   },
   "dependencies": {
-    "@heroicons/react": "2.0.8",
+    "@heroicons/react": "2.0.10",
     "@prisma/client": "4.3.0",
     "@remix-run/express": "1.7.0",
     "@remix-run/node": "1.7.0",
