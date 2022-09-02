@@ -1,6 +1,7 @@
 import { redirect } from '@remix-run/node';
 import { Authenticator } from 'remix-auth';
 import { FormStrategy } from 'remix-auth-form';
+import { OAuth2Strategy } from 'remix-auth-oauth2';
 import invariant from 'tiny-invariant';
 import { sessionStorage } from '~/services/cookieSession.server';
 import { unauthorized } from '~/utils/response';
@@ -56,3 +57,27 @@ authenticator.use(
   }),
   'user-pass',
 );
+
+if (process.env.OAUTH === 'true') {
+  const { OAUTH_AUTHORIZATION_URL, OAUTH_TOKEN_URL, OAUTH_CALLBACK_URL, OAUTH_CLIENT_ID, OAUTH_CLIENT_SECRET } = process.env;
+  invariant(OAUTH_AUTHORIZATION_URL && OAUTH_TOKEN_URL && OAUTH_CALLBACK_URL && OAUTH_CLIENT_ID && OAUTH_CLIENT_SECRET);
+  const oauth2 = new OAuth2Strategy(
+    {
+      authorizationURL: OAUTH_AUTHORIZATION_URL,
+      callbackURL: OAUTH_CALLBACK_URL,
+      clientID: OAUTH_CLIENT_ID,
+      clientSecret: OAUTH_CLIENT_SECRET,
+      tokenURL: OAUTH_TOKEN_URL,
+    },
+    async ({ accessToken, refreshToken, extraParams, profile }) => {
+      // Get the user data from your DB or API using the tokens and profile
+      console.log('accessToken', accessToken);
+      console.log('refreshToken', refreshToken);
+      console.log('extraParams', extraParams);
+      console.log('profile', profile);
+      return profile.id!;
+    },
+  );
+
+  authenticator.use(oauth2, 'oauth');
+}

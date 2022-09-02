@@ -8135,7 +8135,23 @@ remix-auth-form@1.1.2:
   dependencies:
     remix-auth "^3.1.0"
 
-remix-auth@3.2.2, remix-auth@^3.1.0:
+remix-auth-oauth2@^1.2.0, remix-auth-oauth2@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/remix-auth-oauth2/-/remix-auth-oauth2-1.3.0.tgz#42cb8274e0b4ccecc6c5c5755642482456ff8824"
+  integrity sha512-vibb7jxzRmeTqkl2SORgTg5rZqSAt8VdAvz3JBJOAbjn1wScvEcHttAJDQHDhdtdDgJVaOjJ0K7QpQNEeZdi0A==
+  dependencies:
+    debug "^4.3.4"
+    remix-auth "^3.2.2"
+    uuid "^8.3.2"
+
+remix-auth-oidc@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/remix-auth-oidc/-/remix-auth-oidc-1.0.0.tgz#8847c510068d712c4844f4d6020414d399ebdb9a"
+  integrity sha512-bmG7WyCpCPpzor2fZK1FAehNBL0CZXX9Ze4GZMW24LL/AxaRhODZYSRY5C6Fx5iRGYR6J8hjbs/l1Gr4k+DMGA==
+  dependencies:
+    remix-auth-oauth2 "^1.2.0"
+
+remix-auth@3.2.2, remix-auth@^3.1.0, remix-auth@^3.2.2:
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/remix-auth/-/remix-auth-3.2.2.tgz#8941a6b57cd523872b7aacf200976d77c055a9f7"
   integrity sha512-VtzkfxeXbnXilupRTZkP40aik4vFSdwwRT96mbq0UBDMqHVRfQ7h9Y51HFrTufHJZEfAdkCopedMVvm0vQYKag==

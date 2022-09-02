@@ -1,6 +1,6 @@
 import type { ActionFunction, LoaderFunction } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
-import { useSearchParams } from '@remix-run/react';
+import { Link, useLoaderData, useSearchParams } from '@remix-run/react';
 import { z } from 'zod';
 import { Form } from '~/component/Form';
 import { authenticator } from '~/services/authentication.server';
@@ -25,7 +25,7 @@ export const loader: LoaderFunction = async ({ request }) => {
       return await authenticator.logout(request, { redirectTo: '/login' });
     }
   }
-  return null;
+  return { useOAuth: process.env.OAUTH === 'true', oAuthName: process.env.OAUTH_NAME };
 };
 
 export const action: ActionFunction = async ({ request }) => {
@@ -40,6 +40,7 @@ export const action: ActionFunction = async ({ request }) => {
 
 export default function Login() {
   const [searchParams] = useSearchParams();
+  const { useOAuth, oAuthName } = useLoaderData<{ useOAuth: boolean; oAuthName?: string }>();
   return (
     <div className="container mx-auto flex justify-center">
       <Form
@@ -56,6 +57,14 @@ export default function Login() {
             <Field name="username" />
             <Field name="password" type="password" />
             <Button>Log In</Button>
+            {useOAuth ? (
+              <>
+                <div className="divider" />
+                <Link prefetch="none" to={'./oauth'}>
+                  {oAuthName}
+                </Link>
+              </>
+            ) : null}
           </>
         )}
       </Form>
