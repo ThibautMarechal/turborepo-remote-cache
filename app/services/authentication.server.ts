@@ -1,12 +1,13 @@
 import { redirect } from '@remix-run/node';
 import { Authenticator } from 'remix-auth';
 import { FormStrategy } from 'remix-auth-form';
-import { OAuth2Strategy } from 'remix-auth-oauth2';
+import { OpenIDConnectStrategy } from 'remix-auth-oidc';
 import invariant from 'tiny-invariant';
 import { sessionStorage } from '~/services/cookieSession.server';
 import { unauthorized } from '~/utils/response';
 import { getToken } from './tokens.server';
-import { getUserByUsernameAndPassword, getUserDetail } from './users.server';
+import { createExternalUser, getUserByUsernameAndPassword, getUserDetail, userExist } from './users.server';
+import { ServerRole } from '~/roles/ServerRole';
 
 export const authenticator = new Authenticator<string>(sessionStorage);
 
@@ -58,26 +59,49 @@ authenticator.use(
   'user-pass',
 );
 
-if (process.env.OAUTH === 'true') {
-  const { OAUTH_AUTHORIZATION_URL, OAUTH_TOKEN_URL, OAUTH_CALLBACK_URL, OAUTH_CLIENT_ID, OAUTH_CLIENT_SECRET } = process.env;
-  invariant(OAUTH_AUTHORIZATION_URL && OAUTH_TOKEN_URL && OAUTH_CALLBACK_URL && OAUTH_CLIENT_ID && OAUTH_CLIENT_SECRET);
-  const oauth2 = new OAuth2Strategy(
+if (process.env.OIDC === 'true') {
+  const { OIDC_AUTHORIZATION_URL, OIDC_TOKEN_URL, OIDC_CALLBACK_URL, OIDC_CLIENT_ID, OIDC_CLIENT_SECRET, OIDC_PROFILE_URL } = process.env;
+  invariant(OIDC_AUTHORIZATION_URL && OIDC_TOKEN_URL && OIDC_CALLBACK_URL && OIDC_CLIENT_ID && OIDC_CLIENT_SECRET && OIDC_PROFILE_URL);
+  const oidc = new OpenIDConnectStrategy(
     {
-      authorizationURL: OAUTH_AUTHORIZATION_URL,
-      callbackURL: OAUTH_CALLBACK_URL,
-      clientID: OAUTH_CLIENT_ID,
-      clientSecret: OAUTH_CLIENT_SECRET,
-      tokenURL: OAUTH_TOKEN_URL,
+      authorizationURL: OIDC_AUTHORIZATION_URL,
+      callbackURL: OIDC_CALLBACK_URL,
+      clientID: OIDC_CLIENT_ID,
+      clientSecret: OIDC_CLIENT_SECRET,
+      tokenURL: OIDC_TOKEN_URL,
     },
-    async ({ accessToken, refreshToken, extraParams, profile }) => {
+    async ({ accessToken, refreshToken, extraParams, profile, context }) => {
       // Get the user data from your DB or API using the tokens and profile
-      console.log('accessToken', accessToken);
-      console.log('refreshToken', refreshToken);
-      console.log('extraParams', extraParams);
-      console.log('profile', profile);
-      return profile.id!;
+      try {
+        const response = await fetch(OIDC_PROFILE_URL, {
+          headers: {
+            authorization: `Bearer ${accessToken}`,
+          },
+        });
+        if (!response.ok) {
+          console.log('not ok');
+          try {
+            const body = await response.text();
+            throw new Response(body, { status: 401 });
+          } catch (error) {
+            throw new Response((error as Error).message, { status: 401 });
+          }
+        }
+        const userInfo: { sub: string; email?: string; name?: string; preferred_username?: string } = await response.json();
+        if (!(await userExist(userInfo.sub))) {
+          const email = userInfo.email ?? userInfo.sub;
+          const name = userInfo.name ?? userInfo.preferred_username ?? userInfo.sub;
+          const username = userInfo.preferred_username ?? userInfo.sub;
+
+          await createExternalUser({ id: userInfo.sub, email, name, username, role: ServerRole.DEVELOPER });
+        }
+        return userInfo.sub;
+      } catch (e) {
+        console.error('Error while fetching userinfo');
+        return '';
+      }
     },
   );
 
-  authenticator.use(oauth2, 'oauth');
+  authenticator.use(oidc, 'oidc');
 }

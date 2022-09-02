@@ -3,26 +3,11 @@ import { useReactTable, getCoreRowModel } from '@tanstack/react-table';
 import { orderByToSortingState, sortingStateToOrderBy } from '~/utils/sort';
 import { useSortSearchParams } from '~/hooks/useSortSearchParams';
 import { usePaginateSearchParams } from '../usePaginateSearchParams';
-import { useFetcher } from '@remix-run/react';
-import * as React from 'react';
 
 export function usePaginateSortingTable<TableElement>(tableOptions: Omit<TableOptions<TableElement>, 'getCoreRowModel'>, count: number) {
   const { orderBy, setOrderBy } = useSortSearchParams();
 
-  const [pagedData, setPagedData] = React.useState(tableOptions.data);
-
-  React.useEffect(() => {
-    setPagedData(tableOptions.data);
-  }, [tableOptions.data]);
-
-  const fetcher = useFetcher();
-
-  React.useEffect(() => {
-    if (fetcher.data) {
-      setPagedData((previousData) => [...previousData, ...fetcher.data.items]);
-    }
-  }, [fetcher.data]);
-
+  // TODO Lazy loading doesn't work anymore in React18
   const sorting = orderByToSortingState(orderBy);
 
   const { skip, take, nextUrl, previousUrl, getUrlAtPage } = usePaginateSearchParams();
@@ -30,7 +15,6 @@ export function usePaginateSortingTable<TableElement>(tableOptions: Omit<TableOp
   return {
     tableProps: useReactTable({
       ...tableOptions,
-      data: pagedData,
       state: {
         sorting,
       },
@@ -48,8 +32,10 @@ export function usePaginateSortingTable<TableElement>(tableOptions: Omit<TableOp
       previousUrl,
       getUrlAtPage,
       count,
-      currentPageCount: pagedData.length,
-      onLoadMore: (page: string) => fetcher.load(page),
+      currentPageCount: tableOptions.data.length,
+      onLoadMore: (page: string) => {
+        /* TODO Lazy loading solution doesn't work anymore in react 18 */
+      },
     },
   };
 }

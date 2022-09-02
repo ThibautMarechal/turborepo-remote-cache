@@ -15,7 +15,7 @@ const schema = z.object({
 export const loader: LoaderFunction = async ({ request }) => {
   const userId = await authenticator.isAuthenticated(request);
   const url = new URL(request.url);
-  const redirectTo = url.searchParams.get('redirect_to') ?? '/dashboard';
+  const redirectTo = url.searchParams.get('redirect_to') ?? '/';
   if (userId) {
     try {
       await getUser(userId);
@@ -25,7 +25,7 @@ export const loader: LoaderFunction = async ({ request }) => {
       return await authenticator.logout(request, { redirectTo: '/login' });
     }
   }
-  return { useOAuth: process.env.OAUTH === 'true', oAuthName: process.env.OAUTH_NAME };
+  return { useOidc: process.env.OIDC === 'true', oidcName: process.env.OIDC_NAME };
 };
 
 export const action: ActionFunction = async ({ request }) => {
@@ -40,7 +40,7 @@ export const action: ActionFunction = async ({ request }) => {
 
 export default function Login() {
   const [searchParams] = useSearchParams();
-  const { useOAuth, oAuthName } = useLoaderData<{ useOAuth: boolean; oAuthName?: string }>();
+  const { useOidc, oidcName } = useLoaderData<{ useOidc: boolean; oidcName?: string }>();
   return (
     <div className="container mx-auto flex justify-center">
       <Form
@@ -57,11 +57,11 @@ export default function Login() {
             <Field name="username" />
             <Field name="password" type="password" />
             <Button>Log In</Button>
-            {useOAuth ? (
+            {useOidc ? (
               <>
                 <div className="divider" />
-                <Link prefetch="none" to={'./oauth'}>
-                  {oAuthName}
+                <Link prefetch="none" to={'./oidc'}>
+                  {oidcName}
                 </Link>
               </>
             ) : null}

@@ -39,6 +39,7 @@ model User {
   isSuperAdmin Boolean    @default(false)
   role         String     @default("DEVELOPER")
   isDeleted    Boolean    @default(false)
+  isExternal   Boolean    @default(false)
   sessions     Session[]
   tokens       Token[]
   memberships  Member[]

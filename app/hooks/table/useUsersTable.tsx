@@ -5,6 +5,7 @@ import DateCell from '~/component/DateCell';
 import { createColumnHelper } from '@tanstack/react-table';
 import Gravatar from 'react-gravatar';
 import MagnifyingGlassIcon from '@heroicons/react/24/outline/MagnifyingGlassIcon';
+import ArrowTopRightOnSquareIcon from '@heroicons/react/24/outline/ArrowTopRightOnSquareIcon';
 import PencilIcon from '@heroicons/react/24/outline/PencilIcon';
 import KeyIcon from '@heroicons/react/24/outline/KeyIcon';
 import { usePaginateSortingTable } from './usePaginateSortingTable';
@@ -15,6 +16,11 @@ import { isAdmin } from '~/roles/rights';
 const columnHelper = createColumnHelper<User>();
 
 const defaultColumns = [
+  columnHelper.accessor('isExternal', {
+    header: '',
+    enableSorting: true,
+    cell: ({ getValue }) => (getValue() ? <ArrowTopRightOnSquareIcon className="h-4 w-4" /> : null),
+  }),
   columnHelper.accessor('email', {
     header: '',
     enableSorting: false,
