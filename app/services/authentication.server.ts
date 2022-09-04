@@ -3,7 +3,7 @@ import { Authenticator } from 'remix-auth';
 import { FormStrategy } from 'remix-auth-form';
 import { OpenIDConnectStrategy } from 'remix-auth-oidc';
 import invariant from 'tiny-invariant';
-import { sessionStorage } from '~/services/cookieSession.server';
+import { sessionStorage } from '~/services/cookie.server';
 import { unauthorized } from '~/utils/response';
 import { getToken } from './tokens.server';
 import { createExternalUser, getUserByUsernameAndPassword, getUserDetail, userExist } from './users.server';

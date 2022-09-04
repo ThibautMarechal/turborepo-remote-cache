@@ -41,6 +41,7 @@ export const action: ActionFunction = async ({ request }) => {
 export default function Login() {
   const [searchParams] = useSearchParams();
   const { useOidc, oidcName } = useLoaderData<{ useOidc: boolean; oidcName?: string }>();
+  const redirectTo = searchParams.get('redirect_to') || '/';
   return (
     <div className="container mx-auto flex justify-center">
       <div>
@@ -49,7 +50,7 @@ export default function Login() {
           hiddenFields={['redirect_to']}
           method="post"
           values={{
-            redirect_to: searchParams.get('redirect_to') || '/',
+            redirect_to: redirectTo,
           }}
         >
           {({ Field, Button }) => (
@@ -64,7 +65,7 @@ export default function Login() {
         {useOidc ? (
           <>
             <div className="divider" />
-            <RemixForm method="post" action="/login/oidc">
+            <RemixForm method="post" action={`/login/oidc?redirect_to=${redirectTo}`}>
               <Button>{oidcName}</Button>
             </RemixForm>
           </>
