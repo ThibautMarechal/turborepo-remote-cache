@@ -1,5 +1,5 @@
 import Gravatar from 'react-gravatar';
-import { Link, NavLink, useLocation } from '@remix-run/react';
+import { Form, Link, NavLink, useLocation } from '@remix-run/react';
 import ArrowRightOnRectangleIcon from '@heroicons/react/24/outline/ArrowRightOnRectangleIcon';
 import UserIcon from '@heroicons/react/24/outline/UserIcon';
 import UsersIcon from '@heroicons/react/24/outline/UsersIcon';
@@ -75,12 +75,14 @@ export const Navigation = () => {
                     <UserIcon className="h-5 text-primary" />
                   </Link>
                 </li>
-                <li className="w-full">
-                  <Link className="flex justify-between w-full" to="/logout">
-                    Logout
-                    <ArrowRightOnRectangleIcon className="h-5 text-primary" />
-                  </Link>
-                </li>
+                <Form method="post" action="logout">
+                  <li className="w-full">
+                    <button className="flex justify-between w-full">
+                      Logout
+                      <ArrowRightOnRectangleIcon className="h-5 text-primary" />
+                    </button>
+                  </li>
+                </Form>
               </ul>
             </div>
           </ul>

@@ -60,12 +60,12 @@ authenticator.use(
 );
 
 if (process.env.OIDC === 'true') {
-  const { OIDC_AUTHORIZATION_URL, OIDC_TOKEN_URL, OIDC_CALLBACK_URL, OIDC_CLIENT_ID, OIDC_CLIENT_SECRET, OIDC_PROFILE_URL } = process.env;
-  invariant(OIDC_AUTHORIZATION_URL && OIDC_TOKEN_URL && OIDC_CALLBACK_URL && OIDC_CLIENT_ID && OIDC_CLIENT_SECRET && OIDC_PROFILE_URL);
+  const { OIDC_AUTHORIZATION_URL, OIDC_TOKEN_URL, OIDC_CLIENT_ID, OIDC_CLIENT_SECRET, OIDC_PROFILE_URL } = process.env;
+  invariant(OIDC_AUTHORIZATION_URL && OIDC_TOKEN_URL && OIDC_CLIENT_ID && OIDC_CLIENT_SECRET && OIDC_PROFILE_URL);
   const oidc = new OpenIDConnectStrategy(
     {
       authorizationURL: OIDC_AUTHORIZATION_URL,
-      callbackURL: OIDC_CALLBACK_URL,
+      callbackURL: '/login/oidc/callback',
       clientID: OIDC_CLIENT_ID,
       clientSecret: OIDC_CLIENT_SECRET,
       tokenURL: OIDC_TOKEN_URL,

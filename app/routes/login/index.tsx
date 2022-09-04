@@ -1,8 +1,8 @@
 import type { ActionFunction, LoaderFunction } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
-import { Link, useLoaderData, useSearchParams } from '@remix-run/react';
+import { useLoaderData, useSearchParams, Form as RemixForm } from '@remix-run/react';
 import { z } from 'zod';
-import { Form } from '~/component/Form';
+import { Button, Form } from '~/component/Form';
 import { authenticator } from '~/services/authentication.server';
 import { getUser } from '~/services/users.server';
 
@@ -43,31 +43,33 @@ export default function Login() {
   const { useOidc, oidcName } = useLoaderData<{ useOidc: boolean; oidcName?: string }>();
   return (
     <div className="container mx-auto flex justify-center">
-      <Form
-        schema={schema}
-        hiddenFields={['redirect_to']}
-        method="post"
-        values={{
-          redirect_to: searchParams.get('redirect_to') || '/',
-        }}
-      >
-        {({ Field, Button }) => (
+      <div>
+        <Form
+          schema={schema}
+          hiddenFields={['redirect_to']}
+          method="post"
+          values={{
+            redirect_to: searchParams.get('redirect_to') || '/',
+          }}
+        >
+          {({ Field, Button }) => (
+            <>
+              <Field name="redirect_to" />
+              <Field name="username" />
+              <Field name="password" type="password" />
+              <Button>Log In</Button>
+            </>
+          )}
+        </Form>
+        {useOidc ? (
           <>
-            <Field name="redirect_to" />
-            <Field name="username" />
-            <Field name="password" type="password" />
-            <Button>Log In</Button>
-            {useOidc ? (
-              <>
-                <div className="divider" />
-                <Link prefetch="none" to={'./oidc'}>
-                  {oidcName}
-                </Link>
-              </>
-            ) : null}
+            <div className="divider" />
+            <RemixForm method="post" action="/login/oidc">
+              <Button>{oidcName}</Button>
+            </RemixForm>
           </>
-        )}
-      </Form>
+        ) : null}
+      </div>
     </div>
   );
 }
