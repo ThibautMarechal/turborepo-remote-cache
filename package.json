@@ -61,7 +61,7 @@
     "react-router-dom": "6.3.0",
     "react-table": "7.8.0",
     "remix-auth": "3.2.2",
-    "remix-auth-form": "1.1.2",
+    "remix-auth-form": "1.2.0",
     "remix-domains": "0.3.2",
     "remix-forms": "0.17.4-test.0",
     "remix-utils": "3.3.0",
