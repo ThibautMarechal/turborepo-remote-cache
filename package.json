@@ -44,7 +44,7 @@
     "aws-sdk": "2.1213.0",
     "azure-blob-storage": "4.2.5",
     "azure-blob-store": "1.0.7",
-    "classnames": "2.3.1",
+    "classnames": "2.3.2",
     "copy-to-clipboard": "3.3.2",
     "cross-env": "7.0.3",
     "fs-blob-store": "6.0.0",
