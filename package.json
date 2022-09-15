@@ -66,7 +66,7 @@
     "remix-forms": "0.17.4-test.0",
     "remix-utils": "3.3.0",
     "s3-blob-store": "4.1.1",
-    "superjson": "1.9.1",
+    "superjson": "1.10.0",
     "tiny-invariant": "1.2.0",
     "ts-node": "10.9.1",
     "tsconfig-paths": "4.1.0",
