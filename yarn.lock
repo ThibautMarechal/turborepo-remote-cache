@@ -7985,10 +7985,10 @@ raw-body@2.5.1:
     iconv-lite "0.4.24"
     unpipe "1.0.0"
 
-react-charts@3.0.0-beta.48:
-  version "3.0.0-beta.48"
-  resolved "https://registry.yarnpkg.com/react-charts/-/react-charts-3.0.0-beta.48.tgz#504a4b2cf9e4233bc0a887f46af0fc0984282572"
-  integrity sha512-D0etnyfKtpWioHc1UoWe1qiK9MQJG0AmGBsefXiv9tRpiMio7xObcxBYQplvHJrahI5/Fd0ni4KUJmfijYe6NA==
+react-charts@3.0.0-beta.50:
+  version "3.0.0-beta.50"
+  resolved "https://registry.yarnpkg.com/react-charts/-/react-charts-3.0.0-beta.50.tgz#a643f539a0ab6aa5ff5ceb0fbc8eb6c48937c1fb"
+  integrity sha512-TRCwahm+HMPkX2HI1mrHy+i1XLOkXdSY99jyomcmeCXty2r4BX6hdUoF92CaMILydsGbxceimjWLyywaLMrFnw==
   dependencies:
     "@babel/runtime" "^7.14.6"
     "@types/d3-array" "^3.0.1"
