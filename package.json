@@ -95,7 +95,7 @@
     "@vitest/coverage-c8": "0.23.2",
     "c8": "7.12.0",
     "cypress": "10.8.0",
-    "daisyui": "2.29.0",
+    "daisyui": "2.31.0",
     "eslint": "8.23.1",
     "happy-dom": "6.0.4",
     "start-server-and-test": "1.14.0",
