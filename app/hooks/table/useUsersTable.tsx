@@ -46,34 +46,34 @@ const defaultColumns = [
   columnHelper.display({
     id: 'actions',
     enableSorting: false,
-    cell: ({ row }) => {
-      const user = row.original;
-      // eslint-disable-next-line react-hooks/rules-of-hooks
-      const { state, submission } = useTransition();
-      const isDeleting = state === 'submitting' && submission.formData.get('id') === user.id;
-      return (
-        <div className="flex gap-1">
-          <Link to={`/users/${user.username}`} prefetch="intent" title="Show user" className="btn btn-xs btn-square">
-            <MagnifyingGlassIcon className="h-4 w-4" />
-          </Link>
-          <HasRights predicate={(u) => isAdmin(u) && !user.isSuperAdmin}>
-            <Link to={`/users/${user.username}/edit`} prefetch="intent" title="Edit user" className="btn btn-xs btn-square">
-              <PencilIcon className="h-4 w-4" />
-            </Link>
-            <Link to={`/users/${user.username}/change_password`} prefetch="intent" title="Change password" className="btn btn-xs btn-square">
-              <KeyIcon className="h-4 w-4" />
-            </Link>
-            <Form method="post">
-              <button className={cn('btn btn-xs btn-square', { loading: isDeleting })} title="Delete user">
-                {!isDeleting && <TrashIcon className="h-4 w-4" />}
-              </button>
-              <input name="id" value={user.id} type="hidden" />
-            </Form>
-          </HasRights>
-        </div>
-      );
-    },
+    cell: ({ row }) => <UserActions user={row.original} />,
   }),
 ];
+
+const UserActions = ({ user }: { user: User }) => {
+  const { state, submission } = useTransition();
+  const isDeleting = state === 'submitting' && submission.formData.get('id') === user.id;
+  return (
+    <div className="flex gap-1">
+      <Link to={`/users/${user.username}`} prefetch="intent" title="Show user" className="btn btn-xs btn-square">
+        <MagnifyingGlassIcon className="h-4 w-4" />
+      </Link>
+      <HasRights predicate={(u) => isAdmin(u) && !user.isSuperAdmin}>
+        <Link to={`/users/${user.username}/edit`} prefetch="intent" title="Edit user" className="btn btn-xs btn-square">
+          <PencilIcon className="h-4 w-4" />
+        </Link>
+        <Link to={`/users/${user.username}/change_password`} prefetch="intent" title="Change password" className="btn btn-xs btn-square">
+          <KeyIcon className="h-4 w-4" />
+        </Link>
+        <Form method="post">
+          <button className={cn('btn btn-xs btn-square', { loading: isDeleting })} title="Delete user">
+            {!isDeleting && <TrashIcon className="h-4 w-4" />}
+          </button>
+          <input name="id" value={user.id} type="hidden" />
+        </Form>
+      </HasRights>
+    </div>
+  );
+};
 
 export const useUsersTable = (data: User[], count: number) => usePaginateSortingTable({ data, columns: defaultColumns }, count);

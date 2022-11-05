@@ -6,7 +6,6 @@ import DateCell from '~/component/DateCell';
 import TeamCell from '~/component/TeamCell';
 import UserCell from '~/component/UserCell';
 import { createColumnHelper } from '@tanstack/react-table';
-
 import { formatDuration, formatSize } from '~/utils/intl';
 import { usePaginateSortingTable } from './usePaginateSortingTable';
 import HasRights from '~/component/HasRights';
@@ -26,7 +25,6 @@ const defaultColumns = [
   }),
   columnHelper.accessor((artifact) => artifact.user, {
     id: 'user',
-
     header: 'User',
     cell: ({ getValue }) => <UserCell user={getValue()} />,
   }),

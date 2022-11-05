@@ -1,21 +1,23 @@
 import * as React from 'react';
 import type { FormProps } from 'remix-forms';
-import { Form as RemixForm } from 'remix-forms';
+import { createForm } from 'remix-forms';
 import cn from 'classnames';
 
 import type { SomeZodObject } from 'zod';
 
+import { Form as FrameworkForm, useActionData, useSubmit, useTransition as useNavigation } from '@remix-run/react';
+
+const RemixForm = createForm({ component: FrameworkForm, useNavigation, useSubmit, useActionData });
+
 export function Form<Schema extends SomeZodObject>(props: FormProps<Schema>) {
   return (
     <RemixForm<Schema>
-      // className={/* your form classes */}
       fieldComponent={Field}
       labelComponent={Label}
       inputComponent={Input}
       multilineComponent={TextArea}
       selectComponent={Select}
       checkboxComponent={Checkbox}
-      // checkboxWrapperComponent={/* your custom checkbox wrapper */}
       buttonComponent={Button}
       fieldErrorsComponent={Error}
       globalErrorsComponent={Errors}

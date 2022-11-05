@@ -24,7 +24,6 @@ export function usePaginateSortingTable<TableElement>(tableOptions: Omit<TableOp
       },
       getCoreRowModel: getCoreRowModel(),
     }),
-
     paginationProps: {
       skip,
       take,
