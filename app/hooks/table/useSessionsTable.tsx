@@ -11,6 +11,7 @@ const columnHelper = createColumnHelper<Session & { user: User; team: Team | nul
 
 const defaultColumns = [
   columnHelper.accessor((session) => session.team, {
+    id: 'team',
     header: 'Team',
     cell: ({ getValue }) => {
       const team = getValue();

@@ -16,13 +16,16 @@ const defaultColumns = [
     cell: ({ getValue }) => <UserCell user={getValue()} />,
   }),
   columnHelper.accessor((token) => token.name, {
+    id: 'name',
     header: 'Name',
   }),
   columnHelper.accessor((token) => token.creationDate, {
+    id: 'creationDate',
     header: 'Creation date',
     cell: ({ getValue }) => <DateCell date={getValue()} />,
   }),
   columnHelper.accessor((token) => token.lastUsedDate, {
+    id: 'lastUsedDate',
     header: 'Last used date',
     cell: ({ getValue }) => {
       const date = getValue();
@@ -33,21 +36,21 @@ const defaultColumns = [
     id: 'actions',
     header: '',
     enableSorting: false,
-    cell: ({ row }) => {
-      const { id } = row.original;
-      // eslint-disable-next-line react-hooks/rules-of-hooks
-      const { state, submission } = useTransition();
-      const isDeleting = state === 'submitting' && submission.formData.get('id') === id;
-
-      return (
-        <div className="flex">
-          <Form method="post">
-            <input name="id" value={id} type="hidden" />
-            <button className={cn('btn btn-xs btn-square', { loading: isDeleting })}>{!isDeleting && <TrashIcon className="h-4 w-4" />}</button>
-          </Form>
-        </div>
-      );
-    },
+    cell: ({ row }) => <TokenActions token={row.original} />,
   }),
 ];
+
+const TokenActions = ({ token }: { token: Token }) => {
+  const { state, submission } = useTransition();
+  const isDeleting = state === 'submitting' && submission.formData.get('id') === token.id;
+  return (
+    <div className="flex">
+      <Form method="post">
+        <input name="id" value={token.id} type="hidden" />
+        <button className={cn('btn btn-xs btn-square', { loading: isDeleting })}>{!isDeleting && <TrashIcon className="h-4 w-4" />}</button>
+      </Form>
+    </div>
+  );
+};
+
 export const useTokensTable = (data: Array<Token & { user: User }>, count: number) => usePaginateSortingTable({ data, columns: defaultColumns }, count);

@@ -42,19 +42,6 @@ export async function upsertSession(session: Omit<Session, 'creationDate'>) {
     );
 }
 
-export async function getSession(id: string) {
-  return await client.session.findUniqueOrThrow({
-    where: {
-      id,
-    },
-    include: {
-      events: true,
-      team: true,
-      user: true,
-    },
-  });
-}
-
 export async function getSessionsCount({ userId, teamId }: { userId?: string; teamId?: string } = {}) {
   return await client.session.count({
     where: {
