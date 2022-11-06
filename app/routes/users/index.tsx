@@ -39,7 +39,6 @@ export const action: ActionFunction = async ({ request }) => {
 export default function Users() {
   const { items, count } = useTablePageLoaderData<User>();
   const { tableProps, paginationProps } = useUsersTable(items, count);
-  console.log(items, count, tableProps, paginationProps);
   return (
     <>
       <TablePage title="Users" count={count} tableProps={tableProps} paginationProps={paginationProps} searchable />

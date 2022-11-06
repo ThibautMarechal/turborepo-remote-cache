@@ -79,7 +79,6 @@ if (process.env.OIDC === 'true') {
           },
         });
         if (!response.ok) {
-          console.log('not ok');
           try {
             const body = await response.text();
             throw new Response(body, { status: 401 });
