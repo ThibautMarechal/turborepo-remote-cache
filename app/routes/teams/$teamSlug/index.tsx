@@ -19,6 +19,7 @@ import { isTeamOwner } from '~/roles/rights';
 import { json, useLoaderData } from '~/utils/superjson';
 import HasRights from '~/component/HasRights';
 import StorageStats from '~/component/StorageStats';
+import NoSsr from '~/component/NoSsr';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const user = await requireCookieAuth(request);
@@ -101,7 +102,9 @@ export default function Team() {
       </Stats>
       <HasRights predicate={(u) => isTeamOwner(u, team.id)}>
         <StorageStats size={artifactsSize} />
-        <TimeSavedStats local={savedLocally} remote={savedRemotely} />
+        <NoSsr>
+          <TimeSavedStats local={savedLocally} remote={savedRemotely} />
+        </NoSsr>
       </HasRights>
     </div>
   );

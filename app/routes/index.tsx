@@ -21,6 +21,7 @@ import TimeSavedStats from '~/component/TimeSavedStats';
 import { isAdmin } from '~/roles/rights';
 import { json, useLoaderData } from '~/utils/superjson';
 import StorageStats from '~/component/StorageStats';
+import NoSsr from '~/component/NoSsr';
 
 export const loader: LoaderFunction = async ({ request }) => {
   await requireCookieAuth(request);
@@ -111,7 +112,9 @@ export default function DashBoard() {
         </HasRights>
       </Stats>
       <StorageStats size={artifactsSize} />
-      <TimeSavedStats local={savedLocally} remote={savedRemotely} />
+      <NoSsr>
+        <TimeSavedStats local={savedLocally} remote={savedRemotely} />
+      </NoSsr>
     </div>
   );
 }
