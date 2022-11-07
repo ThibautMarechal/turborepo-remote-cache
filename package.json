@@ -86,7 +86,7 @@
     "@thimar/eslint-config": "2.0.1",
     "@types/qs": "6.9.7",
     "@types/react": "18.0.21",
-    "@types/react-dom": "18.0.6",
+    "@types/react-dom": "18.0.8",
     "@types/react-gravatar": "2.6.10",
     "@types/readable-stream": "2.3.14",
     "@vitejs/plugin-react": "2.1.0",
