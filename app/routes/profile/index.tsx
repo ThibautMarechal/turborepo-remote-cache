@@ -1,4 +1,5 @@
 import type { LoaderFunction } from '@remix-run/node';
+import NoSsr from '~/component/NoSsr';
 import StorageStats from '~/component/StorageStats';
 import TimeSavedStats from '~/component/TimeSavedStats';
 import UserCard from '~/component/UserCard';
@@ -54,7 +55,9 @@ export default function Profile() {
       <UserCard user={user} editable baseRoute={`/profile`} />
       <UserStats userId={user.id} sessions={sessions} artifacts={artifacts} tokens={tokens} />
       <StorageStats size={artifactsSize} />
-      <TimeSavedStats local={savedLocally} remote={savedRemotely} />
+      <NoSsr>
+        <TimeSavedStats local={savedLocally} remote={savedRemotely} />
+      </NoSsr>
     </div>
   );
 }

@@ -6,7 +6,6 @@ import DateCell from '~/component/DateCell';
 import TeamCell from '~/component/TeamCell';
 import UserCell from '~/component/UserCell';
 import { createColumnHelper } from '@tanstack/react-table';
-
 import { formatDuration, formatSize } from '~/utils/intl';
 import { usePaginateSortingTable } from './usePaginateSortingTable';
 import HasRights from '~/component/HasRights';
@@ -26,14 +25,13 @@ const defaultColumns = [
   }),
   columnHelper.accessor((artifact) => artifact.user, {
     id: 'user',
-
     header: 'User',
     cell: ({ getValue }) => <UserCell user={getValue()} />,
   }),
   columnHelper.accessor((artifact) => artifact.duration, {
     id: 'duration',
     header: 'Duration',
-    cell: ({ getValue }) => formatDuration(getValue()),
+    cell: ({ getValue }) => formatDuration(getValue() / 1000),
   }),
   columnHelper.accessor((artifact) => artifact.contentLength, {
     id: 'contentLength',
@@ -61,31 +59,31 @@ const defaultColumns = [
     id: 'timeSaved',
     header: 'Time saved',
     enableSorting: false,
-    cell: ({ getValue }) => formatDuration(getValue()),
+    cell: ({ getValue }) => formatDuration(getValue() / 1000),
   }),
   columnHelper.display({
     id: 'actions',
     enableSorting: false,
-    cell: ({ row }) => {
-      const artifact = row.original;
-      // eslint-disable-next-line react-hooks/rules-of-hooks
-      const { state, submission } = useTransition();
-      const isDeleting = state === 'submitting' && submission.formData.get('id') === artifact.id;
-      return (
-        <div className="flex gap-1">
-          <HasRights predicate={(u) => isAdmin(u)}>
-            <Form method="post">
-              <input name="id" value={artifact.id} type="hidden" />
-              <button className={cn('btn btn-xs btn-square', { loading: isDeleting })}>{!isDeleting && <TrashIcon className="h-4 w-4" />}</button>
-            </Form>
-          </HasRights>
-          <a className="btn btn-square btn-xs" href={`/turbo/api/v8/artifacts/${artifact.hash}`} download>
-            <ArrowDownTrayIcon className="h-4 w-4" />
-          </a>
-        </div>
-      );
-    },
+    cell: ({ row }) => <ArtifactActions artifact={row.original} />,
   }),
 ];
+
+const ArtifactActions = ({ artifact }: { artifact: Artifact }) => {
+  const { state, submission } = useTransition();
+  const isDeleting = state === 'submitting' && submission.formData.get('id') === artifact.id;
+  return (
+    <div className="flex gap-1">
+      <HasRights predicate={(u) => isAdmin(u)}>
+        <Form method="post">
+          <input name="id" value={artifact.id} type="hidden" />
+          <button className={cn('btn btn-xs btn-square', { loading: isDeleting })}>{!isDeleting && <TrashIcon className="h-4 w-4" />}</button>
+        </Form>
+      </HasRights>
+      <a className="btn btn-square btn-xs" href={`/turbo/api/v8/artifacts/${artifact.hash}`} download>
+        <ArrowDownTrayIcon className="h-4 w-4" />
+      </a>
+    </div>
+  );
+};
 
 export const useArtifactsTable = (data: Array<Artifact & { user: User; team: Team | null }>, count: number) => usePaginateSortingTable({ data, columns: defaultColumns }, count);

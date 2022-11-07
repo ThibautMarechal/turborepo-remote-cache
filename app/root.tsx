@@ -56,7 +56,7 @@ export default function Root() {
 
 export const CatchBoundary = () => {
   const caught = useCatch();
-  console.log(caught);
+  console.error(caught);
   return (
     <html lang="en" className="bg-base-300" data-theme="turbo">
       <head>
@@ -66,7 +66,7 @@ export const CatchBoundary = () => {
       <body>
         <Navigation />
         <div className="text-error text-4xl text-center m-20">{caught.status}</div>
-        <div className="text-error text-lg text-center m-0">{caught.data}</div>
+        <div className="text-error text-lg text-center m-0">{JSON.stringify(caught.data, null, 2)}</div>
         <ScrollRestoration />
         <Scripts />
         <LiveReload />

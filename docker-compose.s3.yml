@@ -16,7 +16,7 @@ services:
       STORAGE_S3_SECRET_ACCESS_KEY: miniosecretkey
       STORAGE_S3_SSL_ENABLED: 'false'
       STORAGE_S3_BUCKET: turborepo-remote-cache
-      DATABASE_URL: postgres://postgres:example@localhost:5432/turborepo
+      DATABASE_URL: postgres://postgres:example@db:5432/turborepo
 
   minio:
     image: minio/minio

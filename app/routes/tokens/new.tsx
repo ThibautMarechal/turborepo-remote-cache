@@ -1,11 +1,11 @@
 import type { ActionFunction, LoaderFunction } from '@remix-run/node';
 
 import { useActionData } from '@remix-run/react';
-import { formAction } from 'remix-forms';
+import { formAction } from '~/formAction';
 import copy from 'copy-to-clipboard';
 import { z } from 'zod';
 import { requireCookieAuth } from '~/services/authentication.server';
-import { makeDomainFunction } from 'remix-domains';
+import { makeDomainFunction } from 'domain-functions';
 import { Form } from '~/component/Form';
 import { generateToken } from '~/services/tokens.server';
 import ClipboardDocumentIcon from '@heroicons/react/24/outline/ClipboardDocumentIcon';

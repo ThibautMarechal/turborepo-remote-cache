@@ -1,8 +1,8 @@
 import type { User } from '@prisma/client';
 import type { ActionFunction, LoaderFunction } from '@remix-run/node';
 
-import { makeDomainFunction } from 'remix-domains';
-import { formAction } from 'remix-forms';
+import { makeDomainFunction } from 'domain-functions';
+import { formAction } from '~/formAction';
 import { z } from 'zod';
 import { Form } from '~/component/Form';
 import { requireTeamOwner } from '~/roles/rights';

@@ -16,6 +16,7 @@ import HasRights from '~/component/HasRights';
 import { useCurrentUser } from '~/context/CurrentUser';
 import { json, useLoaderData } from '~/utils/superjson';
 import StorageStats from '~/component/StorageStats';
+import NoSsr from '~/component/NoSsr';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const currentUser = await requireCookieAuth(request);
@@ -58,7 +59,9 @@ export default function User() {
       <HasRights predicate={(u) => isAdmin(u)}>
         <UserStats userId={user.id} sessions={sessions} artifacts={artifacts} tokens={tokens} />
         <StorageStats size={artifactsSize} />
-        <TimeSavedStats local={savedLocally} remote={savedRemotely} />
+        <NoSsr>
+          <TimeSavedStats local={savedLocally} remote={savedRemotely} />
+        </NoSsr>
       </HasRights>
     </div>
   );

@@ -3,19 +3,21 @@ import { useReactTable, getCoreRowModel } from '@tanstack/react-table';
 import { orderByToSortingState, sortingStateToOrderBy } from '~/utils/sort';
 import { useSortSearchParams } from '~/hooks/useSortSearchParams';
 import { usePaginateSearchParams } from '../usePaginateSearchParams';
-import { useFetcher } from '@remix-run/react';
 import * as React from 'react';
+import { useFetcher } from '~/utils/superjson';
 
 export function usePaginateSortingTable<TableElement>(tableOptions: Omit<TableOptions<TableElement>, 'getCoreRowModel'>, count: number) {
   const { orderBy, setOrderBy } = useSortSearchParams();
 
   const [pagedData, setPagedData] = React.useState(tableOptions.data);
 
-  React.useEffect(() => {
+  const [previousData, setPreviousData] = React.useState(tableOptions.data);
+  if (tableOptions.data !== previousData) {
+    setPreviousData(tableOptions.data);
     setPagedData(tableOptions.data);
-  }, [tableOptions.data]);
+  }
 
-  const fetcher = useFetcher();
+  const fetcher = useFetcher<{ items: TableElement[] }>();
 
   React.useEffect(() => {
     if (fetcher.data) {
@@ -40,7 +42,6 @@ export function usePaginateSortingTable<TableElement>(tableOptions: Omit<TableOp
       },
       getCoreRowModel: getCoreRowModel(),
     }),
-
     paginationProps: {
       skip,
       take,
@@ -49,7 +50,10 @@ export function usePaginateSortingTable<TableElement>(tableOptions: Omit<TableOp
       getUrlAtPage,
       count,
       currentPageCount: pagedData.length,
-      onLoadMore: (page: string) => fetcher.load(page),
+      onLoadMore: (page: string) => {
+        console.log('loading page', page);
+        fetcher.load(page);
+      },
     },
   };
 }

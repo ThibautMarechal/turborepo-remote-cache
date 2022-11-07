@@ -122,6 +122,23 @@ export async function createUser(user: Pick<User, 'email' | 'name' | 'username' 
   });
 }
 
+export async function userExist(id: string) {
+  return (await client.user.count({ where: { id } })) === 1;
+}
+
+export async function createExternalUser(user: Pick<User, 'email' | 'name' | 'username' | 'role' | 'id'>): Promise<User> {
+  return await client.user.create({
+    data: {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      username: user.username,
+      role: user.role,
+      isExternal: true,
+    },
+  });
+}
+
 export async function updateUser(id: string, user: Pick<User, 'email' | 'name' | 'role'>): Promise<User> {
   return await client.user.update({
     where: { id },

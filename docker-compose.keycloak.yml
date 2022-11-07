@@ -1,0 +1,36 @@
+version: '3.1'
+
+services:
+
+  keycloak:
+    image: jboss/keycloak:16.1.1
+    ports:
+      - 8082:8080
+    environment:
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: turbo
+      DB_VENDOR: postgres
+      DB_ADDR: db
+      DB_PORT: 5432
+      DB_DATABASE: keycloak
+      DB_USER: postgres
+      DB_PASSWORD: example
+    depends_on:
+      - createuser
+
+  createuser:
+    image: jboss/keycloak:16.1.1
+    environment:
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: turbo
+      DB_VENDOR: postgres
+      DB_ADDR: db
+      DB_PORT: 5432
+      DB_DATABASE: keycloak
+      DB_USER: postgres
+      DB_PASSWORD: example
+    entrypoint: >
+      /bin/sh -c "
+        /opt/jboss/keycloak/bin/add-user-keycloak.sh -u admin -p turbo;
+        exit 0;
+      "

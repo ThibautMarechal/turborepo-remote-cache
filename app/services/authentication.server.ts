@@ -1,11 +1,13 @@
 import { redirect } from '@remix-run/node';
 import { Authenticator } from 'remix-auth';
 import { FormStrategy } from 'remix-auth-form';
+import { OpenIDConnectStrategy } from 'remix-auth-oidc';
 import invariant from 'tiny-invariant';
-import { sessionStorage } from '~/services/cookieSession.server';
+import { sessionStorage } from '~/services/cookie.server';
 import { unauthorized } from '~/utils/response';
 import { getToken } from './tokens.server';
-import { getUserByUsernameAndPassword, getUserDetail } from './users.server';
+import { createExternalUser, getUserByUsernameAndPassword, getUserDetail, userExist } from './users.server';
+import { ServerRole } from '~/roles/ServerRole';
 
 export const authenticator = new Authenticator<string>(sessionStorage);
 
@@ -56,3 +58,49 @@ authenticator.use(
   }),
   'user-pass',
 );
+
+if (process.env.OIDC === 'true') {
+  const { OIDC_AUTHORIZATION_URL, OIDC_TOKEN_URL, OIDC_CLIENT_ID, OIDC_CLIENT_SECRET, OIDC_PROFILE_URL } = process.env;
+  invariant(OIDC_AUTHORIZATION_URL && OIDC_TOKEN_URL && OIDC_CLIENT_ID && OIDC_CLIENT_SECRET && OIDC_PROFILE_URL);
+  const oidc = new OpenIDConnectStrategy(
+    {
+      authorizationURL: OIDC_AUTHORIZATION_URL,
+      callbackURL: '/login/oidc/callback',
+      clientID: OIDC_CLIENT_ID,
+      clientSecret: OIDC_CLIENT_SECRET,
+      tokenURL: OIDC_TOKEN_URL,
+    },
+    async ({ accessToken, refreshToken, extraParams, profile, context }) => {
+      // Get the user data from your DB or API using the tokens and profile
+      try {
+        const response = await fetch(OIDC_PROFILE_URL, {
+          headers: {
+            authorization: `Bearer ${accessToken}`,
+          },
+        });
+        if (!response.ok) {
+          try {
+            const body = await response.text();
+            throw new Response(body, { status: 401 });
+          } catch (error) {
+            throw new Response((error as Error).message, { status: 401 });
+          }
+        }
+        const userInfo: { sub: string; email?: string; name?: string; preferred_username?: string } = await response.json();
+        if (!(await userExist(userInfo.sub))) {
+          const email = userInfo.email ?? userInfo.sub;
+          const name = userInfo.name ?? userInfo.preferred_username ?? userInfo.sub;
+          const username = userInfo.preferred_username ?? userInfo.sub;
+
+          await createExternalUser({ id: userInfo.sub, email, name, username, role: ServerRole.DEVELOPER });
+        }
+        return userInfo.sub;
+      } catch (e) {
+        console.error('Error while fetching userinfo');
+        return '';
+      }
+    },
+  );
+
+  authenticator.use(oidc, 'oidc');
+}

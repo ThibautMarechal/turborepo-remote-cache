@@ -11,6 +11,7 @@ const columnHelper = createColumnHelper<Session & { user: User; team: Team | nul
 
 const defaultColumns = [
   columnHelper.accessor((session) => session.team, {
+    id: 'team',
     header: 'Team',
     cell: ({ getValue }) => {
       const team = getValue();
@@ -45,7 +46,7 @@ const defaultColumns = [
       id: 'local-saved',
       header: 'Duration saved locally',
       enableSorting: false,
-      cell: ({ getValue }) => formatDuration(getValue()),
+      cell: ({ getValue }) => formatDuration(getValue() / 1000),
     },
   ),
   columnHelper.accessor(
@@ -54,7 +55,7 @@ const defaultColumns = [
       id: 'remote-saved',
       header: 'Duration saved remotely',
       enableSorting: false,
-      cell: ({ getValue }) => formatDuration(getValue()),
+      cell: ({ getValue }) => formatDuration(getValue() / 1000),
     },
   ),
 ];
