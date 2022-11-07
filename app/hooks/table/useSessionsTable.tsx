@@ -46,7 +46,7 @@ const defaultColumns = [
       id: 'local-saved',
       header: 'Duration saved locally',
       enableSorting: false,
-      cell: ({ getValue }) => formatDuration(getValue()),
+      cell: ({ getValue }) => formatDuration(getValue() / 1000),
     },
   ),
   columnHelper.accessor(
@@ -55,7 +55,7 @@ const defaultColumns = [
       id: 'remote-saved',
       header: 'Duration saved remotely',
       enableSorting: false,
-      cell: ({ getValue }) => formatDuration(getValue()),
+      cell: ({ getValue }) => formatDuration(getValue() / 1000),
     },
   ),
 ];

@@ -31,7 +31,7 @@ const defaultColumns = [
   columnHelper.accessor((artifact) => artifact.duration, {
     id: 'duration',
     header: 'Duration',
-    cell: ({ getValue }) => formatDuration(getValue()),
+    cell: ({ getValue }) => formatDuration(getValue() / 1000),
   }),
   columnHelper.accessor((artifact) => artifact.contentLength, {
     id: 'contentLength',
@@ -59,7 +59,7 @@ const defaultColumns = [
     id: 'timeSaved',
     header: 'Time saved',
     enableSorting: false,
-    cell: ({ getValue }) => formatDuration(getValue()),
+    cell: ({ getValue }) => formatDuration(getValue() / 1000),
   }),
   columnHelper.display({
     id: 'actions',
