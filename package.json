@@ -74,7 +74,7 @@
     "zod": "^3.19.1"
   },
   "devDependencies": {
-    "@faker-js/faker": "7.5.0",
+    "@faker-js/faker": "7.6.0",
     "@remix-run/dev": "1.7.2",
     "@remix-run/eslint-config": "1.7.2",
     "@tailwindcss/typography": "0.5.8",
