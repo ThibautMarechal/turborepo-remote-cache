@@ -3493,10 +3493,10 @@ d3-time-format@^4.1.0:
   dependencies:
     d3-array "2 - 3"
 
-daisyui@2.31.0:
-  version "2.31.0"
-  resolved "https://registry.yarnpkg.com/daisyui/-/daisyui-2.31.0.tgz#906bc447b59c24782320f33fbc990ea1d8c2200c"
-  integrity sha512-qepRXgQPLNcJ8ZPZy+dUvsC7mRWvMLRcVMe85/wZA60Tnhm/bkidhOzdllL8aAk2JX+W/xlIsTJ8NZFpPm+eyw==
+daisyui@2.38.1:
+  version "2.38.1"
+  resolved "https://registry.yarnpkg.com/daisyui/-/daisyui-2.38.1.tgz#28a3303a1832f41e9804d76ec769335ac1248372"
+  integrity sha512-fHAVi+bT3H9QCNM7LNEH1EMPT0IwqufuW2RNhTJZorX3TftB1bWW437BVmSt70AZH72Xvp0mVxwVS3ChSKSj0w==
   dependencies:
     color "^4.2"
     css-selector-tokenizer "^0.8.0"
