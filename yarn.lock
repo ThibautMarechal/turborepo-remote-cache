@@ -5263,10 +5263,10 @@ gunzip-maybe@^1.4.2:
     pumpify "^1.3.3"
     through2 "^2.0.3"
 
-happy-dom@6.0.4:
-  version "6.0.4"
-  resolved "https://registry.yarnpkg.com/happy-dom/-/happy-dom-6.0.4.tgz#553c1a8ba842455beb975c579d769914808c7404"
-  integrity sha512-b+ID23Ms0BY08UNLymsOMG7EI2jSlwEt4cbJs938GZfeNAg+fqgkSO3TokQMgSOFoHznpjWmpVjBUL5boJ9PWw==
+happy-dom@7.6.6:
+  version "7.6.6"
+  resolved "https://registry.yarnpkg.com/happy-dom/-/happy-dom-7.6.6.tgz#f94ce99c5a32d1ea8578b75e8f584e8fcd162513"
+  integrity sha512-28NxRiHXjzhr+BGciLNUoQW4OaBnQPRT/LPYLufh0Fj3Iwh1j9qJaozjBm/Uqdj5Ps4cukevQ7ERieA6Ddwf1g==
   dependencies:
     css.escape "^1.5.1"
     he "^1.2.0"
