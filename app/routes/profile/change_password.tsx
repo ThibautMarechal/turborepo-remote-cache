@@ -18,6 +18,9 @@ export const loader: LoaderFunction = async ({ request }) => {
   if (currentUser.isSuperAdmin) {
     throw forbidden("Cannot update super-admin's password");
   }
+  if (currentUser.isExternal) {
+    throw forbidden("Cannot update external user's password");
+  }
   return null;
 };
 

@@ -45,7 +45,6 @@ export type TimeSavedByMonth = { timeSaved: number; month: number; year: number 
 export async function getTimeSavedByMonth(sourceType: SourceType, { userId, teamId }: { userId?: string; teamId?: string } = {}) {
   // We use queryRaw because Prisma doesn't support grouping by month.
 
-  invariant(!userId || validate(userId), 'userId is not a valid uuid');
   invariant(!teamId || validate(teamId), 'teamId is not a valid uuid');
 
   const conditions: string[] = [

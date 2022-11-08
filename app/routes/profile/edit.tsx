@@ -20,8 +20,11 @@ const schema = z.object({
 });
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const user = await requireCookieAuth(request);
-  return json(await getUserDetail(user.id));
+  const currentUser = await requireCookieAuth(request);
+  if (currentUser.isExternal) {
+    throw forbidden("Cannot update external user's password");
+  }
+  return json(await getUserDetail(currentUser.id));
 };
 
 export const action: ActionFunction = async ({ request }) => {

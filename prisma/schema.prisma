@@ -25,14 +25,14 @@ model Session {
   id           String   @id
   teamId       String?  @db.Uuid
   team         Team?    @relation(fields: [teamId], references: [id])
-  userId       String   @db.Uuid
+  userId       String
   user         User     @relation(fields: [userId], references: [id])
   events       Event[]
   creationDate DateTime @default(now())
 }
 
 model User {
-  id           String     @id @default(uuid()) @db.Uuid
+  id           String     @id @default(uuid())
   username     String     @unique
   name         String
   email        String     @unique
@@ -50,7 +50,7 @@ model User {
 
 model Password {
   id           String   @id @default(uuid()) @db.Uuid
-  userId       String   @db.Uuid
+  userId       String
   user         User     @relation(fields: [userId], references: [id])
   passwordHash String
   creationDate DateTime @default(now())
@@ -74,7 +74,7 @@ model Token {
   name         String
   creationDate DateTime  @default(now())
   lastUsedDate DateTime?
-  userId       String    @db.Uuid
+  userId       String
   user         User      @relation(fields: [userId], references: [id])
 }
 
@@ -83,7 +83,7 @@ model Artifact {
   hash          String
   teamId        String?   @db.Uuid
   team          Team?     @relation(fields: [teamId], references: [id])
-  userId        String    @db.Uuid
+  userId        String
   user          User      @relation(fields: [userId], references: [id])
   creationDate  DateTime  @default(now())
   duration      Int       @default(0)
@@ -96,7 +96,7 @@ model Member {
   id           String   @id @default(uuid()) @db.Uuid
   teamId       String   @db.Uuid
   team         Team     @relation(fields: [teamId], references: [id])
-  userId       String   @db.Uuid
+  userId       String
   user         User     @relation(fields: [userId], references: [id])
   role         String   @default("MEMBER")
   creationDate DateTime @default(now())

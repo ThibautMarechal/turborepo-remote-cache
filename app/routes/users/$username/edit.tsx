@@ -35,6 +35,9 @@ export const action: ActionFunction = async ({ request, params }) => {
     throw forbidden("Cannot update super-admin's informations");
   }
   const mutation = makeDomainFunction(schema)(async ({ name, email, role }) => {
+    if (user.isExternal && (name !== user.name || email !== user.email)) {
+      throw forbidden("Cannot update external user's informations");
+    }
     await updateUser(user.id, { name, email, role });
   });
   return formAction({
@@ -52,8 +55,8 @@ export default function Edit() {
       <Form schema={schema} values={user}>
         {({ Field, Button }) => (
           <>
-            <Field name="name" />
-            <Field name="email" />
+            <Field name="name" hidden={user.isExternal} />
+            <Field name="email" hidden={user.isExternal} />
             <Field name="role" />
             <Button>Update</Button>
           </>

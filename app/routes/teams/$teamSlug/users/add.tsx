@@ -14,7 +14,7 @@ import type { TeamDetail } from '~/types/prisma';
 import { json, useLoaderData } from '~/utils/superjson';
 
 const schema = z.object({
-  userId: z.string().uuid(),
+  userId: z.string(),
   role: z.enum([TeamRole.OWNER, TeamRole.MEMBER]),
 });
 

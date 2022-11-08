@@ -70,7 +70,7 @@ if (process.env.OIDC === 'true') {
       clientSecret: OIDC_CLIENT_SECRET,
       tokenURL: OIDC_TOKEN_URL,
     },
-    async ({ accessToken, refreshToken, extraParams, profile, context }) => {
+    async ({ accessToken }) => {
       // Get the user data from your DB or API using the tokens and profile
       try {
         const response = await fetch(OIDC_PROFILE_URL, {
@@ -96,7 +96,7 @@ if (process.env.OIDC === 'true') {
         }
         return userInfo.sub;
       } catch (e) {
-        console.error('Error while fetching userinfo');
+        console.error('Error while fetching userinfo', e);
         return '';
       }
     },

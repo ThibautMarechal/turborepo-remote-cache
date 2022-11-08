@@ -52,7 +52,7 @@ export default function Profile() {
   }
   return (
     <div className="flex w-full justify-center items-center flex-col gap-5 mt-5">
-      <UserCard user={user} editable baseRoute={`/profile`} />
+      <UserCard user={user} editable={!user.isExternal} baseRoute={`/profile`} />
       <UserStats userId={user.id} sessions={sessions} artifacts={artifacts} tokens={tokens} />
       <StorageStats size={artifactsSize} />
       <NoSsr>

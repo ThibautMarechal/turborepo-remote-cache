@@ -48,6 +48,9 @@ export const UserCard = ({ user, children, editable, baseRoute }: Props) => {
           <span className="font-bold mr-2">Email:</span>
           {user.email}
           <br />
+          <span className="font-bold mr-2">Role:</span>
+          {user.role}
+          <br />
           <span className="font-bold mr-2">Teams:</span>
           {user.memberships.length ? (
             user.memberships.map((membership) => (
