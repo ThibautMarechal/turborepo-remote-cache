@@ -67,6 +67,9 @@ export const TimeSavedStats = ({ local, remote }: Props) => {
                   primaryCursor: {
                     showLine: false,
                   },
+                  tooltip: {
+                    show: false,
+                  },
                 }}
               />
             </Suspense>
