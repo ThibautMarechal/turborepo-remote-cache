@@ -1,0 +1,15 @@
+{
+  "include": [
+    "./seed.ts",
+  ],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "noEmit": true,
+    "types": ["node"],
+    "strict": true,
+    "typeRoots": ["../types", "../node_modules/@types"],
+    "paths": {
+      "~/*": ["../app/*"]
+    }
+  }
+}

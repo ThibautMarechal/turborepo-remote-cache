@@ -25,7 +25,7 @@
     "test:e2e:dev": "start-server-and-test dev http://localhost:8080 \"npx cypress open\"",
     "pretest:e2e:run": "npm run build",
     "test:e2e:run": "cross-env PORT=8811 start-server-and-test http://localhost:8811 \"npx cypress run\"",
-    "typecheck": "tsc -b && tsc -b cypress",
+    "typecheck": "tsc -b && tsc -b cypress && tsc -b prisma",
     "validate": "run-p \"test -- --run\" lint typecheck test:e2e:run",
     "prestart": "prisma migrate deploy && prisma db seed",
     "start": "cross-env NODE_ENV=production remix-serve build"
@@ -37,8 +37,6 @@
     "@remix-run/react": "1.7.5",
     "@remix-run/serve": "1.7.5",
     "@tanstack/react-table": "8.5.22",
-    "@types/node": "18.11.9",
-    "@types/uuid": "^8.3.4",
     "abstract-blob-store": "3.3.5",
     "aws-sdk": "2.1249.0",
     "azure-blob-storage": "4.2.5",
@@ -51,6 +49,7 @@
     "isbot": "^3.6.3",
     "npm-run-all": "4.1.5",
     "prisma": "^4.6.0",
+    "prop-types": "^15.8.1",
     "react": "18.2.0",
     "react-charts": "3.0.0-beta.50",
     "react-dom": "18.2.0",
@@ -83,11 +82,13 @@
     "@testing-library/react": "13.4.0",
     "@testing-library/user-event": "14.4.3",
     "@thimar/eslint-config": "2.0.1",
+    "@types/node": "18.11.9",
     "@types/qs": "6.9.7",
     "@types/react": "18.0.25",
     "@types/react-dom": "18.0.8",
     "@types/react-gravatar": "2.6.10",
     "@types/readable-stream": "2.3.15",
+    "@types/uuid": "^8.3.4",
     "@vitejs/plugin-react": "2.2.0",
     "@vitest/coverage-c8": "^0.25.1",
     "c8": "7.12.0",
@@ -106,6 +107,6 @@
     "react-charts/@types/react-dom": "^18.0.4"
   },
   "prisma": {
-    "seed": "ts-node --require tsconfig-paths/register prisma/seed.ts"
+    "seed": "ts-node  --transpile-only --require tsconfig-paths/register prisma/seed.ts"
   }
 }
