@@ -40,7 +40,7 @@
     "@types/node": "18.7.11",
     "@types/uuid": "^8.3.4",
     "abstract-blob-store": "3.3.5",
-    "aws-sdk": "2.1227.0",
+    "aws-sdk": "2.1249.0",
     "azure-blob-storage": "4.2.5",
     "azure-blob-store": "1.0.7",
     "classnames": "2.3.2",
