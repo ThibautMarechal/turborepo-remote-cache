@@ -75,8 +75,8 @@
   },
   "devDependencies": {
     "@faker-js/faker": "7.6.0",
-    "@remix-run/dev": "1.7.2",
-    "@remix-run/eslint-config": "1.7.2",
+    "@remix-run/dev": "1.7.5",
+    "@remix-run/eslint-config": "1.7.5",
     "@tailwindcss/typography": "0.5.8",
     "@testing-library/cypress": "8.0.3",
     "@testing-library/dom": "8.19.0",
