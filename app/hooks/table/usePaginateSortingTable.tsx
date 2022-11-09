@@ -6,7 +6,11 @@ import { usePaginateSearchParams } from '../usePaginateSearchParams';
 import * as React from 'react';
 import { useFetcher } from '~/utils/superjson';
 
-export function usePaginateSortingTable<TableElement>(tableOptions: Omit<TableOptions<TableElement>, 'getCoreRowModel'>, count: number) {
+export function usePaginateSortingTable<TableElement>(
+  tableOptions: Omit<TableOptions<TableElement>, 'getCoreRowModel'>,
+  count: number,
+  Actions?: React.ComponentType<{ resource: TableElement }>,
+) {
   const { orderBy, setOrderBy } = useSortSearchParams();
 
   const [pagedData, setPagedData] = React.useState(tableOptions.data);
@@ -29,9 +33,22 @@ export function usePaginateSortingTable<TableElement>(tableOptions: Omit<TableOp
 
   const { skip, take, nextUrl, previousUrl, getUrlAtPage } = usePaginateSearchParams();
 
+  const columns = React.useMemo(() => {
+    const cols = [...tableOptions.columns];
+    if (Actions) {
+      cols.push({
+        id: 'actions',
+        enableSorting: false,
+        cell: ({ row }) => <Actions resource={row.original} />,
+      });
+    }
+    return cols;
+  }, [tableOptions, Actions]);
+
   return {
     tableProps: useReactTable({
       ...tableOptions,
+      columns,
       data: pagedData,
       state: {
         sorting,

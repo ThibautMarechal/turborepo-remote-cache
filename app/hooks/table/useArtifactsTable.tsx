@@ -10,7 +10,7 @@ import { formatDuration, formatSize } from '~/utils/intl';
 import { usePaginateSortingTable } from './usePaginateSortingTable';
 import HasRights from '~/component/HasRights';
 import cn from 'classnames';
-import { isAdmin } from '~/roles/rights';
+import { isAdmin, isArtifactOwner } from '~/roles/rights';
 
 const columnHelper = createColumnHelper<Artifact & { user: User; team: Team | null }>();
 
@@ -73,7 +73,7 @@ const ArtifactActions = ({ artifact }: { artifact: Artifact }) => {
   const isDeleting = state === 'submitting' && submission.formData.get('id') === artifact.id;
   return (
     <div className="flex gap-1">
-      <HasRights predicate={(u) => isAdmin(u)}>
+      <HasRights predicate={(u) => isAdmin(u) || isArtifactOwner(u, artifact)}>
         <Form method="post">
           <input name="id" value={artifact.id} type="hidden" />
           <button className={cn('btn btn-xs btn-square', { loading: isDeleting })}>{!isDeleting && <TrashIcon className="h-4 w-4" />}</button>

@@ -1,9 +1,11 @@
 import PlusIcon from '@heroicons/react/24/outline/PlusIcon';
+import TrashIcon from '@heroicons/react/24/outline/TrashIcon';
 import type { Team, User } from '@prisma/client';
 import type { ActionFunction, LoaderFunction } from '@remix-run/node';
-import { Link } from '@remix-run/react';
+import { Form, Link, useTransition } from '@remix-run/react';
 import HasRights from '~/component/HasRights';
 import { TablePage } from '~/component/TablePage';
+import { useCurrentUser } from '~/context/CurrentUser';
 import { useUsersTable } from '~/hooks/table/useUsersTable';
 import { useTablePageLoaderData } from '~/hooks/useTablePageLoaderData';
 import { isTeamOwner, requireTeamOwner } from '~/roles/rights';
@@ -13,6 +15,7 @@ import { getUsersByTeam, getUsersByTeamCount } from '~/services/users.server';
 import { getPaginationFromRequest } from '~/utils/pagination';
 import { getOrderByFromRequest } from '~/utils/sort';
 import { json } from '~/utils/superjson';
+import cn from 'classnames';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   await requireCookieAuth(request);
@@ -36,9 +39,25 @@ export const action: ActionFunction = async ({ request, params }) => {
   return null;
 };
 
+export const UserActions = ({ resource: user }: { resource: User }) => {
+  const { state, submission } = useTransition();
+  const isRemoving = state === 'submitting' && submission.formData.get('id') === user.id;
+  return (
+    <div className="flex gap-1">
+      <Form method="post">
+        <button className={cn('btn btn-xs btn-square', { loading: isRemoving })} title="Remove user from team">
+          {!isRemoving && <TrashIcon className="h-4 w-4" />}
+        </button>
+        <input name="id" value={user.id} type="hidden" />
+      </Form>
+    </div>
+  );
+};
+
 export default function Users() {
   const { items, team, count } = useTablePageLoaderData<User, { team: Team }>();
-  const { tableProps, paginationProps } = useUsersTable(items, count);
+  const currentUser = useCurrentUser();
+  const { tableProps, paginationProps } = useUsersTable(items, count, currentUser && isTeamOwner(currentUser, team.id) ? UserActions : undefined);
   return (
     <>
       <TablePage title={`${team.name}'s users`} count={count} tableProps={tableProps} paginationProps={paginationProps} />

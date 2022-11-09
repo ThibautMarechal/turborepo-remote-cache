@@ -1,5 +1,5 @@
 import type { ActionFunction, LoaderFunction } from '@remix-run/node';
-import { Link } from '@remix-run/react';
+import { Form, Link, useTransition } from '@remix-run/react';
 import { requireCookieAuth } from '~/services/authentication.server';
 import { deleteUser, getUser, getUsers, getUsersCount } from '~/services/users.server';
 import type { User } from '@prisma/client';
@@ -14,6 +14,11 @@ import { isAdmin } from '~/roles/rights';
 import { getSearchFromRequest } from '~/utils/search';
 import { forbidden } from '~/utils/response';
 import { json } from '~/utils/superjson';
+import MagnifyingGlassIcon from '@heroicons/react/24/outline/MagnifyingGlassIcon';
+import PencilIcon from '@heroicons/react/24/outline/PencilIcon';
+import KeyIcon from '@heroicons/react/24/outline/KeyIcon';
+import TrashIcon from '@heroicons/react/24/outline/TrashIcon';
+import cn from 'classnames';
 
 export const loader: LoaderFunction = async ({ request }) => {
   await requireCookieAuth(request);
@@ -36,9 +41,35 @@ export const action: ActionFunction = async ({ request }) => {
   return null;
 };
 
+const UserActions = ({ resource: user }: { resource: User }) => {
+  const { state, submission } = useTransition();
+  const isDeleting = state === 'submitting' && submission.formData.get('id') === user.id;
+  return (
+    <div className="flex gap-1">
+      <Link to={`/users/${user.username}`} prefetch="intent" title="Show user" className="btn btn-xs btn-square">
+        <MagnifyingGlassIcon className="h-4 w-4" />
+      </Link>
+      <HasRights predicate={(u) => isAdmin(u) && !user.isSuperAdmin}>
+        <Link to={`/users/${user.username}/edit`} prefetch="intent" title="Edit user" className="btn btn-xs btn-square">
+          <PencilIcon className="h-4 w-4" />
+        </Link>
+        <Link to={`/users/${user.username}/change_password`} prefetch="intent" title="Change password" className="btn btn-xs btn-square">
+          <KeyIcon className="h-4 w-4" />
+        </Link>
+        <Form method="post">
+          <button className={cn('btn btn-xs btn-square', { loading: isDeleting })} title="Delete user">
+            {!isDeleting && <TrashIcon className="h-4 w-4" />}
+          </button>
+          <input name="id" value={user.id} type="hidden" />
+        </Form>
+      </HasRights>
+    </div>
+  );
+};
+
 export default function Users() {
   const { items, count } = useTablePageLoaderData<User>();
-  const { tableProps, paginationProps } = useUsersTable(items, count);
+  const { tableProps, paginationProps } = useUsersTable(items, count, UserActions);
   return (
     <>
       <TablePage title="Users" count={count} tableProps={tableProps} paginationProps={paginationProps} searchable />
