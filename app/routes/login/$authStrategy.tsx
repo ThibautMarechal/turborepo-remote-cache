@@ -10,6 +10,8 @@ export const loader: LoaderFunction = () => redirect('/login');
 export const action: ActionFunction = async ({ request, params }) => {
   invariant(params.authStrategy);
   const url = new URL(request.url);
+  console.log(request);
+  console.log(url);
   const redirectTo = url.searchParams.get('redirect_to') ?? '/';
 
   try {
