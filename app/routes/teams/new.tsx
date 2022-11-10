@@ -9,8 +9,8 @@ import { createTeam } from '~/services/teams.server';
 import { requireAdmin } from '~/roles/rights';
 
 const schema = z.object({
-  name: z.string().min(1).max(50),
-  slug: z.string().min(1).max(10),
+  name: z.string().min(1).max(255),
+  slug: z.string().min(1).max(255),
 });
 
 const mutation = makeDomainFunction(schema)(async (team) => await createTeam(team));

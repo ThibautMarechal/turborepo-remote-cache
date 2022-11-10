@@ -9,8 +9,8 @@ import { Form } from '~/component/Form';
 import { forbidden, unprocessableEntity } from '~/utils/response';
 
 const schema = z.object({
-  password: z.string().min(1),
-  repeatedPassword: z.string().min(1),
+  password: z.string().min(1).max(255),
+  repeatedPassword: z.string().min(1).max(255),
 });
 
 export const loader: LoaderFunction = async ({ request }) => {

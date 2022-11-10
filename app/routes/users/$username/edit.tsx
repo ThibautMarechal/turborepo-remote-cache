@@ -13,7 +13,7 @@ import type { User } from '@prisma/client';
 
 const schema = z.object({
   email: z.string().min(1).email(),
-  name: z.string().min(1).max(50),
+  name: z.string().min(1).max(255),
   role: z.enum([ServerRole.DEVELOPER, ServerRole.ADMIN]),
 });
 

@@ -68,7 +68,6 @@ export function usePaginateSortingTable<TableElement>(
       count,
       currentPageCount: pagedData.length,
       onLoadMore: (page: string) => {
-        console.log('loading page', page);
         fetcher.load(page);
       },
     },

@@ -10,10 +10,10 @@ import { requireAdmin } from '~/roles/rights';
 import { ServerRole } from '~/roles/ServerRole';
 
 const schema = z.object({
-  username: z.string().min(1).max(50),
+  username: z.string().min(1).max(255),
   email: z.string().min(1).email(),
-  name: z.string().min(1).max(50),
-  password: z.string().min(1).max(50),
+  name: z.string().min(1).max(255),
+  password: z.string().min(1).max(255),
   role: z.enum([ServerRole.DEVELOPER, ServerRole.ADMIN]),
 });
 

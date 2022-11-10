@@ -8,8 +8,8 @@ import { getUser } from '~/services/users.server';
 
 const schema = z.object({
   redirect_to: z.string().optional(),
-  username: z.string().min(1).max(50),
-  password: z.string().min(1).max(50),
+  username: z.string().min(1).max(255),
+  password: z.string().min(1).max(255),
 });
 
 export const loader: LoaderFunction = async ({ request }) => {

@@ -10,7 +10,7 @@ import { json, useLoaderData } from '~/utils/superjson';
 import type { Team } from '@prisma/client';
 
 const schema = z.object({
-  name: z.string().min(1).max(50),
+  name: z.string().min(1).max(255),
 });
 
 export const loader: LoaderFunction = async ({ request, params }) => {

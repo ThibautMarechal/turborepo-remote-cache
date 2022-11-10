@@ -12,7 +12,7 @@ import ClipboardDocumentIcon from '@heroicons/react/24/outline/ClipboardDocument
 import { requireAdmin } from '~/roles/rights';
 
 const schema = z.object({
-  name: z.string().min(1).max(50),
+  name: z.string().min(1).max(255),
 });
 
 export const loader: LoaderFunction = async ({ request }) => {
