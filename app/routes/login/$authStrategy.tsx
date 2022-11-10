@@ -10,6 +10,7 @@ export const loader: LoaderFunction = () => redirect('/login');
 export const action: ActionFunction = async ({ request, params }) => {
   invariant(params.authStrategy);
   const url = new URL(request.url);
+  console.log('request', request);
   console.log('request.url', request.url);
   console.log('new Request(request.url, request)', new Request(request.url, request));
   console.log('new Request(request.url, request).url', new Request(request.url, request).url);
