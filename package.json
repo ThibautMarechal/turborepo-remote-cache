@@ -42,7 +42,7 @@
     "azure-blob-storage": "4.2.5",
     "azure-blob-store": "1.0.7",
     "classnames": "2.3.2",
-    "copy-to-clipboard": "3.3.2",
+    "copy-to-clipboard": "3.3.3",
     "cross-env": "7.0.3",
     "domain-functions": "^1.3.0",
     "fs-blob-store": "6.0.0",
