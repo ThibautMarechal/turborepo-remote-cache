@@ -16,6 +16,8 @@ import { getPaginationFromRequest } from '~/utils/pagination';
 import { getOrderByFromRequest } from '~/utils/sort';
 import { json } from '~/utils/superjson';
 import cn from 'classnames';
+import { useTeamUsersTable } from '~/hooks/table/useTeamUsersTable';
+import type { UserDetail } from '~/types/prisma';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   await requireCookieAuth(request);
@@ -55,9 +57,9 @@ export const UserActions = ({ resource: user }: { resource: User }) => {
 };
 
 export default function Users() {
-  const { items, team, count } = useTablePageLoaderData<User, { team: Team }>();
+  const { items, team, count } = useTablePageLoaderData<UserDetail, { team: Team }>();
   const currentUser = useCurrentUser();
-  const { tableProps, paginationProps } = useUsersTable(items, count, currentUser && isTeamOwner(currentUser, team.id) ? UserActions : undefined);
+  const { tableProps, paginationProps } = useTeamUsersTable(items, count, currentUser && isTeamOwner(currentUser, team.id) ? UserActions : undefined);
   return (
     <>
       <TablePage title={`${team.name}'s users`} count={count} tableProps={tableProps} paginationProps={paginationProps} />

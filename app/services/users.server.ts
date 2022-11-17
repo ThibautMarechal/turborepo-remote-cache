@@ -45,7 +45,7 @@ export async function getUsersCount(): Promise<number> {
   });
 }
 
-export async function getUsersByTeam(teamId: string, skip: number = 0, take: number = 100, orderBy: OrderBy[]): Promise<User[]> {
+export async function getUsersByTeam(teamId: string, skip: number = 0, take: number = 100, orderBy: OrderBy[]) {
   return await client.user.findMany({
     where: {
       memberships: {
@@ -53,6 +53,9 @@ export async function getUsersByTeam(teamId: string, skip: number = 0, take: num
           teamId,
         },
       },
+    },
+    include: {
+      memberships: true,
     },
     skip,
     take,

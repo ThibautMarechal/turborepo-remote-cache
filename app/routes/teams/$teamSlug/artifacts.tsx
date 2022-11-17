@@ -21,7 +21,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   requireTeamOwner(user, team.id);
   const orderBy = getOrderByFromRequest(request);
   const { skip, take } = getPaginationFromRequest(request);
-  const [items, count] = await Promise.all([getArtifacts({ teamId: params.id, skip, take, orderBy }), getArtifactsCount({ teamId: params.id })]);
+  const [items, count] = await Promise.all([getArtifacts({ teamId: team.id, skip, take, orderBy }), getArtifactsCount({ teamId: team.id })]);
   return json({ team, items, count });
 };
 

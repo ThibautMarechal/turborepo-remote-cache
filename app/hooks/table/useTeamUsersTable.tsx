@@ -1,19 +1,12 @@
-import type { User } from '@prisma/client';
 import DateCell from '~/component/DateCell';
 import { createColumnHelper } from '@tanstack/react-table';
 import Gravatar from 'react-gravatar';
-import ArrowTopRightOnSquareIcon from '@heroicons/react/24/outline/ArrowTopRightOnSquareIcon';
 import { usePaginateSortingTable } from './usePaginateSortingTable';
+import type { UserDetail } from '~/types/prisma';
 
-export const columnHelper = createColumnHelper<User>();
+export const columnHelper = createColumnHelper<UserDetail>();
 
 const defaultColumns = [
-  columnHelper.accessor((user) => user.isExternal, {
-    id: 'isExternal',
-    header: '',
-    enableSorting: true,
-    cell: ({ getValue }) => (getValue() ? <ArrowTopRightOnSquareIcon className="h-4 w-4" /> : null),
-  }),
   columnHelper.accessor((user) => user.email, {
     id: 'email',
     header: '',
@@ -28,9 +21,9 @@ const defaultColumns = [
     id: 'username',
     header: 'Username',
   }),
-  columnHelper.accessor((user) => user.role, {
-    id: 'role',
-    header: 'Role',
+  columnHelper.accessor((user) => user.memberships[0].role, {
+    id: 'teamRole',
+    header: 'Team role',
   }),
   columnHelper.accessor((user) => user.creationDate, {
     id: 'creationDate',
@@ -39,5 +32,5 @@ const defaultColumns = [
   }),
 ];
 
-export const useUsersTable = (data: User[], count: number, Actions?: React.ComponentType<{ resource: User }>) =>
+export const useTeamUsersTable = (data: UserDetail[], count: number, Actions?: React.ComponentType<{ resource: UserDetail }>) =>
   usePaginateSortingTable({ data, columns: defaultColumns }, count, Actions);
