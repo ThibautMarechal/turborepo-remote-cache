@@ -6,7 +6,6 @@ import { Form, Link, useTransition } from '@remix-run/react';
 import HasRights from '~/component/HasRights';
 import { TablePage } from '~/component/TablePage';
 import { useCurrentUser } from '~/context/CurrentUser';
-import { useUsersTable } from '~/hooks/table/useUsersTable';
 import { useTablePageLoaderData } from '~/hooks/useTablePageLoaderData';
 import { isTeamOwner, requireTeamOwner } from '~/roles/rights';
 import { requireCookieAuth } from '~/services/authentication.server';
