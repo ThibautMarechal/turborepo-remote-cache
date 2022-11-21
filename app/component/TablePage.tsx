@@ -11,15 +11,16 @@ type Props<TableElement> = {
   title: React.ReactNode;
   count: number;
   searchable?: boolean;
+  onRowDoubleClick?: (tableElement: TableElement, e: React.MouseEvent) => void;
 };
 
-export function TablePage<TableElement>({ title, count, tableProps, paginationProps, searchable }: Props<TableElement>) {
+export function TablePage<TableElement>({ title, count, tableProps, paginationProps, searchable, onRowDoubleClick }: Props<TableElement>) {
   return (
     <>
       <ListTitle title={title} count={count} searchable={searchable} />
       {count ? (
         <>
-          <Table {...tableProps} />
+          <Table {...tableProps} onRowDoubleClick={onRowDoubleClick} />
           <Pagination {...paginationProps} />
         </>
       ) : (

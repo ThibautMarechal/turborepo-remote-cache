@@ -11,8 +11,9 @@ import { usePaginateSortingTable } from './usePaginateSortingTable';
 import HasRights from '~/component/HasRights';
 import cn from 'classnames';
 import { isAdmin, isArtifactOwner } from '~/roles/rights';
+import type { ArtifactDetail } from '~/types/prisma';
 
-const columnHelper = createColumnHelper<Artifact & { user: User; team: Team | null }>();
+const columnHelper = createColumnHelper<ArtifactDetail>();
 
 const defaultColumns = [
   columnHelper.accessor((artifact) => artifact.team, {
@@ -68,7 +69,7 @@ const defaultColumns = [
   }),
 ];
 
-const ArtifactActions = ({ artifact }: { artifact: Artifact }) => {
+const ArtifactActions = ({ artifact }: { artifact: ArtifactDetail }) => {
   const { state, submission } = useTransition();
   const isDeleting = state === 'submitting' && submission.formData.get('id') === artifact.id;
   return (

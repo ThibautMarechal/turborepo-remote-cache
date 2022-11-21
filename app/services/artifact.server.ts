@@ -51,6 +51,18 @@ export async function getArtifact(id: string) {
   });
 }
 
+export async function getArtifactByHash(hash: string) {
+  return client.artifact.findFirst({
+    where: {
+      hash,
+    },
+    include: {
+      user: true,
+      team: true,
+    },
+  });
+}
+
 export async function getArtifactDuration(id: string) {
   return client.artifact
     .findUniqueOrThrow({

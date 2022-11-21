@@ -1,5 +1,5 @@
 import type { ActionFunction, LoaderFunction } from '@remix-run/node';
-import { Form, Link, useTransition } from '@remix-run/react';
+import { Form, Link, useNavigate, useTransition } from '@remix-run/react';
 import { requireCookieAuth } from '~/services/authentication.server';
 import { deleteUser, getUser, getUsers, getUsersCount } from '~/services/users.server';
 import type { User } from '@prisma/client';
@@ -69,10 +69,11 @@ const UserActions = ({ resource: user }: { resource: User }) => {
 
 export default function Users() {
   const { items, count } = useTablePageLoaderData<User>();
+  const navigate = useNavigate();
   const { tableProps, paginationProps } = useUsersTable(items, count, UserActions);
   return (
     <>
-      <TablePage title="Users" count={count} tableProps={tableProps} paginationProps={paginationProps} searchable />
+      <TablePage title="Users" count={count} tableProps={tableProps} paginationProps={paginationProps} searchable onRowDoubleClick={(u) => navigate(`./${u.username}`)} />
       <HasRights predicate={(u) => isAdmin(u)}>
         <Link to="./new" className="btn btn-circle btn-primary fixed bottom-5 right-5">
           <PlusIcon className="w-8" />
