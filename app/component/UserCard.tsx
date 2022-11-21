@@ -54,9 +54,9 @@ export const UserCard = ({ user, children, editable, baseRoute }: Props) => {
           <span className="font-bold mr-2">Teams:</span>
           {user.memberships.length ? (
             user.memberships.map((membership) => (
-              <div className="badge mr-2" key={membership.id}>
+              <Link to={`/teams/${membership.team.slug}`} className="badge mr-2" key={membership.id}>
                 {membership.team.name}
-              </div>
+              </Link>
             ))
           ) : (
             <span className="opacity-50">No Teams</span>
