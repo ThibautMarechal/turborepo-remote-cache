@@ -16,7 +16,7 @@ export const Navigation = () => {
   const user = useCurrentUser();
   const { pathname } = useLocation();
   return (
-    <div className="navbar bg-base-100 sticky top-0 z-20 shadow-xl">
+    <div className="navbar bg-base-100 sticky top-0 z-20 shadow-xl pt-0 pb-0 min-h-0">
       <div className="flex-1 whitespace-nowrap">
         <Link to="/" className={cn({ fullturbo: pathname === '/' })} prefetch="intent">
           <h1 className="text-2xl font-bold">
@@ -25,7 +25,7 @@ export const Navigation = () => {
           </h1>
         </Link>
       </div>
-      <div className="flex-none">
+      <div className="flex-none h-fit">
         {user && (
           <ul className="menu menu-horizontal p-0 gap-1">
             <li>
@@ -65,7 +65,7 @@ export const Navigation = () => {
               </li>
             </HasRights>
             <div className="dropdown dropdown-end">
-              <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
+              <label tabIndex={0} className="btn btn-ghost btn-circle avatar m-2">
                 <Gravatar className="w-10 rounded-full" email={user.email} />
               </label>
               <ul tabIndex={0} className="mt-3 p-2 menu menu-compact shadow-2xl dropdown-content bg-base-100 rounded-box w-52">

@@ -4,9 +4,10 @@ import cn from 'classnames';
 
 export type TableProps<TableElement> = TableInstance<TableElement> & {
   footer?: boolean;
+  onRowDoubleClick?: (element: TableElement, e: React.MouseEvent) => void;
 };
 
-export function Table<TableElement>({ getHeaderGroups, getRowModel, getFooterGroups, footer }: TableProps<TableElement>) {
+export function Table<TableElement>({ getHeaderGroups, getRowModel, getFooterGroups, footer, onRowDoubleClick }: TableProps<TableElement>) {
   return (
     <div className="relative">
       <table className="table table-compact table-zebra w-full flex-grow-5">
@@ -34,7 +35,7 @@ export function Table<TableElement>({ getHeaderGroups, getRowModel, getFooterGro
         <tbody>
           {getRowModel().rows.map((row) => {
             return (
-              <tr key={row.id}>
+              <tr key={row.id} onDoubleClick={(e) => onRowDoubleClick?.(row.original, e)}>
                 {row.getVisibleCells().map((cell) => {
                   return <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>;
                 })}

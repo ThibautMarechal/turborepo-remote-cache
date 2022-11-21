@@ -68,35 +68,35 @@ export default function Team() {
       </div>
       <Stats>
         <Stat
-          title={
-            <Link to="./users" prefetch="intent">
-              Users
-            </Link>
-          }
+          title="Users"
           icon={<UserGroupIcon className="w-8 h-8" />}
           value={team.members.length}
           description={'Users in the team'}
+          linkProps={{
+            to: './users',
+            prefetch: 'intent',
+          }}
         />
         <HasRights predicate={(u) => isTeamOwner(u, team.id)}>
           <Stat
-            title={
-              <Link to="./sessions" prefetch="intent">
-                Sessions
-              </Link>
-            }
+            title="Sessions"
             icon={<BoltIcon className="w-8 h-8" />}
             value={sessions}
             description={'Number of "turbo run <command>"'}
+            linkProps={{
+              to: './sessions',
+              prefetch: 'intent',
+            }}
           />
           <Stat
-            title={
-              <Link to="./artifacts" prefetch="intent">
-                Artifacts
-              </Link>
-            }
+            title="Artifacts"
             icon={<ArchiveBoxIcon className="w-8 h-8" />}
             value={artifacts}
             description={'Artifacts linked to the team'}
+            linkProps={{
+              to: './artifacts',
+              prefetch: 'intent',
+            }}
           />
         </HasRights>
       </Stats>

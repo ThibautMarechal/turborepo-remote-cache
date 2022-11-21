@@ -20,33 +20,33 @@ export const UserStats = ({ userId, sessions, artifacts, tokens }: Props) => {
     <Stats>
       <Stat
         icon={<BoltIcon className="w-8 h-8" />}
-        title={
-          <Link to="./sessions" prefetch="intent">
-            Sessions
-          </Link>
-        }
+        title="Sessions"
         value={sessions}
         description={'Number of "turbo run <command>"'}
+        linkProps={{
+          to: './sessions',
+          prefetch: 'intent',
+        }}
       />
       <Stat
         icon={<ArchiveBoxIcon className="w-8 h-8" />}
-        title={
-          <Link to="./artifacts" prefetch="intent">
-            Artifacts
-          </Link>
-        }
+        title="Artifacts"
         value={artifacts}
         description={'Artifacts pushed by the user'}
+        linkProps={{
+          to: './artifacts',
+          prefetch: 'intent',
+        }}
       />
       <HasRights predicate={(u) => isAdmin(u) || u.id === userId}>
         <Stat
           icon={<FingerPrintIcon className="w-8 h-8" />}
-          title={
-            <Link to="./tokens" prefetch="intent">
-              Tokens
-            </Link>
-          }
+          title="Tokens"
           value={tokens}
+          linkProps={{
+            to: './tokens',
+            prefetch: 'intent',
+          }}
         />
       </HasRights>
     </Stats>
