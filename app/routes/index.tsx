@@ -4,7 +4,6 @@ import BoltIcon from '@heroicons/react/24/outline/BoltIcon';
 import UserGroupIcon from '@heroicons/react/24/outline/UserGroupIcon';
 import UsersIcon from '@heroicons/react/24/outline/UsersIcon';
 import type { LoaderFunction } from '@remix-run/node';
-import { Link } from '@remix-run/react';
 import HasRights from '~/component/HasRights';
 import { Stat } from '~/component/Stat';
 import { Stats } from '~/component/Stats';

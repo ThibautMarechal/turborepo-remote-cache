@@ -1,5 +1,5 @@
 import type { ActionFunction, LoaderFunction } from '@remix-run/node';
-import { Link } from '@remix-run/react';
+import { Link, useNavigate } from '@remix-run/react';
 import { requireCookieAuth } from '~/services/authentication.server';
 import type { Team } from '@prisma/client';
 import { deleteTeam, getTeams, getTeamsCount } from '~/services/teams.server';
@@ -32,10 +32,11 @@ export const action: ActionFunction = async ({ request }) => {
 
 export default function Teams() {
   const { items, count } = useTablePageLoaderData<Team>();
+  const navigate = useNavigate();
   const { tableProps, paginationProps } = useTeamsTable(items, count);
   return (
     <>
-      <TablePage title="Teams" count={count} tableProps={tableProps} paginationProps={paginationProps} searchable />
+      <TablePage title="Teams" count={count} tableProps={tableProps} paginationProps={paginationProps} searchable onRowDoubleClick={(t) => navigate(`./${t.slug}`)} />
       <HasRights predicate={(u) => isAdmin(u)}>
         <Link to="./new" className="btn btn-circle btn-primary fixed bottom-5 right-5">
           <PlusIcon className="w-8" />
