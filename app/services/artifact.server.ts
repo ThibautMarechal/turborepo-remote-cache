@@ -1,8 +1,11 @@
 import type { Artifact } from '@prisma/client';
+import type { CleanPeriod } from '~/clean/CleanPeriod';
+import { getDateFromPeriod } from '~/clean/utils';
 import type { TurboContext } from '~/types/TurboContext';
 import type { OrderBy } from '~/utils/sort';
 import { DEFAULT_ORDER_BY } from '~/utils/sort';
 import { client } from './prismaClient.server';
+import { CacheStorage } from './storage.server';
 
 export function getArtifactId(turboCtx: TurboContext) {
   return `${turboCtx.team?.id ?? turboCtx.user.id}/${turboCtx.hash}`;
@@ -118,4 +121,61 @@ export async function getArtifactsSize({ userId, teamId }: { userId?: string; te
       },
     })
     .then((res) => res._sum.contentLength ?? 0);
+}
+
+export async function deleteArtifactByPeriod(period: CleanPeriod) {
+  const fromDate = getDateFromPeriod(period);
+  await client.$transaction(async (tx) => {
+    const artifactsToRemoved = await tx.artifact.findMany({
+      include: {
+        user: true,
+        team: true,
+      },
+      where: {
+        OR: {
+          AND: {
+            lastHitDate: {
+              equals: null,
+            },
+            creationDate: {
+              lte: fromDate,
+            },
+          },
+          lastHitDate: {
+            lte: fromDate,
+          },
+        },
+      },
+    });
+    const storage = new CacheStorage();
+    const storageCleaning = await Promise.allSettled(artifactsToRemoved.map((a) => storage.removeArtifact(a)));
+    const dbCleaning = await Promise.allSettled(
+      artifactsToRemoved.map((a) =>
+        tx.artifact.delete({
+          where: {
+            id: a.id,
+          },
+        }),
+      ),
+    );
+    let failedCount = 0;
+    artifactsToRemoved.forEach((artifact, index) => {
+      let failed = false;
+      if (storageCleaning[index].status === 'rejected') {
+        console.warn(`Failed to clean artifact ${artifact.id} from storage`);
+        failed = true;
+      }
+      if (dbCleaning[index].status === 'rejected') {
+        console.warn(`Failed to clean artifact ${artifact.id} from database`);
+        failed = true;
+      }
+      if (failed) {
+        failedCount++;
+      }
+    });
+
+    if (failedCount > 0) {
+      throw new Error(`Failed to remove ${failedCount} artifacts`);
+    }
+  });
 }
