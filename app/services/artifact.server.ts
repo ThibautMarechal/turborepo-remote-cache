@@ -1,4 +1,4 @@
-import type { Artifact, Prisma } from '@prisma/client';
+import type { Artifact } from '@prisma/client';
 import type { CleanPeriod } from '~/clean/CleanPeriod';
 import { getDateFromPeriod } from '~/clean/utils';
 import type { TurboContext } from '~/types/TurboContext';
