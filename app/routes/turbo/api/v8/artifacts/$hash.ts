@@ -9,6 +9,9 @@ import { accepted, unprocessableEntity, internalServerError, notFound } from '~/
 import { getArtifactByHash, getArtifactDuration, getArtifactId, hitArtifact, insertArtifact } from '~/services/artifact.server';
 import type { User } from '@prisma/client';
 import { requireTeamMember } from '~/roles/rights';
+import debug from 'debug';
+
+const Debugger = debug('turbo-api-artifacts');
 
 export const loader: LoaderFunction = async ({ request, params, context }) => {
   allowMethods(request, METHOD.GET, METHOD.PUT);
@@ -34,6 +37,7 @@ export const loader: LoaderFunction = async ({ request, params, context }) => {
     turboCtx.team = artifact.team;
     turboCtx.user = artifact.user;
   }
+  Debugger('turboCtx: %o', turboCtx);
 
   const storage = new CacheStorage();
   if (!(await storage.existArtifact(turboCtx))) {
@@ -63,6 +67,7 @@ export const action: ActionFunction = async ({ request, params, context }) => {
   }
 
   const turboCtx = getTurboContext({ request, params, context }, user, team);
+  Debugger('turboCtx: %o', turboCtx);
 
   if (!request.body) {
     throw unprocessableEntity();

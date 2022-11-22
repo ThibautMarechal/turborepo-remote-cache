@@ -8,12 +8,16 @@ import { unprocessableEntity } from 'remix-utils';
 import { getTeamFromRequest } from '~/services/teams.server';
 import { allowMethods, METHOD } from '~/utils/method';
 import { accepted, methodNotAllowed } from '~/utils/response';
+import debug from 'debug';
 
-export const action: ActionFunction = async ({ request, params, context }) => {
+const Debugger = debug('turbo-api-events');
+
+export const action: ActionFunction = async ({ request }) => {
   allowMethods(request, METHOD.GET, METHOD.POST);
   const user = await requireTokenAuth(request);
   const team = await getTeamFromRequest(request);
   const turboEvents = (await request.json()) as TurboEvent[];
+  Debugger('Receiving evets %o', turboEvents);
   if (!turboEvents.length) {
     return unprocessableEntity(turboEvents);
   }
@@ -34,7 +38,7 @@ export const action: ActionFunction = async ({ request, params, context }) => {
   return accepted();
 };
 
-export const loader: LoaderFunction = async ({ request, params, context }) => {
+export const loader: LoaderFunction = async ({ request }) => {
   allowMethods(request, METHOD.GET, METHOD.POST);
   return methodNotAllowed();
 };

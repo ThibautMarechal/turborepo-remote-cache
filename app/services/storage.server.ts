@@ -7,6 +7,9 @@ import aws from 'aws-sdk';
 import s3 from 's3-blob-store';
 import azure from 'azure-blob-store';
 import invariant from 'tiny-invariant';
+import debug from 'debug';
+
+const Debugger = debug('cache');
 
 export class CacheStorage {
   private blobStore: AbstractBlobStore;
@@ -58,6 +61,7 @@ export class CacheStorage {
       default:
         throw new Error('Expected STORAGE_TYPE to be valid storage type (fs,s3,azure)');
     }
+    Debugger(`blobStore: ${STORAGE_TYPE}: %o`, this.blobStore);
   }
 
   private getArtifactKey(turboCtx: TurboContext): string {

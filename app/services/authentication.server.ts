@@ -8,6 +8,9 @@ import { unauthorized } from '~/utils/response';
 import { getToken } from './tokens.server';
 import { createExternalUser, getUserByUsernameAndPassword, getUserDetail, userExist } from './users.server';
 import { ServerRole } from '~/roles/ServerRole';
+import debug from 'debug';
+
+const OIDCDebugger = debug('oidc');
 
 export const authenticator = new Authenticator<string>(sessionStorage);
 
@@ -20,6 +23,7 @@ export async function requireCookieAuth(request: Request, redirectOnfail: boolea
     });
     return await getUserDetail(userId);
   } catch (e) {
+    AuthDebugger(e);
     if (redirectOnfail) {
       throw redirect(failureRedirect);
     } else {
@@ -72,30 +76,37 @@ if (process.env.OIDC === 'true') {
     },
     async ({ accessToken }) => {
       // Get the user data from your DB or API using the tokens and profile
+      OIDCDebugger(`accessToken: ${accessToken}`);
       try {
         const response = await fetch(OIDC_PROFILE_URL, {
           headers: {
             authorization: `Bearer ${accessToken}`,
           },
         });
+        OIDCDebugger(`profile status: ${response.status}`);
         if (!response.ok) {
           try {
             const body = await response.text();
+            OIDCDebugger(`profile text: ${body}`);
             throw new Response(body, { status: 401 });
           } catch (error) {
+            OIDCDebugger(`profile error: ${error}`);
             throw new Response((error as Error).message, { status: 401 });
           }
         }
         const userInfo: { sub: string; email?: string; name?: string; preferred_username?: string } = await response.json();
+        OIDCDebugger(`userInfo: ${userInfo}`);
         if (!(await userExist(userInfo.sub))) {
           const email = userInfo.email ?? userInfo.sub;
           const name = userInfo.name ?? userInfo.preferred_username ?? userInfo.sub;
           const username = userInfo.preferred_username ?? userInfo.sub;
 
-          await createExternalUser({ id: userInfo.sub, email, name, username, role: ServerRole.DEVELOPER });
+          const user = await createExternalUser({ id: userInfo.sub, email, name, username, role: ServerRole.DEVELOPER });
+          OIDCDebugger(`userInfo: %o`, user);
         }
         return userInfo.sub;
       } catch (e) {
+        OIDCDebugger(e);
         console.error('Error while fetching userinfo', e);
         return '';
       }
