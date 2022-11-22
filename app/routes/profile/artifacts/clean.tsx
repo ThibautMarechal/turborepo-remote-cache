@@ -5,7 +5,6 @@ import { z } from 'zod';
 import { requireCookieAuth } from '~/services/authentication.server';
 import { makeDomainFunction } from 'domain-functions';
 import { Form } from '~/component/Form';
-import { requireAdmin } from '~/roles/rights';
 import { CleanPeriod } from '~/clean/CleanPeriod';
 import { deleteArtifactByPeriod } from '~/services/artifact.server';
 
@@ -13,17 +12,16 @@ const schema = z.object({
   period: z.enum([CleanPeriod.DAY, CleanPeriod.WEEK, CleanPeriod.MONTH, CleanPeriod.YEAR]),
 });
 
-const mutation = makeDomainFunction(schema)(({ period }) => deleteArtifactByPeriod(period));
-
 export const loader: LoaderFunction = async ({ request }) => {
-  const user = await requireCookieAuth(request);
-  requireAdmin(user);
+  await requireCookieAuth(request);
   return null;
 };
 
-export const action: ActionFunction = async ({ request }) => {
+export const action: ActionFunction = async ({ request, params }) => {
   const user = await requireCookieAuth(request);
-  requireAdmin(user);
+
+  const mutation = makeDomainFunction(schema)(({ period }) => deleteArtifactByPeriod(period, { userId: user.id }));
+
   return formAction({
     request,
     schema,

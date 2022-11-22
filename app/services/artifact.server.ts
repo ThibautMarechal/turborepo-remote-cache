@@ -1,4 +1,4 @@
-import type { Artifact } from '@prisma/client';
+import type { Artifact, Prisma } from '@prisma/client';
 import type { CleanPeriod } from '~/clean/CleanPeriod';
 import { getDateFromPeriod } from '~/clean/utils';
 import type { TurboContext } from '~/types/TurboContext';
@@ -123,26 +123,31 @@ export async function getArtifactsSize({ userId, teamId }: { userId?: string; te
     .then((res) => res._sum.contentLength ?? 0);
 }
 
-export async function deleteArtifactByPeriod(period: CleanPeriod) {
-  const fromDate = getDateFromPeriod(period);
+export async function deleteArtifactByPeriod(period: CleanPeriod, { teamId, userId }: { userId?: string; teamId?: string } = {}) {
   await client.$transaction(async (tx) => {
+    const fromDate = getDateFromPeriod(period);
+
     const artifactsToRemoved = await tx.artifact.findMany({
       include: {
         user: true,
         team: true,
       },
       where: {
-        OR: {
-          AND: {
-            lastHitDate: {
-              equals: null,
+        AND: {
+          userId,
+          teamId,
+          OR: {
+            AND: {
+              lastHitDate: {
+                equals: null,
+              },
+              creationDate: {
+                lte: fromDate,
+              },
             },
-            creationDate: {
+            lastHitDate: {
               lte: fromDate,
             },
-          },
-          lastHitDate: {
-            lte: fromDate,
           },
         },
       },
