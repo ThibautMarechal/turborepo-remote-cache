@@ -23,7 +23,6 @@ export async function requireCookieAuth(request: Request, redirectOnfail: boolea
     });
     return await getUserDetail(userId);
   } catch (e) {
-    AuthDebugger(e);
     if (redirectOnfail) {
       throw redirect(failureRedirect);
     } else {
