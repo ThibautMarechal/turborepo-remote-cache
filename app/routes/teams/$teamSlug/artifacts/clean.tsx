@@ -32,7 +32,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     request,
     schema,
     mutation,
-    successPath: '..',
+    successPath: `/teams/${team.slug}/artifacts`,
   });
 };
 

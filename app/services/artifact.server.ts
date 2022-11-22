@@ -136,8 +136,8 @@ export async function deleteArtifactByPeriod(period: CleanPeriod, { teamId, user
         AND: {
           userId,
           teamId,
-          OR: {
-            AND: {
+          OR: [
+            {
               lastHitDate: {
                 equals: null,
               },
@@ -145,13 +145,17 @@ export async function deleteArtifactByPeriod(period: CleanPeriod, { teamId, user
                 lte: fromDate,
               },
             },
-            lastHitDate: {
-              lte: fromDate,
+            {
+              lastHitDate: {
+                lte: fromDate,
+              },
             },
-          },
+          ],
         },
       },
     });
+    console.log(`🚮 Deleting ${artifactsToRemoved.length} artifacts older than last ${period} for ${JSON.stringify({ userId, teamId })}`);
+
     const storage = new CacheStorage();
     const storageCleaning = await Promise.allSettled(artifactsToRemoved.map((a) => storage.removeArtifact(a)));
     const dbCleaning = await Promise.allSettled(
@@ -180,7 +184,10 @@ export async function deleteArtifactByPeriod(period: CleanPeriod, { teamId, user
     });
 
     if (failedCount > 0) {
-      throw new Error(`Failed to remove ${failedCount} artifacts`);
+      const errorMessage = `Failed to remove ${failedCount} artifacts`;
+      console.error(errorMessage);
+      throw new Error(errorMessage);
     }
+    console.log(`🚮 Successfully deleted ${artifactsToRemoved.length} artifacts`);
   });
 }

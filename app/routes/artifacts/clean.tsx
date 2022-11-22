@@ -28,7 +28,7 @@ export const action: ActionFunction = async ({ request }) => {
     request,
     schema,
     mutation,
-    successPath: '..',
+    successPath: '/artifacts',
   });
 };
 
