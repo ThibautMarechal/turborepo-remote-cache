@@ -41,7 +41,11 @@ export async function getTokens({ userId, skip, take, orderBy }: { userId?: stri
 }
 
 export async function getTokensCount({ userId }: { userId?: string } = {}) {
-  return await client.token.count();
+  return await client.token.count({
+    where: {
+      userId,
+    },
+  });
 }
 
 export async function generateToken(userId: string, name: string = 'turborepo-cli'): Promise<[string, Token]> {
