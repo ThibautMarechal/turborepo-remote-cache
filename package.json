@@ -95,7 +95,7 @@
     "c8": "7.12.0",
     "cypress": "11.2.0",
     "daisyui": "2.42.1",
-    "eslint": "8.28.0",
+    "eslint": "8.29.0",
     "happy-dom": "7.7.0",
     "start-server-and-test": "1.14.0",
     "tailwindcss": "3.2.4",
