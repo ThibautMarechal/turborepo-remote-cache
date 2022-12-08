@@ -96,7 +96,7 @@
     "cypress": "12.0.1",
     "daisyui": "2.42.1",
     "eslint": "8.29.0",
-    "happy-dom": "7.8.1",
+    "happy-dom": "8.1.0",
     "start-server-and-test": "1.15.1",
     "tailwindcss": "3.2.4",
     "vite": "^3.2.3",
