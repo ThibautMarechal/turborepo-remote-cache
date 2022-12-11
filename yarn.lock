@@ -8549,10 +8549,10 @@ remix-forms@^1.0.0:
   dependencies:
     "@hookform/resolvers" "^2.8.8"
 
-remix-utils@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/remix-utils/-/remix-utils-4.0.0.tgz#1defba34a7b427432c3fda124462eb1a76b25bba"
-  integrity sha512-J+awwyLab1E5qYJxZuKwRWPl+9qBjqt5zYvBGcqapatqpEWvfwpIkuOfWzHp2FcbUqDKHCTpvo4Op3khWGdcpg==
+remix-utils@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/remix-utils/-/remix-utils-5.0.0.tgz#b8936d0b309f4cd373492905fa4db346c2190a63"
+  integrity sha512-cfuD4BGifTfhrwOFdGDf86eBonQ3I692xyqE/n3IiGJ3gS70NONty6lZqnzDcjbrhi7A3TZQ77emy7rC5a8RPw==
   dependencies:
     intl-parse-accept-language "^1.0.0"
     is-ip "^3.1.0"
