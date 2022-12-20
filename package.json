@@ -91,7 +91,7 @@
     "@types/readable-stream": "2.3.15",
     "@types/uuid": "^9.0.0",
     "@vitejs/plugin-react": "^3.0.0",
-    "@vitest/coverage-c8": "^0.25.8",
+    "@vitest/coverage-c8": "^0.26.0",
     "c8": "7.12.0",
     "cypress": "12.1.0",
     "daisyui": "2.46.0",
@@ -101,7 +101,7 @@
     "tailwindcss": "3.2.4",
     "vite": "^4.0.1",
     "vite-tsconfig-paths": "^4.0.2",
-    "vitest": "^0.25.8"
+    "vitest": "^0.26.0"
   },
   "resolutions": {
     "react-charts/@types/react": "^18.0.9",
