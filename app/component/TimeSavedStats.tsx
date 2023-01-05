@@ -30,7 +30,7 @@ export const TimeSavedStats = ({ local, remote }: Props) => {
     <>
       <Stats>
         <Stat icon={<ClockIcon className="w-8 h-8" />} title="Time Saved locally" value={<div className="hover:fullturbo">{formatDuration(totalLocal)}</div>} />
-        <Stat icon={<ClockIcon className="w-8 h-8" />} title="Time Saved remotly" value={<div className="hover:fullturbo">{formatDuration(totalRemote)}</div>} />
+        <Stat icon={<ClockIcon className="w-8 h-8" />} title="Time Saved remotely" value={<div className="hover:fullturbo">{formatDuration(totalRemote)}</div>} />
       </Stats>
       {(totalRemote > 0 || totalLocal > 0) && (
         <div className="w-full px-20 h-80 flex justify-center animate-appear">
