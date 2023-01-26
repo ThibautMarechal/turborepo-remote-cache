@@ -36,7 +36,7 @@
     "@remix-run/node": "1.11.1",
     "@remix-run/react": "1.11.1",
     "@remix-run/serve": "1.11.1",
-    "@tanstack/react-table": "8.7.6",
+    "@tanstack/react-table": "8.7.8",
     "abstract-blob-store": "3.3.5",
     "aws-sdk": "2.1302.0",
     "azure-blob-storage": "4.2.5",
