@@ -17,7 +17,7 @@ export const action: ActionFunction = async ({ request }) => {
   const user = await requireTokenAuth(request);
   const team = await getTeamFromRequest(request);
   const turboEvents = (await request.json()) as TurboEvent[];
-  Debugger('Receiving evets %o', turboEvents);
+  Debugger('Receiving events %o', turboEvents);
   if (!turboEvents.length) {
     return unprocessableEntity(turboEvents);
   }

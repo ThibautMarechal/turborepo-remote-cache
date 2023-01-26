@@ -39,7 +39,7 @@ export async function requireTokenAuth(request: Request) {
   try {
     const { userId } = await getToken(token);
     return await getUserDetail(userId);
-  } catch (error: any) {
+  } catch (error) {
     console.warn('Token Auth Error: ', error?.constructor?.name);
     console.warn(error);
     throw unauthorized();
