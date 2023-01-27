@@ -8565,10 +8565,10 @@ raw-body@2.5.1, raw-body@^2.2.0:
     iconv-lite "0.4.24"
     unpipe "1.0.0"
 
-react-charts@3.0.0-beta.51:
-  version "3.0.0-beta.51"
-  resolved "https://registry.yarnpkg.com/react-charts/-/react-charts-3.0.0-beta.51.tgz#766df47ade4f4deb45ee953a3089850e414b303c"
-  integrity sha512-ST7xOZ9kX96JRe6sAbFdv9zPHTPKYJYZ5CAtybwc1KnF35olwN5WlO2ug0AF7RPv6nRO34jJ78IjuLLavnFrAQ==
+react-charts@3.0.0-beta.54:
+  version "3.0.0-beta.54"
+  resolved "https://registry.yarnpkg.com/react-charts/-/react-charts-3.0.0-beta.54.tgz#8d89f345b789b7fa5f87be8dbc6ad4999d5129a2"
+  integrity sha512-Q5IvY4sXMxdJLLNnRXWnr/TD/c3p/dBRAQTi+nINvIsn2aLUyc81W9KTp6N2MTpkB4zU3594QC1yPeEK91bklg==
   dependencies:
     "@babel/runtime" "^7.14.6"
     "@types/d3-array" "^3.0.1"
