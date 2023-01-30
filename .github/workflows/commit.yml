@@ -139,7 +139,7 @@ jobs:
             ${{ runner.os }}-buildx-
 
       - name: 🐳 Docker build
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           context: .
           cache-from: type=local,src=/tmp/.buildx-cache
