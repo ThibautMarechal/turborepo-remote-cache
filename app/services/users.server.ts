@@ -4,8 +4,8 @@ import type { User } from '@prisma/client';
 import type { OrderBy } from '~/utils/sort';
 import { DEFAULT_ORDER_BY } from '~/utils/sort';
 
-export async function getUsers(skip: number = 0, take: number = 100, orderBy?: OrderBy[], search?: string): Promise<User[]> {
-  return await client.user.findMany({
+export function getUsers(skip: number = 0, take: number = 100, orderBy?: OrderBy[], search?: string) {
+  return client.user.findMany({
     where: {
       isDeleted: false,
       OR: search
@@ -37,16 +37,16 @@ export async function getUsers(skip: number = 0, take: number = 100, orderBy?: O
   });
 }
 
-export async function getUsersCount(): Promise<number> {
-  return await client.user.count({
+export function getUsersCount() {
+  return client.user.count({
     where: {
       isDeleted: false,
     },
   });
 }
 
-export async function getUsersByTeam(teamId: string, skip: number = 0, take: number = 100, orderBy: OrderBy[]) {
-  return await client.user.findMany({
+export function getUsersByTeam(teamId: string, skip: number = 0, take: number = 100, orderBy: OrderBy[]) {
+  return client.user.findMany({
     where: {
       memberships: {
         some: {
@@ -63,8 +63,8 @@ export async function getUsersByTeam(teamId: string, skip: number = 0, take: num
   });
 }
 
-export async function getUsersByTeamCount(teamId: string) {
-  return await client.user.count({
+export function getUsersByTeamCount(teamId: string) {
+  return client.user.count({
     where: {
       memberships: {
         some: {
@@ -75,16 +75,16 @@ export async function getUsersByTeamCount(teamId: string) {
   });
 }
 
-export async function getUser(id: string): Promise<User> {
-  return await client.user.findUniqueOrThrow({ where: { id } });
+export function getUser(id: string) {
+  return client.user.findUniqueOrThrow({ where: { id } });
 }
 
-export async function getUserByUsername(username: string): Promise<User> {
-  return await client.user.findUniqueOrThrow({ where: { username } });
+export function getUserByUsername(username: string) {
+  return client.user.findUniqueOrThrow({ where: { username } });
 }
 
-export async function getUserDetail(id: string) {
-  return await client.user.findUniqueOrThrow({
+export function getUserDetail(id: string) {
+  return client.user.findUniqueOrThrow({
     where: { id },
     include: {
       memberships: {
@@ -96,8 +96,8 @@ export async function getUserDetail(id: string) {
   });
 }
 
-export async function getUserDetailByUsername(username: string): Promise<User> {
-  return await client.user.findUniqueOrThrow({
+export function getUserDetailByUsername(username: string) {
+  return client.user.findUniqueOrThrow({
     where: { username },
     include: {
       memberships: {
@@ -109,8 +109,8 @@ export async function getUserDetailByUsername(username: string): Promise<User> {
   });
 }
 
-export async function createUser(user: Pick<User, 'email' | 'name' | 'username' | 'role'>, password: string): Promise<User> {
-  return await client.user.create({
+export async function createUser(user: Pick<User, 'email' | 'name' | 'username' | 'role'>, password: string) {
+  return client.user.create({
     data: {
       email: user.email,
       name: user.name,
@@ -129,8 +129,8 @@ export async function userExist(id: string) {
   return (await client.user.count({ where: { id } })) === 1;
 }
 
-export async function createExternalUser(user: Pick<User, 'email' | 'name' | 'username' | 'role' | 'id'>): Promise<User> {
-  return await client.user.create({
+export function createExternalUser(user: Pick<User, 'email' | 'name' | 'username' | 'role' | 'id'>) {
+  return client.user.create({
     data: {
       id: user.id,
       email: user.email,
@@ -142,8 +142,8 @@ export async function createExternalUser(user: Pick<User, 'email' | 'name' | 'us
   });
 }
 
-export async function updateUser(id: string, user: Pick<User, 'email' | 'name' | 'role'>): Promise<User> {
-  return await client.user.update({
+export function updateUser(id: string, user: Pick<User, 'email' | 'name' | 'role'>) {
+  return client.user.update({
     where: { id },
     data: {
       email: user.email,
@@ -189,7 +189,7 @@ export async function deleteUser(userId: string) {
   });
 }
 
-export async function getUserByUsernameAndPassword(username: string, password: string): Promise<User> {
+export async function getUserByUsernameAndPassword(username: string, password: string) {
   const user = await client.user.findUniqueOrThrow({
     where: {
       username,
@@ -203,11 +203,10 @@ export async function getUserByUsernameAndPassword(username: string, password: s
   if (await compareHash(password, passwordHash)) {
     return user;
   }
-  throw new Error('User with password not found');
 }
 
-export async function updateUserPassword(userId: string, password: string): Promise<void> {
-  await client.$transaction([
+export async function updateUserPassword(userId: string, password: string) {
+  return client.$transaction([
     client.password.deleteMany({
       where: {
         userId,

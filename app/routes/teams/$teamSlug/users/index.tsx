@@ -1,5 +1,6 @@
 import PlusIcon from '@heroicons/react/24/outline/PlusIcon';
 import TrashIcon from '@heroicons/react/24/outline/TrashIcon';
+import PencilIcon from '@heroicons/react/24/outline/PencilIcon';
 import type { Team, User } from '@prisma/client';
 import type { ActionFunction, LoaderFunction } from '@remix-run/node';
 import { Form, Link, useTransition } from '@remix-run/react';
@@ -45,6 +46,9 @@ export const UserActions = ({ resource: user }: { resource: User }) => {
   const isRemoving = state === 'submitting' && submission.formData.get('id') === user.id;
   return (
     <div className="flex gap-1">
+      <Link to={`./edit/${user.username}`} prefetch="intent" title="Edit user" className="btn btn-xs btn-square">
+        <PencilIcon className="h-4 w-4" />
+      </Link>
       <Form method="post">
         <button className={cn('btn btn-xs btn-square', { loading: isRemoving })} title="Remove user from team">
           {!isRemoving && <TrashIcon className="h-4 w-4" />}
@@ -58,7 +62,7 @@ export const UserActions = ({ resource: user }: { resource: User }) => {
 export default function Users() {
   const { items, team, count } = useTablePageLoaderData<UserDetail, { team: Team }>();
   const currentUser = useCurrentUser();
-  const { tableProps, paginationProps } = useTeamUsersTable(items, count, currentUser && isTeamOwner(currentUser, team.id) ? UserActions : undefined);
+  const { tableProps, paginationProps } = useTeamUsersTable(items, count, team, currentUser && isTeamOwner(currentUser, team.id) ? UserActions : undefined);
   return (
     <>
       <TablePage title={`${team.name}'s users`} count={count} tableProps={tableProps} paginationProps={paginationProps} />

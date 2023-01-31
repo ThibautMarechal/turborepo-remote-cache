@@ -54,6 +54,9 @@ authenticator.use(
     invariant(password && typeof password === 'string', 'Missing password');
     try {
       const user = await getUserByUsernameAndPassword(username, password);
+      if (!user) {
+        throw unauthorized();
+      }
       return user.id;
     } catch (error) {
       throw unauthorized();

@@ -3,10 +3,12 @@ import { createColumnHelper } from '@tanstack/react-table';
 import Gravatar from 'react-gravatar';
 import { usePaginateSortingTable } from './usePaginateSortingTable';
 import type { UserDetail } from '~/types/prisma';
+import type { Team } from '@prisma/client';
+import React from 'react';
 
 export const columnHelper = createColumnHelper<UserDetail>();
 
-const defaultColumns = [
+const getDefaultColumns = (team: Team) => [
   columnHelper.accessor((user) => user.email, {
     id: 'email',
     header: '',
@@ -21,7 +23,7 @@ const defaultColumns = [
     id: 'username',
     header: 'Username',
   }),
-  columnHelper.accessor((user) => user.memberships[0].role, {
+  columnHelper.accessor((user) => user.memberships.find((membership) => membership.teamId === team.id)?.role, {
     id: 'teamRole',
     header: 'Team role',
   }),
@@ -32,5 +34,7 @@ const defaultColumns = [
   }),
 ];
 
-export const useTeamUsersTable = (data: UserDetail[], count: number, Actions?: React.ComponentType<{ resource: UserDetail }>) =>
-  usePaginateSortingTable({ data, columns: defaultColumns }, count, Actions);
+export const useTeamUsersTable = (data: UserDetail[], count: number, team: Team, Actions?: React.ComponentType<{ resource: UserDetail }>) => {
+  const columns = React.useMemo(() => getDefaultColumns(team), [team]);
+  return usePaginateSortingTable({ data, columns }, count, Actions);
+};
