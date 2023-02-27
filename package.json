@@ -97,7 +97,7 @@
     "daisyui": "2.51.1",
     "eslint": "8.35.0",
     "happy-dom": "8.9.0",
-    "start-server-and-test": "1.15.5",
+    "start-server-and-test": "2.0.0",
     "tailwindcss": "3.2.7",
     "vite": "^4.0.1",
     "vite-tsconfig-paths": "^4.0.2",
