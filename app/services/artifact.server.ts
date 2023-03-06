@@ -123,71 +123,77 @@ export async function getArtifactsSize({ userId, teamId }: { userId?: string; te
     .then((res) => res._sum.contentLength ?? 0);
 }
 
-export async function deleteArtifactByPeriod(period: CleanPeriod, { teamId, userId }: { userId?: string; teamId?: string } = {}) {
-  await client.$transaction(async (tx) => {
-    const fromDate = getDateFromPeriod(period);
+export function deleteArtifactByPeriod(period: CleanPeriod, { teamId, userId }: { userId?: string; teamId?: string } = {}) {
+  return client.$transaction(
+    async (tx) => {
+      const fromDate = getDateFromPeriod(period);
 
-    const artifactsToRemoved = await tx.artifact.findMany({
-      include: {
-        user: true,
-        team: true,
-      },
-      where: {
-        AND: {
-          userId,
-          teamId,
-          OR: [
-            {
-              lastHitDate: {
-                equals: null,
-              },
-              creationDate: {
-                lte: fromDate,
-              },
-            },
-            {
-              lastHitDate: {
-                lte: fromDate,
-              },
-            },
-          ],
+      const artifactsToRemoved = await tx.artifact.findMany({
+        include: {
+          user: true,
+          team: true,
         },
-      },
-    });
-    console.log(`🚮 Deleting ${artifactsToRemoved.length} artifacts older than last ${period} for ${JSON.stringify({ userId, teamId })}`);
-
-    const storage = new CacheStorage();
-    const storageCleaning = await Promise.allSettled(artifactsToRemoved.map((a) => storage.removeArtifact(a)));
-    const dbCleaning = await Promise.allSettled(
-      artifactsToRemoved.map((a) =>
-        tx.artifact.delete({
-          where: {
-            id: a.id,
+        where: {
+          AND: {
+            userId,
+            teamId,
+            OR: [
+              {
+                lastHitDate: {
+                  equals: null,
+                },
+                creationDate: {
+                  lte: fromDate,
+                },
+              },
+              {
+                lastHitDate: {
+                  lte: fromDate,
+                },
+              },
+            ],
           },
-        }),
-      ),
-    );
-    let failedCount = 0;
-    artifactsToRemoved.forEach((artifact, index) => {
-      let failed = false;
-      if (storageCleaning[index].status === 'rejected') {
-        console.warn(`Failed to clean artifact ${artifact.id} from storage`);
-        failed = true;
-      }
-      if (dbCleaning[index].status === 'rejected') {
-        console.warn(`Failed to clean artifact ${artifact.id} from database`);
-        failed = true;
-      }
-      if (failed) {
-        failedCount++;
-      }
-    });
+        },
+      });
+      console.log(`🚮 Deleting ${artifactsToRemoved.length} artifacts older than last ${period} for ${JSON.stringify({ userId, teamId })}`);
 
-    if (failedCount > 0) {
-      const errorMessage = `Failed to remove ${failedCount} artifacts`;
-      console.error(errorMessage);
-      throw new Error(errorMessage);
-    }
-    console.log(`🚮 Successfully deleted ${artifactsToRemoved.length} artifacts`);
-  });
+      const storage = new CacheStorage();
+      const storageCleaning = await Promise.allSettled(artifactsToRemoved.map((a) => storage.removeArtifact(a)));
+      const dbCleaning = await Promise.allSettled(
+        artifactsToRemoved.map((a) =>
+          tx.artifact.delete({
+            where: {
+              id: a.id,
+            },
+          }),
+        ),
+      );
+      let failedCount = 0;
+      artifactsToRemoved.forEach((artifact, index) => {
+        let failed = false;
+        if (storageCleaning[index].status === 'rejected') {
+          console.warn(`Failed to clean artifact ${artifact.id} from storage`);
+          failed = true;
+        }
+        if (dbCleaning[index].status === 'rejected') {
+          console.warn(`Failed to clean artifact ${artifact.id} from database`);
+          failed = true;
+        }
+        if (failed) {
+          failedCount++;
+        }
+      });
+
+      if (failedCount > 0) {
+        const errorMessage = `Failed to remove ${failedCount} artifacts`;
+        console.error(errorMessage);
+        throw new Error(errorMessage);
+      }
+      console.log(`🚮 Successfully deleted ${artifactsToRemoved.length} artifacts`);
+      return artifactsToRemoved.length;
+    },
+    {
+      timeout: 60 * 1000,
+    },
+  );
 }
