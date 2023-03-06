@@ -14,7 +14,7 @@ import debug from 'debug';
 const Debugger = debug('turbo-api-artifacts');
 
 export const loader: LoaderFunction = async ({ request, params, context }) => {
-  allowMethods(request, METHOD.GET, METHOD.PUT);
+  allowMethods(request, METHOD.GET, METHOD.PUT, METHOD.HEAD);
   let user: User;
   let authByToken = false;
   try {
@@ -50,6 +50,13 @@ export const loader: LoaderFunction = async ({ request, params, context }) => {
   const headers = new Headers();
   headers.set('Content-Type', 'application/octet-stream');
   headers.set(DURATION_HEADER, artifactDuration.toString());
+
+  if (request.method === METHOD.HEAD) {
+    return new Response(null, {
+      status: 200,
+      headers,
+    });
+  }
   // Cast as ReadableStream because Response actually accept Readable as BodyInit
   return new Response((await storage.readArtifact(turboCtx)) as unknown as ReadableStream, {
     status: 200,
@@ -58,7 +65,7 @@ export const loader: LoaderFunction = async ({ request, params, context }) => {
 };
 
 export const action: ActionFunction = async ({ request, params, context }) => {
-  allowMethods(request, METHOD.GET, METHOD.PUT);
+  allowMethods(request, METHOD.GET, METHOD.PUT, METHOD.HEAD);
   const user = await requireTokenAuth(request);
   const team = await getTeamFromRequest(request);
 
