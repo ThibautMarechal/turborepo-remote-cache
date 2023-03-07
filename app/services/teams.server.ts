@@ -3,7 +3,7 @@ import { removeTeamUndescore } from '~/mapper/team';
 import type { OrderBy } from '~/utils/sort';
 import { client } from './prismaClient.server';
 
-export function getTeams(skip: number, take: number, orderBy: OrderBy[], search: string) {
+export function getTeams(skip: number, take: number, orderBy: OrderBy[] = [], search: string = '') {
   return client.team.findMany({
     where: {
       isDeleted: false,
