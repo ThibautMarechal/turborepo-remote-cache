@@ -15,8 +15,8 @@ import { getOrderByFromRequest } from '~/utils/sort';
 import { json } from '~/utils/superjson';
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const user = await requireCookieAuth(request);
-  requireAdmin(user);
+  const currentUser = await requireCookieAuth(request);
+  requireAdmin(currentUser);
   const orderBy = getOrderByFromRequest(request);
   const { skip, take } = getPaginationFromRequest(request);
   const [items, count] = await Promise.all([getArtifacts({ skip, take, orderBy }), getArtifactsCount()]);
@@ -44,7 +44,7 @@ export default function Artifacts() {
   return (
     <>
       <TablePage title="All artifacts" count={count} tableProps={tableProps} paginationProps={paginationProps} />
-      <Link to="./clean" className="btn btn-circle btn-primary fixed bottom-5 right-5">
+      <Link to="./clean" className="fixed btn btn-circle btn-primary bottom-5 right-5">
         <TrashIcon className="w-8" />
       </Link>
     </>
