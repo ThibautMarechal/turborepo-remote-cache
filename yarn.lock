@@ -8416,10 +8416,17 @@ remix-auth-oidc@^1.0.0:
   dependencies:
     remix-auth-oauth2 "^1.2.0"
 
-remix-auth@^3.2.2, remix-auth@^3.3.0:
+remix-auth@^3.2.2:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/remix-auth/-/remix-auth-3.3.0.tgz#38f2e8825c42c0ebd89737992787b11b663fb42c"
   integrity sha512-sLY5s6DQF4OJp03HM/dIEw3tLfSOIowerS2QDTuvEVXoEA3IHVmk7QkvOKosWdVPbcnlRfwF6PbeBLKgo6vqsg==
+  dependencies:
+    uuid "^8.3.2"
+
+remix-auth@^3.3.0:
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/remix-auth/-/remix-auth-3.4.0.tgz#a3cd4455477f6c60f6cf1bad0ae119101a6d8ff8"
+  integrity sha512-VRliJo9VRAS4sSYgMjYbi7rYRixPWU2Tb8PFZb06OIj0nONK/1KRzHf2+Y6VGZeIacepLVgan6g2IUJjayE2rQ==
   dependencies:
     uuid "^8.3.2"
 
