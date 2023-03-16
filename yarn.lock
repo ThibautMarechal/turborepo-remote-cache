@@ -1530,9 +1530,9 @@
   integrity sha512-x89rFxH3SRdYaA+JCXwfe+RkE1SFTo9GcOkZettHer71Y3T7V+ogKmfw5CjTazgS3d0ClJ7p1NA+SP7VQLQcLw==
 
 "@hookform/resolvers@^2.8.8":
-  version "2.9.7"
-  resolved "https://registry.yarnpkg.com/@hookform/resolvers/-/resolvers-2.9.7.tgz#8b257ae67234ce0270e6b044c1a61fb98ec02b4b"
-  integrity sha512-BloehX3MOLwuFEwT4yZnmolPjVmqyn8VsSuodLfazbCIqxBHsQ4qUZsi+bvNNCduRli1AGWFrkDLGD5QoNzsoA==
+  version "2.9.11"
+  resolved "https://registry.yarnpkg.com/@hookform/resolvers/-/resolvers-2.9.11.tgz#9ce96e7746625a89239f68ca57c4f654264c17ef"
+  integrity sha512-bA3aZ79UgcHj7tFV7RlgThzwSSHZgvfbt2wprldRkYBcMopdMvHyO17Wwp/twcJasNFischFfS7oz8Katz8DdQ==
 
 "@humanwhocodes/config-array@^0.11.8":
   version "0.11.8"
@@ -8424,9 +8424,9 @@ remix-auth@^3.2.2, remix-auth@^3.3.0:
     uuid "^8.3.2"
 
 remix-forms@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/remix-forms/-/remix-forms-1.0.0.tgz#03c57b4b92ce22babb1d3ade796f8798b2514a2a"
-  integrity sha512-S/qkP08vEgIT3aX6zRVwWe+RffBEukmaxQ8u+XjsCNf7/IaDDt3DpQzT0dJOZSIZSUW+710jAoQvh7K9VF8CaA==
+  version "1.5.4"
+  resolved "https://registry.yarnpkg.com/remix-forms/-/remix-forms-1.5.4.tgz#86b651ba4d3a6046d0238cbbe72989732423f09a"
+  integrity sha512-VgrL86Hj8jL+d0ae5p4xpGIV7CCwTCId7be8GR03jH0mGE7YpDDQXWdz36tc0U4XenlxFOT2RJFkidUhvimIAA==
   dependencies:
     "@hookform/resolvers" "^2.8.8"
 
