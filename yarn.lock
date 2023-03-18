@@ -8510,9 +8510,9 @@ remix-auth@^3.3.0, remix-auth@^3.4.0:
     uuid "^8.3.2"
 
 remix-forms@^1.0.0:
-  version "1.5.4"
-  resolved "https://registry.yarnpkg.com/remix-forms/-/remix-forms-1.5.4.tgz#86b651ba4d3a6046d0238cbbe72989732423f09a"
-  integrity sha512-VgrL86Hj8jL+d0ae5p4xpGIV7CCwTCId7be8GR03jH0mGE7YpDDQXWdz36tc0U4XenlxFOT2RJFkidUhvimIAA==
+  version "1.6.1"
+  resolved "https://registry.yarnpkg.com/remix-forms/-/remix-forms-1.6.1.tgz#d23568d36081bf2893d9dfd3598d38a848057c6d"
+  integrity sha512-yScs8kA9eP89y9f5VXL5JxqT9miY2tXJu4sWk4opPkzh9II2+qjQR/eJ/5zZTvhtA9+TSpEaZZ7y94pETJzC2Q==
   dependencies:
     "@hookform/resolvers" "^2.8.8"
 
