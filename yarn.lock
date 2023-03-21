@@ -4069,9 +4069,9 @@ dom-accessibility-api@^0.5.6, dom-accessibility-api@^0.5.9:
   integrity sha512-X7BJ2yElsnOJ30pZF4uIIDfBEVgF4XEBxL9Bxhy6dnrm5hkzqmsWHGTiHqRiITNhMyFLyAiWndIJP7Z1NTteDg==
 
 domain-functions@^1.3.0:
-  version "1.6.1"
-  resolved "https://registry.yarnpkg.com/domain-functions/-/domain-functions-1.6.1.tgz#811b63212a2b20e34c861360f150f15570e01b04"
-  integrity sha512-mDwHiHk8BFKXvgQZFWFOAVC3wB3u7p9BjC4zDlHmPFv5dvu//gPf/IE64j1e16TBIyOEe6ohVxcLKsTeUUWjAA==
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/domain-functions/-/domain-functions-1.7.0.tgz#348eda98b61dea6f7673c2d28dc8240af9f9f845"
+  integrity sha512-hv+XEH8+fuPNqeqemAL5mcqRAQhTTCHx2dTYsia8Zaetw9k1x5imsFb+CDB9Mn3hAdoncWEbgFfPIBFAXZzkmQ==
   dependencies:
     qs "^6.10.3"
 
