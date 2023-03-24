@@ -55,7 +55,7 @@
     "react-charts": "3.0.0-beta.54",
     "react-dom": "18.2.0",
     "react-gravatar": "2.6.3",
-    "react-hook-form": "7.43.7",
+    "react-hook-form": "7.43.8",
     "react-intersection-observer": "9.4.3",
     "react-router-dom": "6.9.0",
     "remix-auth": "^3.3.0",
