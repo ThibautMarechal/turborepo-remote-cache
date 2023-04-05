@@ -1893,17 +1893,17 @@
     lodash.merge "^4.6.2"
     postcss-selector-parser "6.0.10"
 
-"@tanstack/react-table@8.8.1":
-  version "8.8.1"
-  resolved "https://registry.yarnpkg.com/@tanstack/react-table/-/react-table-8.8.1.tgz#34f33d3c841bd5e79c7004d5db1f063c95aab34e"
-  integrity sha512-BWVzFvb0Vj2kxC14xcwSHplGe15xJx2+rOWqLFS/f899S+eprK4hSoa0XO3/TzrfirNeh9eaqdeSvCgl9sBjXg==
+"@tanstack/react-table@8.8.5":
+  version "8.8.5"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-table/-/react-table-8.8.5.tgz#d345fd855bb8067cd32b7a9b5231bdefd9cbde55"
+  integrity sha512-g/t21E/ICHvaCOJOhsDNr5QaB/6aDQEHFbx/YliwwU/CJThMqG+dS28vnToIBV/5MBgpeXoGRi2waDJVJlZrtg==
   dependencies:
-    "@tanstack/table-core" "8.8.1"
+    "@tanstack/table-core" "8.8.5"
 
-"@tanstack/table-core@8.8.1":
-  version "8.8.1"
-  resolved "https://registry.yarnpkg.com/@tanstack/table-core/-/table-core-8.8.1.tgz#e2a5be13b8f9ebec3f265d3bac5c3b7fecaa8c9a"
-  integrity sha512-RtS+1BUSgrNGB4q/E0NuGV0BAQLWPoxS8qJuQlkYbCRVZ0qTeRD2b5rbtbFbhYH2/hDuLCj6uEShHcrSTgOwTA==
+"@tanstack/table-core@8.8.5":
+  version "8.8.5"
+  resolved "https://registry.yarnpkg.com/@tanstack/table-core/-/table-core-8.8.5.tgz#4d75b452a9989a273174df1b9249157292a15bd5"
+  integrity sha512-Xnwa1qxpgvSW7ozLiexmKp2PIYcLBiY/IizbdGriYCL6OOHuZ9baRhrrH51zjyz+61ly6K59rmt6AI/3RR+97Q==
 
 "@testing-library/cypress@9.0.0":
   version "9.0.0"
