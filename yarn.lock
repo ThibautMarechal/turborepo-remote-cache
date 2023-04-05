@@ -8596,9 +8596,9 @@ remix-forms@^1.0.0:
     "@hookform/resolvers" "^2.8.8"
 
 remix-utils@^6.0.0:
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/remix-utils/-/remix-utils-6.0.0.tgz#1c075c7a466d40d5c89950f694b24ce0cdc9a5a4"
-  integrity sha512-S7Xec0YHZxGFEDawWpIbU7HQAZC0j51FmAvcCyBRuxjo71aAIMdmez47dgF8T91yxpHV1xlIKPL7LhBzmYsOZw==
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/remix-utils/-/remix-utils-6.1.0.tgz#130bf7ca1fbf0824c6fcfbe578e7e332406768f7"
+  integrity sha512-OEuoSEBjtkxiscaTdabq/F9jnyOfygeLMpvF0b6RTH07RWUyQjiSX4aKenk4jhEnxUTqUmK9KC2GUvZo/HjPCA==
   dependencies:
     intl-parse-accept-language "^1.0.0"
     is-ip "^3.1.0"
