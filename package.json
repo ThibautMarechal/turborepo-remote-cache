@@ -85,7 +85,7 @@
     "@thimar/eslint-config": "2.0.1",
     "@types/node": "18.15.11",
     "@types/qs": "6.9.7",
-    "@types/react": "18.0.29",
+    "@types/react": "18.0.33",
     "@types/react-dom": "18.0.11",
     "@types/react-gravatar": "2.6.10",
     "@types/readable-stream": "2.3.15",
