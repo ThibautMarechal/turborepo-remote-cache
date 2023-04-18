@@ -6256,9 +6256,9 @@ isarray@^2.0.5:
   integrity sha512-xHjhDr3cNBK0BzdUJSPXZntQUx/mwMS5Rw4A7lPJ90XGAO6ISP/ePDNuo0vhqOZU+UD5JoodwCAAoZQd3FeAKw==
 
 isbot@^3.6.3:
-  version "3.6.7"
-  resolved "https://registry.yarnpkg.com/isbot/-/isbot-3.6.7.tgz#38bd4792542291500e355da7798e7afae31802ec"
-  integrity sha512-SXNUQaNZlj/+9jdrGnAp6WW0YoHe3MIwwc6oRIYuhhERBUt7/L6I7JkMiA2sX9fcvS7gZ2C7GWgmDZfOOU4I5g==
+  version "3.6.8"
+  resolved "https://registry.yarnpkg.com/isbot/-/isbot-3.6.8.tgz#3b389c6ab43346ca719171da1886313be07b591b"
+  integrity sha512-V8XUXN0/UYxfgrui4o38pmOve2eO/1KjluxR1G8Qnu5gqlUiNrvtX06t1W5n8vFtrtKfHj96iFYuPL39jXUe8g==
 
 isexe@^2.0.0:
   version "2.0.0"
