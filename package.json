@@ -33,9 +33,9 @@
   "dependencies": {
     "@heroicons/react": "2.0.17",
     "@prisma/client": "^4.6.0",
-    "@remix-run/node": "1.14.3",
-    "@remix-run/react": "1.14.3",
-    "@remix-run/serve": "1.14.3",
+    "@remix-run/node": "1.15.0",
+    "@remix-run/react": "1.15.0",
+    "@remix-run/serve": "1.15.0",
     "@tanstack/react-table": "8.8.5",
     "abstract-blob-store": "3.3.5",
     "aws-sdk": "2.1350.0",
@@ -74,8 +74,8 @@
   },
   "devDependencies": {
     "@faker-js/faker": "7.6.0",
-    "@remix-run/dev": "1.14.3",
-    "@remix-run/eslint-config": "1.14.3",
+    "@remix-run/dev": "1.15.0",
+    "@remix-run/eslint-config": "1.15.0",
     "@tailwindcss/typography": "0.5.9",
     "@testing-library/cypress": "9.0.0",
     "@testing-library/dom": "9.2.0",
