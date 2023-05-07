@@ -5,8 +5,8 @@ import { DURATION_HEADER, getTurboContext } from '~/utils/turboContext';
 import { requireCookieAuth, requireTokenAuth } from '~/services/authentication.server';
 import { getTeamFromRequest } from '~/services/teams.server';
 import { allowMethods, METHOD } from '~/utils/method';
-import { accepted, unprocessableEntity, internalServerError, notFound } from '~/utils/response';
-import { getArtifactByHash, getArtifactDuration, getArtifactId, hitArtifact, insertArtifact } from '~/services/artifact.server';
+import { accepted, unprocessableEntity, internalServerError, notFound, conflict } from '~/utils/response';
+import { existArtifactByHash, getArtifactByHash, getArtifactDuration, getArtifactId, hitArtifact, insertArtifact } from '~/services/artifact.server';
 import type { User } from '@prisma/client';
 import { requireTeamMember } from '~/roles/rights';
 import debug from 'debug';
@@ -77,7 +77,13 @@ export const action: ActionFunction = async ({ request, params, context }) => {
   Debugger('turboCtx: %o', turboCtx);
 
   if (!request.body) {
+    Debugger('No body');
     throw unprocessableEntity();
+  }
+
+  if (await existArtifactByHash(turboCtx.hash!)) {
+    Debugger('Conflicting hash');
+    throw conflict();
   }
 
   const storage = new CacheStorage();

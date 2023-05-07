@@ -33,3 +33,7 @@ export function unprocessableEntity(body?: BodyInit | null, init?: ResponseInit)
 export function internalServerError(body?: BodyInit | null, init?: ResponseInit): Response {
   return createResponse(500, body, init);
 }
+
+export function conflict(body?: BodyInit | null, init?: ResponseInit): Response {
+  return createResponse(409, body, init);
+}

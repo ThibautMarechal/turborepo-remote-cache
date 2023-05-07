@@ -66,6 +66,16 @@ export async function getArtifactByHash(hash: string) {
   });
 }
 
+export async function existArtifactByHash(hash: string) {
+  return client.artifact
+    .count({
+      where: {
+        hash,
+      },
+    })
+    .then((c) => c > 0);
+}
+
 export async function getArtifactDuration(id: string) {
   return client.artifact
     .findUniqueOrThrow({
