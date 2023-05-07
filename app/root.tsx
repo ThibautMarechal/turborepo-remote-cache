@@ -1,21 +1,30 @@
-import type { LinksFunction, LoaderFunction, MetaFunction } from '@remix-run/node';
+// eslint-disable-next-line camelcase
+import type { LinksFunction, LoaderFunction, V2_MetaFunction } from '@remix-run/node';
 
-import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useCatch } from '@remix-run/react';
+import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, isRouteErrorResponse, useRouteError } from '@remix-run/react';
 
 import { authenticator } from '~/services/authentication.server';
 import { getUserDetail } from '~/services/users.server';
 import { CurrentUserProvider } from '~/context/CurrentUser';
 import Navigation from '~/component/Navigation';
 import type { UserDetail } from '~/types/prisma';
-import tailwind from '~/styles/tailwind.css';
+import tailwind from './tailwind.css';
 import fullturboStyle from '~/styles/fullturbo.css';
 import { json, useLoaderData } from '~/utils/superjson';
 
-export const meta: MetaFunction = () => ({
-  charset: 'utf-8',
-  title: 'Turborepo Remote Cache',
-  viewport: 'width=device-width,initial-scale=1',
-});
+// eslint-disable-next-line camelcase
+export const meta: V2_MetaFunction = () => [
+  {
+    title: 'Turborepo Remote Cache',
+  },
+  {
+    charSet: 'utf-8',
+  },
+  {
+    name: 'viewport',
+    content: 'width=device-width,initial-scale=1',
+  },
+];
 
 export const loader: LoaderFunction = async ({ request }) => {
   const userFromCookie = await authenticator.isAuthenticated(request);
@@ -54,9 +63,10 @@ export default function Root() {
   );
 }
 
-export const CatchBoundary = () => {
-  const caught = useCatch();
-  console.error(caught);
+export const ErrorBoundary = () => {
+  const error = useRouteError();
+  const status = isRouteErrorResponse(error) ? error.status : '';
+  const data = isRouteErrorResponse(error) ? error.data : error instanceof Error ? error.message : 'Unknown error';
   return (
     <html lang="en" className="bg-base-300" data-theme="turbo">
       <head>
@@ -65,8 +75,8 @@ export const CatchBoundary = () => {
       </head>
       <body>
         <Navigation />
-        <div className="text-error text-4xl text-center m-20">{caught.status}</div>
-        <div className="text-error text-lg text-center m-0">{JSON.stringify(caught.data, null, 2)}</div>
+        <div className="m-20 text-4xl text-center text-error">{status}</div>
+        <div className="m-0 text-lg text-center text-error">{JSON.stringify(data, null, 2)}</div>
         <ScrollRestoration />
         <Scripts />
         <LiveReload />

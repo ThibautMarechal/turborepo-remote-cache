@@ -1,7 +1,7 @@
 import TrashIcon from '@heroicons/react/24/outline/TrashIcon';
 import ArrowDownTrayIcon from '@heroicons/react/24/outline/ArrowDownTrayIcon';
 import type { Artifact, Team, User } from '@prisma/client';
-import { Form, useTransition } from '@remix-run/react';
+import { Form, useNavigation } from '@remix-run/react';
 import DateCell from '~/component/DateCell';
 import TeamCell from '~/component/TeamCell';
 import UserCell from '~/component/UserCell';
@@ -70,18 +70,18 @@ const defaultColumns = [
 ];
 
 const ArtifactActions = ({ artifact }: { artifact: ArtifactDetail }) => {
-  const { state, submission } = useTransition();
-  const isDeleting = state === 'submitting' && submission.formData.get('id') === artifact.id;
+  const { state, formData } = useNavigation();
+  const isDeleting = state === 'submitting' && formData.get('id') === artifact.id;
   return (
     <div className="flex gap-1">
       <HasRights predicate={(u) => isAdmin(u) || isArtifactOwner(u, artifact)}>
         <Form method="post">
           <input name="id" value={artifact.id} type="hidden" />
-          <button className={cn('btn btn-xs btn-square', { loading: isDeleting })}>{!isDeleting && <TrashIcon className="h-4 w-4" />}</button>
+          <button className={cn('btn btn-xs btn-square', { loading: isDeleting })}>{!isDeleting && <TrashIcon className="w-4 h-4" />}</button>
         </Form>
       </HasRights>
       <a className="btn btn-square btn-xs" href={`/turbo/api/v8/artifacts/${artifact.hash}`} download>
-        <ArrowDownTrayIcon className="h-4 w-4" />
+        <ArrowDownTrayIcon className="w-4 h-4" />
       </a>
     </div>
   );

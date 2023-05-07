@@ -1,5 +1,5 @@
 import type { ActionFunction, LoaderFunction } from '@remix-run/node';
-import { Form, Link, useNavigate, useTransition } from '@remix-run/react';
+import { Form, Link, useNavigate, useNavigation } from '@remix-run/react';
 import { requireCookieAuth } from '~/services/authentication.server';
 import { deleteUser, getUser, getUsers, getUsersCount } from '~/services/users.server';
 import type { User } from '@prisma/client';
@@ -42,23 +42,23 @@ export const action: ActionFunction = async ({ request }) => {
 };
 
 const UserActions = ({ resource: user }: { resource: User }) => {
-  const { state, submission } = useTransition();
-  const isDeleting = state === 'submitting' && submission.formData.get('id') === user.id;
+  const { state, formData } = useNavigation();
+  const isDeleting = state === 'submitting' && formData.get('id') === user.id;
   return (
     <div className="flex gap-1">
       <Link to={`/users/${user.username}`} prefetch="intent" title="Show user" className="btn btn-xs btn-square">
-        <MagnifyingGlassIcon className="h-4 w-4" />
+        <MagnifyingGlassIcon className="w-4 h-4" />
       </Link>
       <HasRights predicate={(u) => isAdmin(u) && !user.isSuperAdmin}>
         <Link to={`/users/${user.username}/edit`} prefetch="intent" title="Edit user" className="btn btn-xs btn-square">
-          <PencilIcon className="h-4 w-4" />
+          <PencilIcon className="w-4 h-4" />
         </Link>
         <Link to={`/users/${user.username}/change_password`} prefetch="intent" title="Change password" className="btn btn-xs btn-square">
-          <KeyIcon className="h-4 w-4" />
+          <KeyIcon className="w-4 h-4" />
         </Link>
         <Form method="post">
           <button className={cn('btn btn-xs btn-square', { loading: isDeleting })} title="Delete user">
-            {!isDeleting && <TrashIcon className="h-4 w-4" />}
+            {!isDeleting && <TrashIcon className="w-4 h-4" />}
           </button>
           <input name="id" value={user.id} type="hidden" />
         </Form>
@@ -75,7 +75,7 @@ export default function Users() {
     <>
       <TablePage title="Users" count={count} tableProps={tableProps} paginationProps={paginationProps} searchable onRowDoubleClick={(u) => navigate(`./${u.username}`)} />
       <HasRights predicate={(u) => isAdmin(u)}>
-        <Link to="./new" className="btn btn-circle btn-primary fixed bottom-5 right-5">
+        <Link to="./new" className="fixed btn btn-circle btn-primary bottom-5 right-5">
           <PlusIcon className="w-8" />
         </Link>
       </HasRights>

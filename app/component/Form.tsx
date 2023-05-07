@@ -5,7 +5,7 @@ import cn from 'classnames';
 
 import type { SomeZodObject } from 'zod';
 
-import { Form as FrameworkForm, useActionData, useSubmit, useTransition as useNavigation } from '@remix-run/react';
+import { Form as FrameworkForm, useActionData, useSubmit, useNavigation } from '@remix-run/react';
 
 const RemixForm = createForm({ component: FrameworkForm, useNavigation, useSubmit, useActionData });
 
@@ -56,7 +56,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, JSX.IntrinsicElements
 Checkbox.displayName = 'Checkbox';
 
 export const Button = ({ className, ...props }: JSX.IntrinsicElements['button']) => (
-  <div className="form-control w-full mt-5">
+  <div className="w-full mt-5 form-control">
     <button className={cn('btn btn-primary', className)} {...props} />
   </div>
 );

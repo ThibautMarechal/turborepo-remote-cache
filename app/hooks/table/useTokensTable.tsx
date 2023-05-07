@@ -1,7 +1,7 @@
 import TrashIcon from '@heroicons/react/24/outline/TrashIcon';
 import type { Token, User } from '@prisma/client';
 import { createColumnHelper } from '@tanstack/react-table';
-import { Form, useTransition } from '@remix-run/react';
+import { Form, useNavigation } from '@remix-run/react';
 import { DateCell } from '~/component/DateCell';
 import { UserCell } from '~/component/UserCell';
 import cn from 'classnames';
@@ -41,13 +41,13 @@ const defaultColumns = [
 ];
 
 const TokenActions = ({ token }: { token: Token }) => {
-  const { state, submission } = useTransition();
-  const isDeleting = state === 'submitting' && submission.formData.get('id') === token.id;
+  const { state, formData } = useNavigation();
+  const isDeleting = state === 'submitting' && formData.get('id') === token.id;
   return (
     <div className="flex">
       <Form method="post">
         <input name="id" value={token.id} type="hidden" />
-        <button className={cn('btn btn-xs btn-square', { loading: isDeleting })}>{!isDeleting && <TrashIcon className="h-4 w-4" />}</button>
+        <button className={cn('btn btn-xs btn-square', { loading: isDeleting })}>{!isDeleting && <TrashIcon className="w-4 h-4" />}</button>
       </Form>
     </div>
   );

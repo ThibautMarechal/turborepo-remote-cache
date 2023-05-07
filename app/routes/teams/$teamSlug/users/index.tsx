@@ -3,7 +3,7 @@ import TrashIcon from '@heroicons/react/24/outline/TrashIcon';
 import PencilIcon from '@heroicons/react/24/outline/PencilIcon';
 import type { Team, User } from '@prisma/client';
 import type { ActionFunction, LoaderFunction } from '@remix-run/node';
-import { Form, Link, useTransition } from '@remix-run/react';
+import { Form, Link, useNavigation } from '@remix-run/react';
 import HasRights from '~/component/HasRights';
 import { TablePage } from '~/component/TablePage';
 import { useCurrentUser } from '~/context/CurrentUser';
@@ -42,16 +42,16 @@ export const action: ActionFunction = async ({ request, params }) => {
 };
 
 export const UserActions = ({ resource: user }: { resource: User }) => {
-  const { state, submission } = useTransition();
-  const isRemoving = state === 'submitting' && submission.formData.get('id') === user.id;
+  const { state, formData } = useNavigation();
+  const isRemoving = state === 'submitting' && formData.get('id') === user.id;
   return (
     <div className="flex gap-1">
       <Link to={`./edit/${user.username}`} prefetch="intent" title="Edit user" className="btn btn-xs btn-square">
-        <PencilIcon className="h-4 w-4" />
+        <PencilIcon className="w-4 h-4" />
       </Link>
       <Form method="post">
         <button className={cn('btn btn-xs btn-square', { loading: isRemoving })} title="Remove user from team">
-          {!isRemoving && <TrashIcon className="h-4 w-4" />}
+          {!isRemoving && <TrashIcon className="w-4 h-4" />}
         </button>
         <input name="id" value={user.id} type="hidden" />
       </Form>
@@ -67,7 +67,7 @@ export default function Users() {
     <>
       <TablePage title={`${team.name}'s users`} count={count} tableProps={tableProps} paginationProps={paginationProps} />
       <HasRights predicate={(u) => isTeamOwner(u, team.id)}>
-        <Link to="./add" className="btn btn-circle btn-primary fixed bottom-5 right-5">
+        <Link to="./add" className="fixed btn btn-circle btn-primary bottom-5 right-5">
           <PlusIcon className="w-8" />
         </Link>
       </HasRights>

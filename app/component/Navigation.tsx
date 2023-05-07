@@ -16,18 +16,18 @@ export const Navigation = () => {
   const user = useCurrentUser();
   const { pathname } = useLocation();
   return (
-    <div className="navbar bg-base-100 sticky top-0 z-20 shadow-xl pt-0 pb-0 min-h-0">
+    <div className="sticky top-0 z-20 pt-0 pb-0 shadow-xl navbar bg-base-100 min-h-16">
       <div className="flex-1 whitespace-nowrap">
         <Link to="/" className={cn({ fullturbo: pathname === '/' })} prefetch="intent">
           <h1 className="text-2xl font-bold">
             Turbo Remote Cache
-            <img src="/favicon.svg" alt="logo" className="-translate-x-3/4 w-10 inline-block mr-5" />
+            <img src="/favicon.svg" alt="logo" className="inline-block w-10 mr-5 -translate-x-3/4" />
           </h1>
         </Link>
       </div>
       <div className="flex-none h-fit">
         {user && (
-          <ul className="menu menu-horizontal p-0 gap-1">
+          <ul className="gap-1 p-0 menu menu-horizontal">
             <li>
               <NavLink to="/users" className="text-primary-content">
                 <UsersIcon className={cn('h-5', { 'text-primary': !pathname.startsWith('/users'), 'text-secondary': pathname.startsWith('/users') })} />
@@ -65,10 +65,10 @@ export const Navigation = () => {
               </li>
             </HasRights>
             <div className="dropdown dropdown-end">
-              <label tabIndex={0} className="btn btn-ghost btn-circle avatar m-2">
+              <label tabIndex={0} className="m-2 btn btn-ghost btn-circle avatar">
                 <Gravatar className="w-10 rounded-full" email={user.email} />
               </label>
-              <ul tabIndex={0} className="mt-3 p-2 menu menu-compact shadow-2xl dropdown-content bg-base-100 rounded-box w-52">
+              <ul tabIndex={0} className="p-2 mt-3 shadow-2xl menu menu-compact dropdown-content bg-base-100 rounded-box w-52">
                 <li className="w-full">
                   <Link className="flex justify-between w-full" to="/profile">
                     Profile
