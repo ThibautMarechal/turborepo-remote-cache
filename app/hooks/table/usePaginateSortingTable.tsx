@@ -25,7 +25,7 @@ export function usePaginateSortingTable<TableElement>(
 
   React.useEffect(() => {
     if (fetcher.data) {
-      setPagedData((previousData) => [...previousData, ...fetcher.data.items]);
+      setPagedData((previousData) => [...previousData, ...(fetcher.data?.items ?? [])]);
     }
   }, [fetcher.data]);
 

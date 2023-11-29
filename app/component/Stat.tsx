@@ -14,7 +14,7 @@ export const Stat = ({ icon, title, value, description, linkProps }: Props) => {
   const content = (
     <>
       <div className="stat-figure text-primary">{icon}</div>
-      <div className="stat-title text-secondary-content">{title}</div>
+      <div className="stat-title">{title}</div>
       <div className="stat-value">{value}</div>
       {description ? <div className="stat-desc">{description}</div> : null}
     </>

@@ -36,15 +36,15 @@ const defaultColumns = [
 const TeamActions = ({ team }: { team: Team }) => {
   return (
     <div className="flex gap-1">
-      <Link to={`/teams/${team.slug}`} prefetch="intent" className="btn btn-xs btn-square">
+      <Link to={`/teams/${team.slug}`} prefetch="intent" className="btn btn-xs btn-square btn-outline">
         <MagnifyingGlassIcon className="h-4 w-4" />
       </Link>
       <HasRights predicate={(u) => isTeamOwner(u, team.id)}>
-        <Link to={`/teams/${team.slug}/edit`} prefetch="intent" className="btn btn-xs btn-square">
+        <Link to={`/teams/${team.slug}/edit`} prefetch="intent" className="btn btn-xs btn-square btn-outline">
           <PencilIcon className="h-4 w-4" />
         </Link>
         <Form method="post" className="h-6">
-          <button className="btn btn-xs btn-square">
+          <button className="btn btn-xs btn-square btn-outline">
             <TrashIcon className="h-4 w-4" />
           </button>
           <input name="id" value={team.id} type="hidden" />

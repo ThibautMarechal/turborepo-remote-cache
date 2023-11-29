@@ -24,7 +24,7 @@
     position: absolute;
     width: 300%;
     height: 100%;
-    background: linear-gradient(90deg, hsl(var(--p)), hsl(var(--s)), hsl(var(--p)), hsl(var(--s)), hsl(var(--p)));
+    background: linear-gradient(90deg, oklch(var(--p)), oklch(var(--s)), oklch(var(--p)), oklch(var(--s)), oklch(var(--p)));
     pointer-events: none;
     mix-blend-mode: multiply;
     animation-name: fullturbo;

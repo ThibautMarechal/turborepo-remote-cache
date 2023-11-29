@@ -28,10 +28,10 @@ export const UserCard = ({ user, children, editable, baseRoute }: Props) => {
           {editable && !user.isSuperAdmin && (
             <HasRights predicate={(u) => isAdmin(u) || u.id === user.id}>
               <div className="absolute top-1 right-1">
-                <Link to={`${baseRoute}/edit`} prefetch="intent" title="Edit user" className="btn btn-xs mx-1">
+                <Link to={`${baseRoute}/edit`} prefetch="intent" title="Edit user" className="btn btn-xs btn-outline mx-1">
                   <PencilIcon className="h-4 w-4" />
                 </Link>
-                <Link to={`${baseRoute}/change_password`} prefetch="intent" title="Change password" className="btn btn-xs">
+                <Link to={`${baseRoute}/change_password`} prefetch="intent" title="Change password" className="btn btn-xs btn-outline">
                   <KeyIcon className="h-4 w-4" />
                 </Link>
               </div>

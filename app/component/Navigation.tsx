@@ -17,7 +17,7 @@ export const Navigation = () => {
   const { pathname } = useLocation();
   return (
     <div className="sticky top-0 z-20 pt-0 pb-0 shadow-xl navbar bg-base-100 min-h-16">
-      <div className="flex-1 whitespace-nowrap">
+      <div className="flex-1 whitespace-nowrap navbar-start">
         <Link to="/" className={cn({ fullturbo: pathname === '/' })} prefetch="intent">
           <h1 className="text-2xl font-bold">
             Turbo Remote Cache
@@ -28,37 +28,37 @@ export const Navigation = () => {
       <div className="flex-none h-fit">
         {user && (
           <ul className="gap-1 p-0 menu menu-horizontal">
-            <li>
-              <NavLink to="/users" className="text-primary-content">
+            <li className="justify-center">
+              <NavLink to="/users" >
                 <UsersIcon className={cn('h-5', { 'text-primary': !pathname.startsWith('/users'), 'text-secondary': pathname.startsWith('/users') })} />
                 Users
               </NavLink>
             </li>
-            <li>
-              <NavLink to="/teams" className="text-primary-content">
+            <li className="justify-center">
+              <NavLink to="/teams">
                 <UserGroup className={cn('h-5', { 'text-primary': !pathname.startsWith('/teams'), 'text-secondary': pathname.startsWith('/teams') })} />
                 Teams
               </NavLink>
             </li>
-            <li>
+            <li className="justify-center">
               <HasRights predicate={(u) => isAdmin(u)}>
-                <NavLink to="/sessions" className="text-primary-content hover:text-red-50">
+                <NavLink to="/sessions">
                   <BoltIcon className={cn('h-5', { 'text-primary': !pathname.startsWith('/sessions'), 'text-secondary': pathname.startsWith('/sessions') })} />
                   Sessions
                 </NavLink>
               </HasRights>
             </li>
-            <li>
+            <li className="justify-center">
               <HasRights predicate={(u) => isAdmin(u)}>
-                <NavLink to="/artifacts" className="text-primary-content">
+                <NavLink to="/artifacts">
                   <ArchiveBoxIcon className={cn('h-5', { 'text-primary': !pathname.startsWith('/artifacts'), 'text-secondary': pathname.startsWith('/artifacts') })} />
                   Artifacts
                 </NavLink>
               </HasRights>
             </li>
             <HasRights predicate={(u) => isAdmin(u)}>
-              <li>
-                <NavLink to="/tokens" className="text-primary-content">
+              <li className="justify-center">
+                <NavLink to="/tokens">
                   <FingerPrintIcon className={cn('h-5', { 'text-primary': !pathname.startsWith('/tokens'), 'text-secondary': pathname.startsWith('/tokens') })} />
                   Tokens
                 </NavLink>

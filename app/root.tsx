@@ -1,5 +1,4 @@
-// eslint-disable-next-line camelcase
-import type { LinksFunction, LoaderFunction, V2_MetaFunction } from '@remix-run/node';
+import type { LinksFunction, LoaderFunction, MetaFunction } from '@remix-run/node';
 
 import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, isRouteErrorResponse, useRouteError } from '@remix-run/react';
 
@@ -12,8 +11,7 @@ import tailwind from './tailwind.css';
 import fullturboStyle from '~/styles/fullturbo.css';
 import { json, useLoaderData } from '~/utils/superjson';
 
-// eslint-disable-next-line camelcase
-export const meta: V2_MetaFunction = () => [
+export const meta: MetaFunction = () => [
   {
     title: 'Turborepo Remote Cache',
   },

@@ -62,13 +62,13 @@ export const TimeSavedStats = ({ local, remote }: Props) => {
                       stacked: true,
                     },
                   ],
-                  defaultColors: ['hsl(var(--p))', 'hsl(var(--pc))'],
+                  defaultColors: ['oklch(var(--p))', 'oklch(var(--a))'],
                   dark: true,
                   primaryCursor: {
                     showLine: false,
                   },
                   tooltip: {
-                    show: false,
+                    show: true,
                   },
                 }}
               />

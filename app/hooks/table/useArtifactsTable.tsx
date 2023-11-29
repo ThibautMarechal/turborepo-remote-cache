@@ -71,16 +71,16 @@ const defaultColumns = [
 
 const ArtifactActions = ({ artifact }: { artifact: ArtifactDetail }) => {
   const { state, formData } = useNavigation();
-  const isDeleting = state === 'submitting' && formData.get('id') === artifact.id;
+  const isDeleting = state === 'submitting' && formData?.get('id') === artifact.id;
   return (
     <div className="flex gap-1">
       <HasRights predicate={(u) => isAdmin(u) || isArtifactOwner(u, artifact)}>
         <Form method="post">
           <input name="id" value={artifact.id} type="hidden" />
-          <button className={cn('btn btn-xs btn-square', { loading: isDeleting })}>{!isDeleting && <TrashIcon className="w-4 h-4" />}</button>
+          <button className={cn('btn btn-xs btn-outline btn-square', { loading: isDeleting })}>{!isDeleting && <TrashIcon className="w-4 h-4" />}</button>
         </Form>
       </HasRights>
-      <a className="btn btn-square btn-xs" href={`/turbo/api/v8/artifacts/${artifact.hash}`} download>
+      <a className="btn btn-square btn-xs btn-outline" href={`/turbo/api/v8/artifacts/${artifact.hash}`} download>
         <ArrowDownTrayIcon className="w-4 h-4" />
       </a>
     </div>
