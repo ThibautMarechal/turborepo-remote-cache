@@ -6,10 +6,9 @@
     "baseUrl": ".",
     "noEmit": true,
     "types": ["node"],
+    "module": "NodeNext",
     "strict": true,
-    "typeRoots": ["../types", "../node_modules/@types"],
-    "paths": {
-      "~/*": ["../app/*"]
-    }
-  }
+    "typeRoots": ["../types", "../node_modules/@types"]
+  },
+  "ts-node": { "esm": true }
 }

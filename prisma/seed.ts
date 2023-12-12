@@ -1,44 +1,40 @@
 import { PrismaClient } from '@prisma/client';
-import { hash } from '../app/utils/hash';
+import { hash } from '../app/utils/hash.js';
 import { v4 as newGuid } from 'uuid';
-import { ServerRole } from '~/roles/ServerRole';
+import { ServerRole } from '../app/roles/ServerRole.js';
 
-async function main() {
-  const { ADMIN_USERNAME, ADMIN_NAME, ADMIN_PASSWORD, ADMIN_EMAIL } = process.env;
+const { ADMIN_USERNAME, ADMIN_NAME, ADMIN_PASSWORD, ADMIN_EMAIL } = process.env;
 
-  const client = new PrismaClient();
+const client = new PrismaClient();
 
-  try {
-    await client.$connect();
-    const adminExist = await client.user.findFirst({
-      where: {
-        isSuperAdmin: true,
-      },
-    });
-    if (adminExist) {
-      console.log(`🔌 Admin already created`);
-      return;
-    }
-    const adminId = newGuid();
-    await client.user.create({
-      data: {
-        id: adminId,
-        name: ADMIN_NAME || 'Admin',
-        username: ADMIN_USERNAME || 'admin',
-        email: ADMIN_EMAIL || adminId,
-        isSuperAdmin: true,
-        role: ServerRole.ADMIN,
-        password: {
-          create: {
-            passwordHash: await hash(ADMIN_PASSWORD || 'turbo'),
-          },
+try {
+  await client.$connect();
+  const adminExist = await client.user.findFirst({
+    where: {
+      isSuperAdmin: true,
+    },
+  });
+  if (adminExist) {
+    console.log(`🔌 Admin already created`);
+    process.exit(0);
+  }
+  const adminId = newGuid();
+  await client.user.create({
+    data: {
+      id: adminId,
+      name: ADMIN_NAME || 'Admin',
+      username: ADMIN_USERNAME || 'admin',
+      email: ADMIN_EMAIL || adminId,
+      isSuperAdmin: true,
+      role: ServerRole.ADMIN,
+      password: {
+        create: {
+          passwordHash: await hash(ADMIN_PASSWORD || 'turbo'),
         },
       },
-    });
-    console.log(`🔌 Admin created`);
-  } finally {
-    await client.$disconnect();
-  }
+    },
+  });
+  console.log(`🔌 Admin created`);
+} finally {
+  await client.$disconnect();
 }
-
-main();

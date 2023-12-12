@@ -5,6 +5,4 @@ export default {
   ignoredRouteFiles: ['.*'],
   devServerPort: 3000,
   tailwind: true,
-  future: {
-  },
 };
