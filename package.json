@@ -84,7 +84,7 @@
     "@types/react-gravatar": "2.6.13",
     "@types/readable-stream": "2.3.15",
     "@types/uuid": "^9.0.7",
-    "@vitejs/plugin-react": "4.2.0",
+    "@vitejs/plugin-react": "^4.2.1",
     "@vitest/coverage-c8": "^0.33.0",
     "c8": "7.13.0",
     "cypress": "13.6.0",
@@ -94,9 +94,9 @@
     "start-server-and-test": "2.0.3",
     "tailwind": "4.0.0",
     "tailwindcss": "3.3.5",
-    "vite": "5.0.3",
-    "vite-tsconfig-paths": "4.2.1",
-    "vitest": "0.34.6"
+    "vite": "^5.0.10",
+    "vite-tsconfig-paths": "^4.2.3",
+    "vitest": "^1.1.1"
   },
   "resolutions": {
     "@types/react": "18.2.39",
