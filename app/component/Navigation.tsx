@@ -29,7 +29,7 @@ export const Navigation = () => {
         {user && (
           <ul className="gap-1 p-0 menu menu-horizontal">
             <li className="justify-center">
-              <NavLink to="/users" >
+              <NavLink to="/users">
                 <UsersIcon className={cn('h-5', { 'text-primary': !pathname.startsWith('/users'), 'text-secondary': pathname.startsWith('/users') })} />
                 Users
               </NavLink>

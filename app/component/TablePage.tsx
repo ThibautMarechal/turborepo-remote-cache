@@ -1,9 +1,7 @@
 import * as React from 'react';
 import ListTitle from './ListTitle';
-import type { PaginationProps } from './Pagination';
-import Pagination from './Pagination';
-import type { TableProps } from './Table';
-import Table from './Table';
+import { Pagination, type PaginationProps } from './Pagination';
+import { Table, type TableProps } from './Table';
 
 type Props<TableElement> = {
   tableProps: TableProps<TableElement>;

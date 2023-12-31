@@ -2,8 +2,7 @@ import type { Token } from '@prisma/client';
 import { hash } from '~/utils/hash';
 import { client } from './prismaClient.server';
 import { v4 as newGuid } from 'uuid';
-import type { OrderBy } from '~/utils/sort';
-import { DEFAULT_ORDER_BY } from '~/utils/sort';
+import { type OrderBy, DEFAULT_ORDER_BY } from '~/utils/sort';
 
 export function mapOrderBy(orderBy: OrderBy[]) {
   return orderBy.map((orderBy) => {

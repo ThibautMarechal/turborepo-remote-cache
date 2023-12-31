@@ -1,6 +1,5 @@
 import * as React from 'react';
-import type { FormProps } from 'remix-forms';
-import { createForm } from 'remix-forms';
+import { createForm, type FormProps } from 'remix-forms';
 import cn from 'classnames';
 
 import type { SomeZodObject } from 'zod';

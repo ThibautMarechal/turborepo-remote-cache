@@ -1,5 +1,4 @@
-import type { ActionFunction, LoaderFunction } from '@remix-run/node';
-import { redirect } from '@remix-run/node';
+import { redirect, type ActionFunction, type LoaderFunction } from '@remix-run/node';
 import { useLoaderData, useSearchParams, Form as RemixForm } from '@remix-run/react';
 import { z } from 'zod';
 import { Button, Form } from '~/component/Form';

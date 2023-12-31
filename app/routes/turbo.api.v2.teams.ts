@@ -1,5 +1,4 @@
-import type { LoaderFunction } from '@remix-run/node';
-import { json } from '@remix-run/node';
+import { json, type LoaderFunction } from '@remix-run/node';
 import { addTeamUndescore } from '~/mapper/team';
 import { ServerRole } from '~/roles/ServerRole';
 import { TeamRole } from '~/roles/TeamRole';

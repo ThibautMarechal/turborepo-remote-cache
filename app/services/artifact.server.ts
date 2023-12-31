@@ -2,8 +2,7 @@ import type { Artifact } from '@prisma/client';
 import type { CleanPeriod } from '~/clean/CleanPeriod';
 import { getDateFromPeriod } from '~/clean/utils';
 import type { TurboContext } from '~/types/TurboContext';
-import type { OrderBy } from '~/utils/sort';
-import { DEFAULT_ORDER_BY } from '~/utils/sort';
+import { DEFAULT_ORDER_BY, type OrderBy } from '~/utils/sort';
 import { client } from './prismaClient.server';
 import { CacheStorage } from './storage.server';
 

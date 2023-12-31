@@ -1,6 +1,5 @@
 import type { Session } from '@prisma/client';
-import type { OrderBy } from '~/utils/sort';
-import { DEFAULT_ORDER_BY } from '~/utils/sort';
+import { DEFAULT_ORDER_BY, type OrderBy } from '~/utils/sort';
 import { client } from './prismaClient.server';
 
 export function mapOrderBy(orderBy: OrderBy[]) {

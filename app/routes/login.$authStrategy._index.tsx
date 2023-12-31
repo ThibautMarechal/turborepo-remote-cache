@@ -1,7 +1,6 @@
-import type { ActionFunction, LoaderFunction } from '@remix-run/node';
+import { redirect, type ActionFunction, type LoaderFunction } from '@remix-run/node';
 import { authenticator } from '~/services/authentication.server';
 
-import { redirect } from '@remix-run/node';
 import invariant from 'tiny-invariant';
 import { redirectToCookie } from '~/services/cookie.server';
 

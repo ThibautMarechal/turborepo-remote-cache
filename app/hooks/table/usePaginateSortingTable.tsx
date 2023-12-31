@@ -1,5 +1,4 @@
-import type { TableOptions } from '@tanstack/react-table';
-import { useReactTable, getCoreRowModel } from '@tanstack/react-table';
+import { useReactTable, type TableOptions, getCoreRowModel } from '@tanstack/react-table';
 import { orderByToSortingState, sortingStateToOrderBy } from '~/utils/sort';
 import { useSortSearchParams } from '~/hooks/useSortSearchParams';
 import { usePaginateSearchParams } from '../usePaginateSearchParams';

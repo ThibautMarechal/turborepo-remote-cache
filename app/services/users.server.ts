@@ -1,8 +1,7 @@
 import { compareHash, hash } from '~/utils/hash';
 import { client } from './prismaClient.server';
 import type { User } from '@prisma/client';
-import type { OrderBy } from '~/utils/sort';
-import { DEFAULT_ORDER_BY } from '~/utils/sort';
+import { type OrderBy, DEFAULT_ORDER_BY } from '~/utils/sort';
 
 export function getUsers(skip: number = 0, take: number = 100, orderBy?: OrderBy[], search?: string) {
   return client.user.findMany({
