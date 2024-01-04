@@ -3404,10 +3404,10 @@ d3-time-format@^4.1.0:
   dependencies:
     d3-array "2 - 3"
 
-daisyui@4.4.13:
-  version "4.4.13"
-  resolved "https://registry.yarnpkg.com/daisyui/-/daisyui-4.4.13.tgz#1b0a042ede05e841e1e8edd7fbbeda828dcc2954"
-  integrity sha512-hk2xykBSTpCdSFx2LbF4WJb9cePE86+dF2q5abhsEVYOIAWRJRPglczZ5gskFmCvYlBFmZ02io7uxBovnUAG/w==
+daisyui@4.5.0:
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/daisyui/-/daisyui-4.5.0.tgz#8fe5198fba6788adeac78786d2d10296241278a7"
+  integrity sha512-RWQCPQ0vBUaxGy768O7Ku8SRQgwdoto1lDzuKeVOcMtYghuSbUY7NoPoMK+k8JH4s1J02OvpNAgtB9MeKpZIwg==
   dependencies:
     css-selector-tokenizer "^0.8"
     culori "^3"
