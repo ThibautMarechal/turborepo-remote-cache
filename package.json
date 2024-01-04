@@ -77,7 +77,7 @@
     "@testing-library/react": "14.1.2",
     "@testing-library/user-event": "14.5.1",
     "@thimar/eslint-config": "2.0.1",
-    "@types/node": "20.10.0",
+    "@types/node": "20.10.6",
     "@types/qs": "6.9.10",
     "@types/react": "18.2.46",
     "@types/react-dom": "18.2.18",
