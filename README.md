@@ -14,7 +14,7 @@ Self-host your [turborepo remote cache](https://turborepo.org/docs/features/remo
 - See artifacts globally, by user or by teams
 - Display times saved by using the remote caching
 - Probably can be deployed anywhere that support Remix ([How top deploy a Remix  app?](https://remix.run/docs/en/v1/guides/deployment))
-- Docker Image support [thibmarechal/turborepo-remote-cache](https://hub.docker.com/r/thibmarechal/turbo-epo-remote-cache)
+- Docker Image support [thibmarechal/turborepo-remote-cache](https://hub.docker.com/r/thibmarechal/turborepo-remote-cache)
 
 
 
