@@ -103,6 +103,6 @@
     "cli-truncate": "2.1.0"
   },
   "prisma": {
-    "seed": "tsx prisma/seed.ts"
+    "seed": "tsx ./prisma/seed.ts"
   }
 }
