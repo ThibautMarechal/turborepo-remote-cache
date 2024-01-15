@@ -6,7 +6,7 @@
     "baseUrl": ".",
     "noEmit": true,
     "types": ["node"],
-    "module": "ESNext",
+    "module": "NodeNext",
     "strict": true,
     "typeRoots": ["../types", "../node_modules/@types"]
   }
