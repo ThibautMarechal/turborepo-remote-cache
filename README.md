@@ -23,7 +23,7 @@ Self-host your [turborepo remote cache](https://turborepo.org/docs/features/remo
 ### USER configuration
 - ADMIN_USERNAME : admin
 - ADMIN_NAME : Admin
-- ADMIN_PASWWORD : turbo
+- ADMIN_PASSWORD : turbo
 - ADMIN_EMAIL
 
 ### TURBO configuration
