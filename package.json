@@ -1,6 +1,6 @@
 {
   "name": "@thimar/turborepo-remote-cache",
-  "version": "1.12.0",
+  "version": "1.12.1",
   "description": "Self hosted Turborepo remote cache",
   "keywords": [
     "turborepo",
