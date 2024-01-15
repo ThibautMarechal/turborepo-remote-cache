@@ -10,5 +10,8 @@
     "strict": true,
     "typeRoots": ["../types", "../node_modules/@types"]
   },
-  "ts-node": { "esm": true }
+  "ts-node": {
+    "transpileOnly": true,
+    "esm": true,
+  },
 }
