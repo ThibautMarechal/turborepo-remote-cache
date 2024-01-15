@@ -9,9 +9,5 @@
     "module": "ESNext",
     "strict": true,
     "typeRoots": ["../types", "../node_modules/@types"]
-  },
-  "ts-node": {
-    "transpileOnly": true,
-    "esm": true,
-  },
+  }
 }
