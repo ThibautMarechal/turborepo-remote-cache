@@ -1819,10 +1819,10 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-gravatar@2.6.13":
-  version "2.6.13"
-  resolved "https://registry.yarnpkg.com/@types/react-gravatar/-/react-gravatar-2.6.13.tgz#0964c41852ab0362f221aecdeb4597eb0614e07a"
-  integrity sha512-Ku0QFrzuCayeo75XIHKok3m6/FRwM76OcC5orOXuLHof5Otxor12mZ4Xj1+utyi4k8n6LtH0+0VbKUwRIxmpmw==
+"@types/react-gravatar@2.6.14":
+  version "2.6.14"
+  resolved "https://registry.yarnpkg.com/@types/react-gravatar/-/react-gravatar-2.6.14.tgz#2196ef241c1d9a514ec0cf17e0ea395250334dae"
+  integrity sha512-esbOXcvdGEJAsu1X8yHmArQ28Jo1gUmRZNVyA8MlEn7Z1mjj+9daHKiRoDQk61Y0kqbFGl75C4DOfUhb9uk5Tw==
   dependencies:
     "@types/react" "*"
 
