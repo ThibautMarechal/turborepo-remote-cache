@@ -55,6 +55,7 @@
     "react-router-dom": "6.20.0",
     "remix-auth": "3.6.0",
     "remix-auth-form": "1.4.0",
+    "remix-auth-microsoft": "^2.0.1",
     "remix-auth-oidc": "1.0.0",
     "remix-forms": "2.2.0",
     "remix-utils": "^7.3.0",

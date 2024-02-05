@@ -8266,10 +8266,18 @@ remix-auth-form@1.4.0:
   resolved "https://registry.yarnpkg.com/remix-auth-form/-/remix-auth-form-1.4.0.tgz#77a16fef27fa6a795a63891022aaf9f72fd2e6e5"
   integrity sha512-PirsVtv2AbJ7Lg+OjE+rjlW9AnkNYmqfmNIqTg0Mh1wur22ls5hxf2icVXVCRRhpcpV+FyoDxh03LtIyRj646A==
 
-remix-auth-oauth2@^1.2.0:
-  version "1.11.0"
-  resolved "https://registry.yarnpkg.com/remix-auth-oauth2/-/remix-auth-oauth2-1.11.0.tgz#c754bf948f1a9898ea53eccf903bd39a4d4355d9"
-  integrity sha512-Yf1LF6NLYPFa7X2Rax/VEhXmYXFjZOi/q+7DmbMeoMHjAfkpqxbvzqqYSKIKDGR51z5TXR5na4to4380mir5bg==
+remix-auth-microsoft@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/remix-auth-microsoft/-/remix-auth-microsoft-2.0.1.tgz#3d19c0e2c073cd0d3afe54b7a72086b074078bf9"
+  integrity sha512-7utTr9/5ax9f8VKrl4x2khguD0xRtBIaJSRaHJ2qOkan0WlcwHpcC18i3bktr6UfcXqjsgZVzBDnh0eOkEbruA==
+  dependencies:
+    remix-auth "^3.6.0"
+    remix-auth-oauth2 "^1.11.0"
+
+remix-auth-oauth2, remix-auth-oauth2@^1.2.0:
+  version "1.11.1"
+  resolved "https://registry.yarnpkg.com/remix-auth-oauth2/-/remix-auth-oauth2-1.11.1.tgz#7f150d520fcfdf86320c31217fe5303098a7e7a5"
+  integrity sha512-eGNUB0+yiIuxansfyZM+SqpiAlsFEqOrNUr8LmxSRjx2RW/GOe/aT1fL8n+VtkcrLXPqUJWxE+GhEowF81+VDQ==
   dependencies:
     debug "^4.3.4"
 
@@ -8280,7 +8288,7 @@ remix-auth-oidc@1.0.0:
   dependencies:
     remix-auth-oauth2 "^1.2.0"
 
-remix-auth@3.6.0:
+remix-auth@3.6.0, remix-auth@^3.6.0:
   version "3.6.0"
   resolved "https://registry.yarnpkg.com/remix-auth/-/remix-auth-3.6.0.tgz#3ed6a070a11e72f13a4c10ed0704a5e411cbdf02"
   integrity sha512-mxlzLYi+/GKQSaXIqIw15dxAT1wm+93REAeDIft2unrKDYnjaGhhpapyPhdbALln86wt9lNAk21znfRss3fG7Q==
