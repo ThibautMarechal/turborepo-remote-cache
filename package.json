@@ -79,7 +79,7 @@
     "@thimar/eslint-config": "2.0.1",
     "@types/node": "20.10.6",
     "@types/qs": "6.9.11",
-    "@types/react": "18.2.46",
+    "@types/react": "18.2.54",
     "@types/react-dom": "18.2.18",
     "@types/react-gravatar": "2.6.14",
     "@types/readable-stream": "2.3.15",
@@ -98,7 +98,7 @@
     "vitest": "^1.1.1"
   },
   "resolutions": {
-    "@types/react": "18.2.46",
+    "@types/react": "18.2.54",
     "@types/react-dom": "18.2.18",
     "cli-truncate": "2.1.0"
   },
