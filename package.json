@@ -88,7 +88,7 @@
     "@vitest/coverage-v8": "^1.1.1",
     "cypress": "13.6.4",
     "daisyui": "4.5.0",
-    "eslint": "8.54.0",
+    "eslint": "8.56.0",
     "happy-dom": "12.10.3",
     "start-server-and-test": "2.0.3",
     "tailwind": "4.0.0",
