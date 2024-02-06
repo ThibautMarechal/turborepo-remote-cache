@@ -8301,10 +8301,10 @@ remix-auth@3.6.0:
   dependencies:
     uuid "^8.3.2"
 
-remix-forms@2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/remix-forms/-/remix-forms-2.2.0.tgz#076fa9e40ed604f617ca7acc444981f6e14314c9"
-  integrity sha512-Evba+nz/TalAB0dpClR1Ani8Z42q1wxewQ0JyyyvmJi9tyWatpC+f9ZZO2nepJAsK4nWia88Givfq2H4vX+bUg==
+remix-forms@2.2.1:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/remix-forms/-/remix-forms-2.2.1.tgz#e022f841deff0fa397c496913f1991a94503126d"
+  integrity sha512-fTN7RhzljJRnBpeXas1aUCjY0w6/1WwnswZMf2r3DmxSVfz0HzU0jSO3PpWJU5qDkWlndzCj2ZR9d9kgOdMSbA==
   dependencies:
     "@hookform/resolvers" "^2.8.8"
 
