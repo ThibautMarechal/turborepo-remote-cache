@@ -1,3 +1,4 @@
+import React from 'react';
 import { redirect, type ActionFunction, type LoaderFunction } from '@remix-run/node';
 import { useLoaderData, useSearchParams, Form as RemixForm } from '@remix-run/react';
 import { z } from 'zod';
@@ -24,7 +25,20 @@ export const loader: LoaderFunction = async ({ request }) => {
       return await authenticator.logout(request, { redirectTo: '/login' });
     }
   }
-  return { useOidc: process.env.OIDC === 'true', oidcName: process.env.OIDC_NAME };
+  const authStrategies = [];
+  if (process.env.OIDC === 'true') {
+    authStrategies.push({
+      type: 'oidc',
+      name: process.env.OIDC_NAME ?? 'OpenIdConnect',
+    });
+  }
+  if (process.env.AZURE_AD === 'true') {
+    authStrategies.push({
+      type: 'azure-ad',
+      name: 'Azure AD',
+    });
+  }
+  return { authStrategies };
 };
 
 export const action: ActionFunction = async ({ request }) => {
@@ -39,7 +53,7 @@ export const action: ActionFunction = async ({ request }) => {
 
 export default function Login() {
   const [searchParams] = useSearchParams();
-  const { useOidc, oidcName } = useLoaderData<{ useOidc: boolean; oidcName?: string }>();
+  const { authStrategies } = useLoaderData<{ authStrategies: Array<{ type: string; name: string }> }>();
   const redirectTo = searchParams.get('redirect_to') || '/';
   return (
     <div className="container mx-auto flex justify-center">
@@ -61,14 +75,14 @@ export default function Login() {
             </>
           )}
         </Form>
-        {useOidc ? (
-          <>
+        {authStrategies.map((startegy) => (
+          <React.Fragment key={startegy.type}>
             <div className="divider" />
-            <RemixForm method="post" action={`/login/oidc?redirect_to=${redirectTo}`}>
-              <Button>{oidcName}</Button>
+            <RemixForm method="post" action={`/login/${startegy.type}?redirect_to=${redirectTo}`}>
+              <Button>{startegy.name}</Button>
             </RemixForm>
-          </>
-        ) : null}
+          </React.Fragment>
+        ))}
       </div>
     </div>
   );

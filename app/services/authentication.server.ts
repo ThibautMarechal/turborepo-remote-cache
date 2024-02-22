@@ -9,8 +9,10 @@ import { getToken } from './tokens.server';
 import { createExternalUser, getUserByUsernameAndPassword, getUserDetail, userExist } from './users.server';
 import { ServerRole } from '~/roles/ServerRole';
 import debug from 'debug';
+import { MicrosoftStrategy } from 'remix-auth-microsoft';
 
 const OIDCDebugger = debug('oidc');
+const AZUREADDebugger = debug('azure-ad');
 
 export const authenticator = new Authenticator<string>(sessionStorage);
 
@@ -116,4 +118,29 @@ if (process.env.OIDC === 'true') {
   );
 
   authenticator.use(oidc, 'oidc');
+}
+
+if (process.env.AZURE_AD === 'true') {
+  const { AZURE_AD_CLIENT_ID, AZURE_AD_CLIENT_SECRET, AZURE_AD_TENANT_ID } = process.env;
+  invariant(AZURE_AD_CLIENT_ID && AZURE_AD_CLIENT_SECRET && AZURE_AD_TENANT_ID);
+  const microsoftStrategy = new MicrosoftStrategy(
+    {
+      clientId: AZURE_AD_CLIENT_ID,
+      clientSecret: AZURE_AD_CLIENT_SECRET,
+      tenantId: AZURE_AD_TENANT_ID,
+      redirectUri: '/login/azure-ad/callback',
+      prompt: 'consent',
+    },
+    async ({ profile }) => {
+      if (!(await userExist(profile.id))) {
+        const email = profile.emails?.[0].value ?? profile.id;
+        const name = profile.displayName;
+        const username = profile.displayName;
+        const user = await createExternalUser({ id: profile.id, email, name, username, role: ServerRole.DEVELOPER });
+        AZUREADDebugger(`userInfo: %o`, user);
+      }
+      return profile.id;
+    },
+  );
+  authenticator.use(microsoftStrategy, 'azure-ad');
 }
