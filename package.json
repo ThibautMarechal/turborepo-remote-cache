@@ -71,7 +71,7 @@
   "devDependencies": {
     "@remix-run/dev": "2.3.1",
     "@remix-run/eslint-config": "2.3.1",
-    "@tailwindcss/typography": "0.5.10",
+    "@tailwindcss/typography": "0.5.13",
     "@testing-library/cypress": "^10.0.1",
     "@testing-library/dom": "9.3.4",
     "@testing-library/jest-dom": "6.1.4",
