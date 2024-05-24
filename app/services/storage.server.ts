@@ -52,7 +52,7 @@ export class CacheStorage {
         invariant(STORAGE_AZURE_STORAGE_ACCOUNT, 'Expected STORAGE_AZURE_STORAGE_ACCOUNT');
         invariant(STORAGE_AZURE_STORAGE_ACCESS_KEY, 'Expected STORAGE_AZURE_STORAGE_ACCESS_KEY');
         invariant(STORAGE_AZURE_STORAGE_CONTAINER, 'Expected STORAGE_AZURE_STORAGE_CONTAINER');
-        this.blobStore = azure({
+        this.blobStore = azure.default({
           accountName: STORAGE_AZURE_STORAGE_ACCOUNT,
           accountKey: STORAGE_AZURE_STORAGE_ACCESS_KEY,
           container: STORAGE_AZURE_STORAGE_CONTAINER,
