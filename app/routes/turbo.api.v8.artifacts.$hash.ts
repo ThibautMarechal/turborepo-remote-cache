@@ -87,7 +87,8 @@ export const action: ActionFunction = async ({ request, params, context }) => {
   }
 
   const storage = new CacheStorage();
-  const contentLength = Number.parseInt(request.headers.get('Content-Length') as string);
+
+  const contentLength = Number.parseInt((request.headers.get('Content-Length') as string) ?? 0);
   try {
     await Promise.all([
       // The real type of request.body is ReadableStream. Somehow ReadableStream can be used as AsyncIterator
