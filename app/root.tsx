@@ -7,8 +7,8 @@ import { getUserDetail } from '~/services/users.server';
 import { CurrentUserProvider } from '~/context/CurrentUser';
 import Navigation from '~/component/Navigation';
 import type { UserDetail } from '~/types/prisma';
-import tailwind from './tailwind.css';
-import fullturboStyle from '~/styles/fullturbo.css';
+import tailwind from './tailwind.css?url';
+import fullturboStyle from '~/styles/fullturbo.css?url';
 import { json, useLoaderData } from '~/utils/superjson';
 
 export const meta: MetaFunction = () => [
