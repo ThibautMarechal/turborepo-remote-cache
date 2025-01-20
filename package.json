@@ -95,7 +95,7 @@
     "happy-dom": "12.10.3",
     "start-server-and-test": "2.0.3",
     "tailwind": "4.0.0",
-    "tailwindcss": "3.3.5",
+    "tailwindcss": "3.4.17",
     "vite": "^5.0.10",
     "vite-tsconfig-paths": "^4.2.3",
     "vitest": "^1.1.1"
