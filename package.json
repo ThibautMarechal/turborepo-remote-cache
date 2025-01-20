@@ -12,7 +12,7 @@
   "type": "module",
   "scripts": {
     "build": "remix build",
-    "dev": "remix dev",
+    "dev": "remix dev -c 'node server/index.mjs'",
     "docker": "docker-compose -f docker-compose.db.yml up -d",
     "lint": "eslint ./app --color --max-warnings=0",
     "setup": "prisma migrate dev && prisma db seed",
@@ -23,14 +23,13 @@
     "typecheck": "tsc -b && tsc -b cypress && tsc -b prisma",
     "validate": "run-p \"test -- --run\" lint typecheck test:e2e:run",
     "prestart": "prisma migrate deploy && prisma db seed",
-    "start": "cross-env NODE_ENV=production remix-serve build/index.js"
+    "start": "cross-env NODE_ENV=production node server/index.mjs"
   },
   "dependencies": {
     "@heroicons/react": "2.0.18",
     "@prisma/client": "^5.8.1",
-    "@remix-run/node": "2.3.1",
-    "@remix-run/react": "2.3.1",
-    "@remix-run/serve": "2.3.1",
+    "@remix-run/node": "2.10.3",
+    "@remix-run/react": "2.10.3",
     "@tanstack/react-table": "8.10.7",
     "abstract-blob-store": "3.3.5",
     "aws-sdk": "2.1551.0",
@@ -43,6 +42,8 @@
     "domain-functions": "2.5.1",
     "fs-blob-store": "6.0.0",
     "isbot": "3.7.1",
+    "koa": "^2.15.3",
+    "koa-static": "^5.0.0",
     "npm-run-all": "4.1.5",
     "prisma": "^5.8.1",
     "prop-types": "15.8.1",
@@ -58,6 +59,7 @@
     "remix-auth-microsoft": "^2.0.1",
     "remix-auth-oidc": "1.0.0",
     "remix-forms": "2.2.1",
+    "remix-koa-adapter": "^2.0.0",
     "remix-utils": "^7.3.0",
     "s3-blob-store": "4.1.1",
     "superjson": "2.2.1",
@@ -69,8 +71,8 @@
     "zod": "3.22.4"
   },
   "devDependencies": {
-    "@remix-run/dev": "2.3.1",
-    "@remix-run/eslint-config": "2.3.1",
+    "@remix-run/dev": "2.10.3",
+    "@remix-run/eslint-config": "2.10.3",
     "@tailwindcss/typography": "0.5.10",
     "@testing-library/cypress": "^10.0.1",
     "@testing-library/dom": "9.3.4",
