@@ -39,7 +39,7 @@
     "copy-to-clipboard": "3.3.3",
     "cross-env": "7.0.3",
     "debug": "4.3.4",
-    "domain-functions": "2.5.1",
+    "domain-functions": "2.6.0",
     "fs-blob-store": "6.0.0",
     "isbot": "3.7.1",
     "koa": "^2.15.3",

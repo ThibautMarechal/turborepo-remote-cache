@@ -3688,10 +3688,10 @@ dom-accessibility-api@^0.5.6, dom-accessibility-api@^0.5.9:
   resolved "https://registry.yarnpkg.com/dom-accessibility-api/-/dom-accessibility-api-0.5.16.tgz#5a7429e6066eb3664d911e33fb0e45de8eb08453"
   integrity sha512-X7BJ2yElsnOJ30pZF4uIIDfBEVgF4XEBxL9Bxhy6dnrm5hkzqmsWHGTiHqRiITNhMyFLyAiWndIJP7Z1NTteDg==
 
-domain-functions@2.5.1:
-  version "2.5.1"
-  resolved "https://registry.yarnpkg.com/domain-functions/-/domain-functions-2.5.1.tgz#4893a7872e4a698a3b02dd7a3ca976433b9a1b0a"
-  integrity sha512-lUL2oJEATvTjbz0/BhHaEtON260Zzp4ZhrgJJ9I9BJGbWUc3P+2CS1UzdC80mdIyHQA9pwKL+mAHV7z70PL3hg==
+domain-functions@2.6.0:
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/domain-functions/-/domain-functions-2.6.0.tgz#e5489fdb9a42432cd9b508f98ad0bda082232976"
+  integrity sha512-UiIyxC76DaMGNuCQ/CS8nC+EuGx11WV5juYG+F1BoMu+Nz03exJW/QFIelhlo7AuSXW+/rkNOyidKMpVtsqHwQ==
 
 dotenv@^16.0.0:
   version "16.3.1"
