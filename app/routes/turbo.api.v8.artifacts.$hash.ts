@@ -26,7 +26,7 @@ export const loader: LoaderFunction = async ({ request, params, context }) => {
   const team = await getTeamFromRequest(request);
   const turboCtx = getTurboContext({ request, params, context }, user, team);
   if (!authByToken) {
-    // Overriding the turboCOntext when uath with cookie
+    // Overriding the turboContext when auth with cookie
     if (!turboCtx.hash) {
       throw new Error('hash required');
     }
