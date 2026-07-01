@@ -1830,13 +1830,12 @@
     "@types/scheduler" "*"
     csstype "^3.0.2"
 
-"@types/readable-stream@2.3.15":
-  version "2.3.15"
-  resolved "https://registry.yarnpkg.com/@types/readable-stream/-/readable-stream-2.3.15.tgz#3d79c9ceb1b6a57d5f6e6976f489b9b5384321ae"
-  integrity sha512-oM5JSKQCcICF1wvGgmecmHldZ48OZamtMxcGGVICOJA8o8cahXC1zEVAif8iwoc5j8etxFaRFnf095+CDsuoFQ==
+"@types/readable-stream@4.0.24":
+  version "4.0.24"
+  resolved "https://registry.yarnpkg.com/@types/readable-stream/-/readable-stream-4.0.24.tgz#7b2431bfc1367d05c53598ad36094b044726d442"
+  integrity sha512-NRvUNC/JFGPJvqdAfEve8oginbM6V08u5NzLWpG8MwA2kTPOLnqk+wpwuPT+mp3aUsxyuT6m2gnrPuHYCruzEg==
   dependencies:
     "@types/node" "*"
-    safe-buffer "~5.1.1"
 
 "@types/scheduler@*":
   version "0.16.8"
