@@ -1,5 +1,5 @@
 import type { Event, Session, Team, User } from '@prisma/client';
-import { createColumnHelper } from '@tanstack/react-table';
+import { legacyCreateColumnHelper as createColumnHelper, type LegacyColumnDef } from '@tanstack/react-table/legacy';
 import DateCell from '~/component/DateCell';
 import TeamCell from '~/component/TeamCell';
 import UserCell from '~/component/UserCell';
@@ -7,9 +7,11 @@ import { EventType, SourceType } from '~/types/vercel/turborepo';
 import { formatDuration } from '~/utils/intl';
 import { usePaginateSortingTable } from './usePaginateSortingTable';
 
-const columnHelper = createColumnHelper<Session & { user: User; team: Team | null; events: Event[] }>();
+type SessionRow = Session & { user: User; team: Team | null; events: Event[] };
 
-const defaultColumns = [
+const columnHelper = createColumnHelper<SessionRow>();
+
+const defaultColumns: LegacyColumnDef<SessionRow, any>[] = [
   columnHelper.accessor((session) => session.team, {
     id: 'team',
     header: 'Team',

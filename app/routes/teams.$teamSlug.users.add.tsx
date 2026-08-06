@@ -1,7 +1,7 @@
 import type { User } from '@prisma/client';
 import type { ActionFunction, LoaderFunction } from '@remix-run/node';
 
-import { makeDomainFunction } from 'domain-functions';
+import { makeDomainFunction, toComposable } from 'domain-functions';
 import { formAction } from '~/formAction';
 import { z } from 'zod';
 import { Form } from '~/component/Form';
@@ -32,7 +32,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   const user = await requireCookieAuth(request);
   const team = await getTeamDetailBySlug(params.teamSlug as string);
   requireTeamOwner(user, team.id);
-  const mutation = makeDomainFunction(schema)(async ({ userId, role }) => await addUserToTteam(team.id, userId, role));
+  const mutation = toComposable(makeDomainFunction(schema)(async ({ userId, role }) => await addUserToTteam(team.id, userId, role)));
   return formAction({
     request,
     schema,

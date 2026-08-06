@@ -1,5 +1,5 @@
 import DateCell from '~/component/DateCell';
-import { createColumnHelper } from '@tanstack/react-table';
+import { legacyCreateColumnHelper as createColumnHelper, type LegacyColumnDef } from '@tanstack/react-table/legacy';
 import Gravatar from 'react-gravatar';
 import { usePaginateSortingTable } from './usePaginateSortingTable';
 import type { UserDetail } from '~/types/prisma';
@@ -8,7 +8,7 @@ import React from 'react';
 
 export const columnHelper = createColumnHelper<UserDetail>();
 
-const getDefaultColumns = (team: Team) => [
+const getDefaultColumns = (team: Team): LegacyColumnDef<UserDetail, any>[] => [
   columnHelper.accessor((user) => user.email, {
     id: 'email',
     header: '',

@@ -1,6 +1,6 @@
 import type { ActionFunction, LoaderFunction } from '@remix-run/node';
 
-import { makeDomainFunction } from 'domain-functions';
+import { makeDomainFunction, toComposable } from 'domain-functions';
 import { formAction } from '~/formAction';
 import { z } from 'zod';
 import { Form } from '~/component/Form';
@@ -35,7 +35,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   return formAction({
     request,
     schema,
-    mutation: makeDomainFunction(schema)(({ role }) => changeTeamRole(team.id, user.id, role)),
+    mutation: toComposable(makeDomainFunction(schema)(({ role }) => changeTeamRole(team.id, user.id, role))),
     successPath: `/teams/${team.slug}/users`,
   });
 };

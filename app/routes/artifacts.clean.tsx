@@ -3,7 +3,7 @@ import type { ActionFunction, LoaderFunction } from '@remix-run/node';
 import { formAction } from '~/formAction';
 import { z } from 'zod';
 import { requireCookieAuth, requireTokenAuth } from '~/services/authentication.server';
-import { makeDomainFunction } from 'domain-functions';
+import { makeDomainFunction, toComposable } from 'domain-functions';
 import { Form } from '~/component/Form';
 import { requireAdmin } from '~/roles/rights';
 import { CleanPeriod } from '~/clean/CleanPeriod';
@@ -16,7 +16,7 @@ const schema = z.object({
   period: z.enum([CleanPeriod.DAY, CleanPeriod.WEEK, CleanPeriod.MONTH, CleanPeriod.YEAR]),
 });
 
-const mutation = makeDomainFunction(schema)(({ period }) => deleteArtifactByPeriod(period));
+const mutation = toComposable(makeDomainFunction(schema)(({ period }) => deleteArtifactByPeriod(period)));
 
 export const loader: LoaderFunction = async ({ request }) => {
   const user = await requireCookieAuth(request);

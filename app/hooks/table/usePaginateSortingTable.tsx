@@ -1,11 +1,12 @@
-import { useReactTable, type TableOptions, getCoreRowModel } from '@tanstack/react-table';
+import { useLegacyTable as useReactTable, type LegacyTableOptions as TableOptions, getCoreRowModel } from '@tanstack/react-table/legacy';
+import type { RowData } from '@tanstack/react-table';
 import { orderByToSortingState, sortingStateToOrderBy } from '~/utils/sort';
 import { useSortSearchParams } from '~/hooks/useSortSearchParams';
 import { usePaginateSearchParams } from '../usePaginateSearchParams';
 import * as React from 'react';
 import { useFetcher } from '~/utils/superjson';
 
-export function usePaginateSortingTable<TableElement>(
+export function usePaginateSortingTable<TableElement extends RowData>(
   tableOptions: Omit<TableOptions<TableElement>, 'getCoreRowModel'>,
   count: number,
   Actions?: React.ComponentType<{ resource: TableElement }>,

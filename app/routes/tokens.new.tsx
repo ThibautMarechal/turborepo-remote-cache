@@ -5,7 +5,7 @@ import { formAction } from '~/formAction';
 import copy from 'copy-to-clipboard';
 import { z } from 'zod';
 import { requireCookieAuth } from '~/services/authentication.server';
-import { makeDomainFunction } from 'domain-functions';
+import { makeDomainFunction, toComposable } from 'domain-functions';
 import { Form } from '~/component/Form';
 import { generateToken } from '~/services/tokens.server';
 import ClipboardDocumentIcon from '@heroicons/react/24/outline/ClipboardDocumentIcon';
@@ -24,7 +24,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 export const action: ActionFunction = async ({ request }) => {
   const user = await requireCookieAuth(request);
   requireAdmin(user);
-  const mutation = makeDomainFunction(schema)(async ({ name }) => await generateToken(user.id, name).then(([token]) => token));
+  const mutation = toComposable(makeDomainFunction(schema)(async ({ name }) => await generateToken(user.id, name).then(([token]) => token)));
   return await formAction({
     request,
     schema,

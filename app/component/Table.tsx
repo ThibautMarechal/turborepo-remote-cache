@@ -1,12 +1,13 @@
-import { flexRender, type Table as TableInstance } from '@tanstack/react-table';
+import { flexRender, type RowData } from '@tanstack/react-table';
+import type { LegacyReactTable as TableInstance } from '@tanstack/react-table/legacy';
 import cn from 'classnames';
 
-export type TableProps<TableElement> = TableInstance<TableElement> & {
+export type TableProps<TableElement extends RowData> = TableInstance<TableElement> & {
   footer?: boolean;
   onRowDoubleClick?: (element: TableElement, e: React.MouseEvent) => void;
 };
 
-export function Table<TableElement>({ getHeaderGroups, getRowModel, getFooterGroups, footer, onRowDoubleClick }: TableProps<TableElement>) {
+export function Table<TableElement extends RowData>({ getHeaderGroups, getRowModel, getFooterGroups, footer, onRowDoubleClick }: TableProps<TableElement>) {
   return (
     <div className="relative">
       <table className="table table-compact table-zebra w-full flex-grow-5">

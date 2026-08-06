@@ -3,7 +3,7 @@ import type { ActionFunction, LoaderFunction } from '@remix-run/node';
 import { formAction } from '~/formAction';
 import { z } from 'zod';
 import { requireCookieAuth } from '~/services/authentication.server';
-import { makeDomainFunction } from 'domain-functions';
+import { makeDomainFunction, toComposable } from 'domain-functions';
 import { Form } from '~/component/Form';
 import { requireTeamOwner } from '~/roles/rights';
 import { CleanPeriod } from '~/clean/CleanPeriod';
@@ -26,7 +26,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   const team = await getTeamBySlug(params.teamSlug as string);
   requireTeamOwner(user, team.id);
 
-  const mutation = makeDomainFunction(schema)(({ period }) => deleteArtifactByPeriod(period, { teamId: team.id }));
+  const mutation = toComposable(makeDomainFunction(schema)(({ period }) => deleteArtifactByPeriod(period, { teamId: team.id })));
 
   return formAction({
     request,

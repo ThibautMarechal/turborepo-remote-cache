@@ -4,7 +4,7 @@ import { formAction } from '~/formAction';
 import { z } from 'zod';
 import { requireCookieAuth } from '~/services/authentication.server';
 import { createUser } from '~/services/users.server';
-import { makeDomainFunction } from 'domain-functions';
+import { makeDomainFunction, toComposable } from 'domain-functions';
 import { Form } from '~/component/Form';
 import { requireAdmin } from '~/roles/rights';
 import { ServerRole } from '~/roles/ServerRole';
@@ -17,7 +17,7 @@ const schema = z.object({
   role: z.enum([ServerRole.DEVELOPER, ServerRole.ADMIN]),
 });
 
-const mutation = makeDomainFunction(schema)(async ({ password, ...user }) => await createUser(user, password));
+const mutation = toComposable(makeDomainFunction(schema)(async ({ password, ...user }) => await createUser(user, password)));
 
 export const loader: LoaderFunction = async ({ request }) => {
   const user = await requireCookieAuth(request);

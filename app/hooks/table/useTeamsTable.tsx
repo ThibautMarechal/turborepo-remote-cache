@@ -2,7 +2,7 @@ import TrashIcon from '@heroicons/react/24/outline/TrashIcon';
 import type { Team } from '@prisma/client';
 import { Form, Link } from '@remix-run/react';
 import DateCell from '~/component/DateCell';
-import { createColumnHelper } from '@tanstack/react-table';
+import { legacyCreateColumnHelper as createColumnHelper, type LegacyColumnDef } from '@tanstack/react-table/legacy';
 
 import MagnifyingGlassIcon from '@heroicons/react/24/outline/MagnifyingGlassIcon';
 import PencilIcon from '@heroicons/react/24/outline/PencilIcon';
@@ -12,7 +12,7 @@ import { isTeamOwner } from '~/roles/rights';
 
 const columnHelper = createColumnHelper<Team>();
 
-const defaultColumns = [
+const defaultColumns: LegacyColumnDef<Team, any>[] = [
   columnHelper.accessor((team) => team.name, {
     id: 'name',
     header: 'Name',

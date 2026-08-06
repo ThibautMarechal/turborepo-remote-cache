@@ -5,7 +5,7 @@ import { Form, useNavigation } from '@remix-run/react';
 import DateCell from '~/component/DateCell';
 import TeamCell from '~/component/TeamCell';
 import UserCell from '~/component/UserCell';
-import { createColumnHelper } from '@tanstack/react-table';
+import { legacyCreateColumnHelper as createColumnHelper, type LegacyColumnDef } from '@tanstack/react-table/legacy';
 import { formatDuration, formatSize } from '~/utils/intl';
 import { usePaginateSortingTable } from './usePaginateSortingTable';
 import HasRights from '~/component/HasRights';
@@ -15,7 +15,7 @@ import type { ArtifactDetail } from '~/types/prisma';
 
 const columnHelper = createColumnHelper<ArtifactDetail>();
 
-const defaultColumns = [
+const defaultColumns: LegacyColumnDef<ArtifactDetail, any>[] = [
   columnHelper.accessor((artifact) => artifact.team, {
     id: 'team',
     header: 'Team',

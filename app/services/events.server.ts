@@ -3,7 +3,6 @@ import invariant from 'tiny-invariant';
 import { EventType, type SourceType } from '~/types/vercel/turborepo';
 import { client } from './prismaClient.server';
 import { validate } from 'uuid';
-import type { Decimal } from '@prisma/client/runtime/library';
 
 export async function insertEvents(events: Omit<Event, 'id' | 'creationDate'>[]) {
   return await client.event.createMany({ data: events });
@@ -81,8 +80,8 @@ ORDER BY year ASC, month ASC;
     .$queryRawUnsafe<
       Array<{
         timeSaved: bigint;
-        month: Decimal;
-        year: Decimal;
+        month: Prisma.Decimal;
+        year: Prisma.Decimal;
       }>
     >(query)
     .then((dbResult) => {
