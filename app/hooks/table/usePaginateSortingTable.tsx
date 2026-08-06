@@ -25,6 +25,8 @@ export function usePaginateSortingTable<TableElement extends RowData>(
 
   React.useEffect(() => {
     if (fetcher.data) {
+      // Syncing local state from an external system (the fetcher's loaded page), not derived render state.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setPagedData((previousData) => [...previousData, ...(fetcher.data?.items ?? [])]);
     }
   }, [fetcher.data]);

@@ -6,7 +6,7 @@ import DateCell from '~/component/DateCell';
 import TeamCell from '~/component/TeamCell';
 import UserCell from '~/component/UserCell';
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table';
-import { appTableFeatures, type AppTableFeatures } from './tableFeatures';
+import type { AppTableFeatures } from './tableFeatures';
 import { formatDuration, formatSize } from '~/utils/intl';
 import { usePaginateSortingTable } from './usePaginateSortingTable';
 import HasRights from '~/component/HasRights';

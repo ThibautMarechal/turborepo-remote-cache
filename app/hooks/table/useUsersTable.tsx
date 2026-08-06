@@ -1,7 +1,7 @@
 import type { User } from '@prisma/client';
 import DateCell from '~/component/DateCell';
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table';
-import { appTableFeatures, type AppTableFeatures } from './tableFeatures';
+import type { AppTableFeatures } from './tableFeatures';
 import Gravatar from 'react-gravatar';
 import ArrowTopRightOnSquareIcon from '@heroicons/react/24/outline/ArrowTopRightOnSquareIcon';
 import { usePaginateSortingTable } from './usePaginateSortingTable';

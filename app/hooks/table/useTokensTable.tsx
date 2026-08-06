@@ -1,7 +1,7 @@
 import TrashIcon from '@heroicons/react/24/outline/TrashIcon';
 import type { Token, User } from '@prisma/client';
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table';
-import { appTableFeatures, type AppTableFeatures } from './tableFeatures';
+import type { AppTableFeatures } from './tableFeatures';
 import { Form, useNavigation } from '@remix-run/react';
 import { DateCell } from '~/component/DateCell';
 import { UserCell } from '~/component/UserCell';

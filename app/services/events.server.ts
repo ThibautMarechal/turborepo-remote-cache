@@ -96,7 +96,6 @@ ORDER BY year ASC, month ASC;
       // Fill month value with no stats.
       // We could do it in the pg query (https://stackoverflow.com/questions/24156202/postgresql-group-month-wise-with-missing-values)
       // We also fill the blanks months from the years presents in our stats to have a better looking graph
-      // eslint-disable-next-line prefer-destructuring
       const start = timeSavedStats[0];
       const end = timeSavedStats[timeSavedStats.length - 1];
       const startingYear = start.year;

@@ -1,6 +1,6 @@
 import DateCell from '~/component/DateCell';
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table';
-import { appTableFeatures, type AppTableFeatures } from './tableFeatures';
+import type { AppTableFeatures } from './tableFeatures';
 import Gravatar from 'react-gravatar';
 import { usePaginateSortingTable } from './usePaginateSortingTable';
 import type { UserDetail } from '~/types/prisma';

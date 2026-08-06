@@ -1,6 +1,6 @@
 import type { Event, Session, Team, User } from '@prisma/client';
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table';
-import { appTableFeatures, type AppTableFeatures } from './tableFeatures';
+import type { AppTableFeatures } from './tableFeatures';
 import DateCell from '~/component/DateCell';
 import TeamCell from '~/component/TeamCell';
 import UserCell from '~/component/UserCell';
