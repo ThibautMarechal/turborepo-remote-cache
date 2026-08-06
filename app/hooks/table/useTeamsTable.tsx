@@ -2,7 +2,8 @@ import TrashIcon from '@heroicons/react/24/outline/TrashIcon';
 import type { Team } from '@prisma/client';
 import { Form, Link } from '@remix-run/react';
 import DateCell from '~/component/DateCell';
-import { legacyCreateColumnHelper as createColumnHelper, type LegacyColumnDef } from '@tanstack/react-table/legacy';
+import { createColumnHelper, type ColumnDef } from '@tanstack/react-table';
+import { appTableFeatures, type AppTableFeatures } from './tableFeatures';
 
 import MagnifyingGlassIcon from '@heroicons/react/24/outline/MagnifyingGlassIcon';
 import PencilIcon from '@heroicons/react/24/outline/PencilIcon';
@@ -10,9 +11,9 @@ import { usePaginateSortingTable } from './usePaginateSortingTable';
 import HasRights from '~/component/HasRights';
 import { isTeamOwner } from '~/roles/rights';
 
-const columnHelper = createColumnHelper<Team>();
+const columnHelper = createColumnHelper<AppTableFeatures, Team>();
 
-const defaultColumns: LegacyColumnDef<Team, any>[] = [
+const defaultColumns: ColumnDef<AppTableFeatures, Team, any>[] = [
   columnHelper.accessor((team) => team.name, {
     id: 'name',
     header: 'Name',

@@ -1,6 +1,8 @@
-import { flexRender, type RowData } from '@tanstack/react-table';
-import type { LegacyReactTable as TableInstance } from '@tanstack/react-table/legacy';
+import { flexRender, type RowData, type ReactTable } from '@tanstack/react-table';
+import type { AppTableFeatures } from '~/hooks/table/tableFeatures';
 import cn from 'classnames';
+
+type TableInstance<TableElement extends RowData> = ReactTable<AppTableFeatures, TableElement>;
 
 export type TableProps<TableElement extends RowData> = TableInstance<TableElement> & {
   footer?: boolean;
@@ -36,7 +38,7 @@ export function Table<TableElement extends RowData>({ getHeaderGroups, getRowMod
           {getRowModel().rows.map((row) => {
             return (
               <tr key={row.id} onDoubleClick={(e) => onRowDoubleClick?.(row.original, e)}>
-                {row.getVisibleCells().map((cell) => {
+                {row.getAllCells().map((cell) => {
                   return <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>;
                 })}
               </tr>

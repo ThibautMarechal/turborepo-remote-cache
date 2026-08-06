@@ -1,13 +1,14 @@
 import type { User } from '@prisma/client';
 import DateCell from '~/component/DateCell';
-import { legacyCreateColumnHelper as createColumnHelper, type LegacyColumnDef } from '@tanstack/react-table/legacy';
+import { createColumnHelper, type ColumnDef } from '@tanstack/react-table';
+import { appTableFeatures, type AppTableFeatures } from './tableFeatures';
 import Gravatar from 'react-gravatar';
 import ArrowTopRightOnSquareIcon from '@heroicons/react/24/outline/ArrowTopRightOnSquareIcon';
 import { usePaginateSortingTable } from './usePaginateSortingTable';
 
-export const columnHelper = createColumnHelper<User>();
+export const columnHelper = createColumnHelper<AppTableFeatures, User>();
 
-const defaultColumns: LegacyColumnDef<User, any>[] = [
+const defaultColumns: ColumnDef<AppTableFeatures, User, any>[] = [
   columnHelper.accessor((user) => user.isExternal, {
     id: 'isExternal',
     header: '',

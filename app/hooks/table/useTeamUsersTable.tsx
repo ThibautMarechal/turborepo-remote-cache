@@ -1,14 +1,15 @@
 import DateCell from '~/component/DateCell';
-import { legacyCreateColumnHelper as createColumnHelper, type LegacyColumnDef } from '@tanstack/react-table/legacy';
+import { createColumnHelper, type ColumnDef } from '@tanstack/react-table';
+import { appTableFeatures, type AppTableFeatures } from './tableFeatures';
 import Gravatar from 'react-gravatar';
 import { usePaginateSortingTable } from './usePaginateSortingTable';
 import type { UserDetail } from '~/types/prisma';
 import type { Team } from '@prisma/client';
 import React from 'react';
 
-export const columnHelper = createColumnHelper<UserDetail>();
+export const columnHelper = createColumnHelper<AppTableFeatures, UserDetail>();
 
-const getDefaultColumns = (team: Team): LegacyColumnDef<UserDetail, any>[] => [
+const getDefaultColumns = (team: Team): ColumnDef<AppTableFeatures, UserDetail, any>[] => [
   columnHelper.accessor((user) => user.email, {
     id: 'email',
     header: '',

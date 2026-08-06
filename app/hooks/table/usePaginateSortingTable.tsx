@@ -1,5 +1,5 @@
-import { useLegacyTable as useReactTable, type LegacyTableOptions as TableOptions, getCoreRowModel } from '@tanstack/react-table/legacy';
-import type { RowData } from '@tanstack/react-table';
+import { useTable, type TableOptions, type RowData } from '@tanstack/react-table';
+import { appTableFeatures, type AppTableFeatures } from './tableFeatures';
 import { orderByToSortingState, sortingStateToOrderBy } from '~/utils/sort';
 import { useSortSearchParams } from '~/hooks/useSortSearchParams';
 import { usePaginateSearchParams } from '../usePaginateSearchParams';
@@ -7,7 +7,7 @@ import * as React from 'react';
 import { useFetcher } from '~/utils/superjson';
 
 export function usePaginateSortingTable<TableElement extends RowData>(
-  tableOptions: Omit<TableOptions<TableElement>, 'getCoreRowModel'>,
+  tableOptions: Omit<TableOptions<AppTableFeatures, TableElement>, 'features'>,
   count: number,
   Actions?: React.ComponentType<{ resource: TableElement }>,
 ) {
@@ -46,19 +46,22 @@ export function usePaginateSortingTable<TableElement extends RowData>(
   }, [tableOptions, Actions]);
 
   return {
-    tableProps: useReactTable({
-      ...tableOptions,
-      columns,
-      data: pagedData,
-      state: {
-        sorting,
+    tableProps: useTable(
+      {
+        ...tableOptions,
+        features: appTableFeatures,
+        columns,
+        data: pagedData,
+        state: {
+          sorting,
+        },
+        onSortingChange: (s) => {
+          const newSorting = typeof s === 'function' ? s(sorting) : s;
+          setOrderBy(sortingStateToOrderBy(newSorting));
+        },
       },
-      onSortingChange: (s) => {
-        const newSorting = typeof s === 'function' ? s(sorting) : s;
-        setOrderBy(sortingStateToOrderBy(newSorting));
-      },
-      getCoreRowModel: getCoreRowModel(),
-    }),
+      (state) => state,
+    ),
     paginationProps: {
       skip,
       take,

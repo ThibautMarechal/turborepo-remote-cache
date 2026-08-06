@@ -1,5 +1,6 @@
 import type { Event, Session, Team, User } from '@prisma/client';
-import { legacyCreateColumnHelper as createColumnHelper, type LegacyColumnDef } from '@tanstack/react-table/legacy';
+import { createColumnHelper, type ColumnDef } from '@tanstack/react-table';
+import { appTableFeatures, type AppTableFeatures } from './tableFeatures';
 import DateCell from '~/component/DateCell';
 import TeamCell from '~/component/TeamCell';
 import UserCell from '~/component/UserCell';
@@ -9,9 +10,9 @@ import { usePaginateSortingTable } from './usePaginateSortingTable';
 
 type SessionRow = Session & { user: User; team: Team | null; events: Event[] };
 
-const columnHelper = createColumnHelper<SessionRow>();
+const columnHelper = createColumnHelper<AppTableFeatures, SessionRow>();
 
-const defaultColumns: LegacyColumnDef<SessionRow, any>[] = [
+const defaultColumns: ColumnDef<AppTableFeatures, SessionRow, any>[] = [
   columnHelper.accessor((session) => session.team, {
     id: 'team',
     header: 'Team',
