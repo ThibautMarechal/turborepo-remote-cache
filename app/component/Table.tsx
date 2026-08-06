@@ -1,12 +1,15 @@
-import { flexRender, type Table as TableInstance } from '@tanstack/react-table';
+import { flexRender, type RowData, type ReactTable } from '@tanstack/react-table';
+import type { AppTableFeatures } from '~/hooks/table/tableFeatures';
 import cn from 'classnames';
 
-export type TableProps<TableElement> = TableInstance<TableElement> & {
+type TableInstance<TableElement extends RowData> = ReactTable<AppTableFeatures, TableElement>;
+
+export type TableProps<TableElement extends RowData> = TableInstance<TableElement> & {
   footer?: boolean;
   onRowDoubleClick?: (element: TableElement, e: React.MouseEvent) => void;
 };
 
-export function Table<TableElement>({ getHeaderGroups, getRowModel, getFooterGroups, footer, onRowDoubleClick }: TableProps<TableElement>) {
+export function Table<TableElement extends RowData>({ getHeaderGroups, getRowModel, getFooterGroups, footer, onRowDoubleClick }: TableProps<TableElement>) {
   return (
     <div className="relative">
       <table className="table table-compact table-zebra w-full flex-grow-5">
@@ -35,7 +38,7 @@ export function Table<TableElement>({ getHeaderGroups, getRowModel, getFooterGro
           {getRowModel().rows.map((row) => {
             return (
               <tr key={row.id} onDoubleClick={(e) => onRowDoubleClick?.(row.original, e)}>
-                {row.getVisibleCells().map((cell) => {
+                {row.getAllCells().map((cell) => {
                   return <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>;
                 })}
               </tr>

@@ -1,15 +1,18 @@
 import TrashIcon from '@heroicons/react/24/outline/TrashIcon';
 import type { Token, User } from '@prisma/client';
-import { createColumnHelper } from '@tanstack/react-table';
+import { createColumnHelper, type ColumnDef } from '@tanstack/react-table';
+import type { AppTableFeatures } from './tableFeatures';
 import { Form, useNavigation } from '@remix-run/react';
 import { DateCell } from '~/component/DateCell';
 import { UserCell } from '~/component/UserCell';
 import cn from 'classnames';
 import { usePaginateSortingTable } from './usePaginateSortingTable';
 
-const columnHelper = createColumnHelper<Token & { user: User }>();
+type TokenRow = Token & { user: User };
 
-const defaultColumns = [
+const columnHelper = createColumnHelper<AppTableFeatures, TokenRow>();
+
+const defaultColumns: ColumnDef<AppTableFeatures, TokenRow, any>[] = [
   columnHelper.accessor((token) => token.user, {
     id: 'user',
     header: 'User',

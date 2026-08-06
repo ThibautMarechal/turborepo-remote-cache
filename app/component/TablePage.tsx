@@ -1,9 +1,10 @@
 import * as React from 'react';
+import type { RowData } from '@tanstack/react-table';
 import ListTitle from './ListTitle';
 import { Pagination, type PaginationProps } from './Pagination';
 import { Table, type TableProps } from './Table';
 
-type Props<TableElement> = {
+type Props<TableElement extends RowData> = {
   tableProps: TableProps<TableElement>;
   paginationProps: PaginationProps;
   title: React.ReactNode;
@@ -12,7 +13,7 @@ type Props<TableElement> = {
   onRowDoubleClick?: (tableElement: TableElement, e: React.MouseEvent) => void;
 };
 
-export function TablePage<TableElement>({ title, count, tableProps, paginationProps, searchable, onRowDoubleClick }: Props<TableElement>) {
+export function TablePage<TableElement extends RowData>({ title, count, tableProps, paginationProps, searchable, onRowDoubleClick }: Props<TableElement>) {
   return (
     <>
       <ListTitle title={title} count={count} searchable={searchable} />

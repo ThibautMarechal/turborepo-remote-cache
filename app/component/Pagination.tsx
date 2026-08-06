@@ -51,7 +51,9 @@ export const Pagination = ({ count, getUrlAtPage, skip, take, currentPageCount, 
           // https://remix.run/docs/en/v1.5.1/guides/routing#what-is-the-index-query-param
           const remixRoutePath = `${match.pathname}${isIndexRoute ? '?index&' : ''}`;
           const fullpath = remixRoutePath + getUrlAtPage(currentPageCount / take).replace(/^\?/, isIndexRoute ? '?index&' : '?');
-          currentPageCount % take === 0 && onLoadMore?.(fullpath);
+          if (currentPageCount % take === 0) {
+            onLoadMore?.(fullpath);
+          }
         }
       }
     },

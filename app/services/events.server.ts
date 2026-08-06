@@ -3,7 +3,6 @@ import invariant from 'tiny-invariant';
 import { EventType, type SourceType } from '~/types/vercel/turborepo';
 import { client } from './prismaClient.server';
 import { validate } from 'uuid';
-import type { Decimal } from '@prisma/client/runtime/library';
 
 export async function insertEvents(events: Omit<Event, 'id' | 'creationDate'>[]) {
   return await client.event.createMany({ data: events });
@@ -81,8 +80,8 @@ ORDER BY year ASC, month ASC;
     .$queryRawUnsafe<
       Array<{
         timeSaved: bigint;
-        month: Decimal;
-        year: Decimal;
+        month: Prisma.Decimal;
+        year: Prisma.Decimal;
       }>
     >(query)
     .then((dbResult) => {
@@ -97,7 +96,6 @@ ORDER BY year ASC, month ASC;
       // Fill month value with no stats.
       // We could do it in the pg query (https://stackoverflow.com/questions/24156202/postgresql-group-month-wise-with-missing-values)
       // We also fill the blanks months from the years presents in our stats to have a better looking graph
-      // eslint-disable-next-line prefer-destructuring
       const start = timeSavedStats[0];
       const end = timeSavedStats[timeSavedStats.length - 1];
       const startingYear = start.year;

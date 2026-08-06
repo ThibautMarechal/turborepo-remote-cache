@@ -2,7 +2,7 @@ import type { LinksFunction, LoaderFunction, MetaFunction } from '@remix-run/nod
 
 import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, isRouteErrorResponse, useRouteError } from '@remix-run/react';
 
-import { authenticator } from '~/services/authentication.server';
+import { getUserSession } from '~/services/authentication.server';
 import { getUserDetail } from '~/services/users.server';
 import { CurrentUserProvider } from '~/context/CurrentUser';
 import Navigation from '~/component/Navigation';
@@ -25,7 +25,8 @@ export const meta: MetaFunction = () => [
 ];
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const userFromCookie = await authenticator.isAuthenticated(request);
+  const session = await getUserSession(request);
+  const userFromCookie = session.get('userId');
   try {
     return json({ user: userFromCookie ? await getUserDetail(userFromCookie) : null });
   } catch (e) {

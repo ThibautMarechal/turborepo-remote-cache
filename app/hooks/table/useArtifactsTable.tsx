@@ -5,7 +5,8 @@ import { Form, useNavigation } from '@remix-run/react';
 import DateCell from '~/component/DateCell';
 import TeamCell from '~/component/TeamCell';
 import UserCell from '~/component/UserCell';
-import { createColumnHelper } from '@tanstack/react-table';
+import { createColumnHelper, type ColumnDef } from '@tanstack/react-table';
+import type { AppTableFeatures } from './tableFeatures';
 import { formatDuration, formatSize } from '~/utils/intl';
 import { usePaginateSortingTable } from './usePaginateSortingTable';
 import HasRights from '~/component/HasRights';
@@ -13,9 +14,9 @@ import cn from 'classnames';
 import { isAdmin, isArtifactOwner } from '~/roles/rights';
 import type { ArtifactDetail } from '~/types/prisma';
 
-const columnHelper = createColumnHelper<ArtifactDetail>();
+const columnHelper = createColumnHelper<AppTableFeatures, ArtifactDetail>();
 
-const defaultColumns = [
+const defaultColumns: ColumnDef<AppTableFeatures, ArtifactDetail, any>[] = [
   columnHelper.accessor((artifact) => artifact.team, {
     id: 'team',
     header: 'Team',

@@ -3,7 +3,7 @@ import { formAction } from '~/formAction';
 import { z } from 'zod';
 import { requireCookieAuth } from '~/services/authentication.server';
 import { getUserByUsername, updateUserPassword } from '~/services/users.server';
-import { makeDomainFunction } from 'domain-functions';
+import { makeDomainFunction, toComposable } from 'domain-functions';
 import { Form } from '~/component/Form';
 import { requireAdmin } from '~/roles/rights';
 import { forbidden, unprocessableEntity } from '~/utils/response';
@@ -30,12 +30,12 @@ export const action: ActionFunction = async ({ request, params }) => {
   if (user.isSuperAdmin) {
     throw forbidden("Cannot update super-admin's password");
   }
-  const mutation = makeDomainFunction(schema)(async ({ password, repeatedPassword }) => {
+  const mutation = toComposable(makeDomainFunction(schema)(async ({ password, repeatedPassword }) => {
     if (password !== repeatedPassword) {
       throw unprocessableEntity("passwords doesn't match");
     }
     await updateUserPassword(user.id, password);
-  });
+  }));
   return formAction({
     request,
     schema,

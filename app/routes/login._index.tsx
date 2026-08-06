@@ -3,7 +3,7 @@ import { redirect, type ActionFunction, type LoaderFunction } from '@remix-run/n
 import { useLoaderData, useSearchParams, Form as RemixForm } from '@remix-run/react';
 import { z } from 'zod';
 import { Button, Form } from '~/component/Form';
-import { authenticator } from '~/services/authentication.server';
+import { authenticator, commitUserSession, destroyUserSession, getUserSession } from '~/services/authentication.server';
 import { getUser } from '~/services/users.server';
 
 const schema = z.object({
@@ -13,7 +13,8 @@ const schema = z.object({
 });
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const userId = await authenticator.isAuthenticated(request);
+  const session = await getUserSession(request);
+  const userId = session.get('userId');
   const url = new URL(request.url);
   const redirectTo = url.searchParams.get('redirect_to') ?? '/';
   if (userId) {
@@ -22,7 +23,7 @@ export const loader: LoaderFunction = async ({ request }) => {
       return redirect(redirectTo);
     } catch (e) {
       // Logout deleted users
-      return await authenticator.logout(request, { redirectTo: '/login' });
+      return redirect('/login', { headers: { 'Set-Cookie': await destroyUserSession(request) } });
     }
   }
   const authStrategies = [];
@@ -45,10 +46,15 @@ export const action: ActionFunction = async ({ request }) => {
   const clonedRequest = request.clone(); // cannot read 2 times the formData without clone
   const formData = await request.formData();
   const redirectUri = formData.get('redirect_to')?.toString() ?? '/';
-  return await authenticator.authenticate('user-pass', clonedRequest, {
-    successRedirect: redirectUri,
-    failureRedirect: `/login?redirect_to=${redirectUri}`,
-  });
+  try {
+    const userId = await authenticator.authenticate('user-pass', clonedRequest);
+    return redirect(redirectUri, { headers: { 'Set-Cookie': await commitUserSession(request, userId) } });
+  } catch (error) {
+    if (error instanceof Response) {
+      throw error;
+    }
+    return redirect(`/login?redirect_to=${redirectUri}`);
+  }
 };
 
 export default function Login() {

@@ -3,7 +3,7 @@ import { formAction } from '~/formAction';
 import { z } from 'zod';
 import { requireCookieAuth } from '~/services/authentication.server';
 import { getUserByUsername, updateUser } from '~/services/users.server';
-import { makeDomainFunction } from 'domain-functions';
+import { makeDomainFunction, toComposable } from 'domain-functions';
 import { Form } from '~/component/Form';
 import { requireAdmin } from '~/roles/rights';
 import { ServerRole } from '~/roles/ServerRole';
@@ -34,12 +34,12 @@ export const action: ActionFunction = async ({ request, params }) => {
   if (user.isSuperAdmin) {
     throw forbidden("Cannot update super-admin's informations");
   }
-  const mutation = makeDomainFunction(schema)(async ({ name, email, role }) => {
+  const mutation = toComposable(makeDomainFunction(schema)(async ({ name, email, role }) => {
     if (user.isExternal && (name !== user.name || email !== user.email)) {
       throw forbidden("Cannot update external user's informations");
     }
     await updateUser(user.id, { name, email, role });
-  });
+  }));
   return formAction({
     request,
     schema,

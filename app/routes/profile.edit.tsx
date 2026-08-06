@@ -4,7 +4,7 @@ import { formAction } from '~/formAction';
 import { z } from 'zod';
 import { requireCookieAuth } from '~/services/authentication.server';
 import { getUserDetail, updateUser } from '~/services/users.server';
-import { makeDomainFunction } from 'domain-functions';
+import { makeDomainFunction, toComposable } from 'domain-functions';
 import { Form } from '~/component/Form';
 import { ServerRole } from '~/roles/ServerRole';
 import { json, useLoaderData } from '~/utils/superjson';
@@ -29,12 +29,12 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export const action: ActionFunction = async ({ request }) => {
   const currentUser = await requireCookieAuth(request);
-  const mutation = makeDomainFunction(schema)(async ({ id, ...user }) => {
+  const mutation = toComposable(makeDomainFunction(schema)(async ({ id, ...user }) => {
     if (user.role !== currentUser.role) {
       forbidden('The current user cannot change his current role');
     }
     await updateUser(id, user);
-  });
+  }));
 
   return formAction({
     request,

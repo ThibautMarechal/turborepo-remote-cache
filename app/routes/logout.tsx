@@ -1,8 +1,6 @@
-import type { LoaderFunction } from '@remix-run/node';
-import { authenticator } from '~/services/authentication.server';
+import { redirect, type LoaderFunction } from '@remix-run/node';
+import { destroyUserSession } from '~/services/authentication.server';
 
 export const action: LoaderFunction = async ({ request }) => {
-  return await authenticator.logout(request, {
-    redirectTo: '/login',
-  });
+  return redirect('/login', { headers: { 'Set-Cookie': await destroyUserSession(request) } });
 };

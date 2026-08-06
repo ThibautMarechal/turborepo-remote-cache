@@ -1,11 +1,13 @@
+import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from '@prisma/client';
 import { hash } from '../app/utils/hash.js';
 import { v4 as newGuid } from 'uuid';
 import { ServerRole } from '../app/roles/ServerRole.js';
 
-const { ADMIN_USERNAME, ADMIN_NAME, ADMIN_PASSWORD, ADMIN_EMAIL } = process.env;
+const { ADMIN_USERNAME, ADMIN_NAME, ADMIN_PASSWORD, ADMIN_EMAIL, DATABASE_URL } = process.env;
 
-const client = new PrismaClient();
+const adapter = new PrismaPg({ connectionString: DATABASE_URL });
+const client = new PrismaClient({ adapter });
 
 try {
   await client.$connect();
