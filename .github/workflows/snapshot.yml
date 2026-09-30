@@ -11,7 +11,8 @@ name: Snapshot
 # - this workflow file is always taken from the base branch, a PR cannot change it
 # - the PR code is only checked out after approval, without git credentials, and
 #   only runs inside the Docker build, which has no access to the runner (docker login)
-# - no GitHub Actions cache is written from PR builds, to avoid cache poisoning
+# - no build cache is used: exporting it took longer than building the image,
+#   and PR builds could otherwise poison it
 on:
   push:
     branches:
@@ -69,8 +70,6 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
 
   guard:
     name: 🛡️ Check approval gate
