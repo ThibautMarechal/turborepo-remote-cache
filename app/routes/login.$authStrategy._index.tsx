@@ -1,5 +1,5 @@
 import { redirect, type ActionFunction, type LoaderFunction } from 'react-router';
-import { authenticator } from '~/services/authentication.server';
+import { authenticateExternal } from '~/services/authentication.server';
 
 import invariant from 'tiny-invariant';
 import { redirectToCookie } from '~/services/cookie.server';
@@ -12,7 +12,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   const redirectTo = url.searchParams.get('redirect_to') ?? '/';
 
   try {
-    await authenticator.authenticate(params.authStrategy, request);
+    await authenticateExternal(params.authStrategy, request);
     return redirect(redirectTo);
   } catch (error) {
     if (error instanceof Response && isRedirect(error)) {

@@ -84,16 +84,30 @@ authenticator.use(
   'user-pass',
 );
 
+// OAuth providers need an absolute redirect URI, which depends on the URL the app is reached with,
+// so these strategies are created for each request (see authenticateExternal)
+type ExternalStrategyFactory = (redirectURI: string) => { authenticate(request: Request): Promise<string> };
+const externalStrategies = new Map<string, ExternalStrategyFactory>();
+
+export async function authenticateExternal(name: string, request: Request) {
+  const createStrategy = externalStrategies.get(name);
+  if (!createStrategy) {
+    throw new Error(`Unknown authentication strategy: ${name}`);
+  }
+  const redirectURI = new URL(`/login/${name}/callback`, request.url).toString();
+  return await createStrategy(redirectURI).authenticate(request);
+}
+
 if (process.env.OIDC === 'true') {
   const { OIDC_AUTHORIZATION_URL, OIDC_TOKEN_URL, OIDC_CLIENT_ID, OIDC_CLIENT_SECRET, OIDC_PROFILE_URL } = process.env;
   invariant(OIDC_AUTHORIZATION_URL && OIDC_TOKEN_URL && OIDC_CLIENT_ID && OIDC_CLIENT_SECRET && OIDC_PROFILE_URL);
-  const oidc = new OAuth2Strategy<string>(
+  const createOidcStrategy: ExternalStrategyFactory = (redirectURI) => new OAuth2Strategy<string>(
     {
       authorizationEndpoint: OIDC_AUTHORIZATION_URL,
       tokenEndpoint: OIDC_TOKEN_URL,
       clientId: OIDC_CLIENT_ID,
       clientSecret: OIDC_CLIENT_SECRET,
-      redirectURI: '/login/oidc/callback',
+      redirectURI,
       scopes: ['openid', 'email', 'profile'],
     },
     async ({ tokens }) => {
@@ -136,18 +150,18 @@ if (process.env.OIDC === 'true') {
     },
   );
 
-  authenticator.use(oidc, 'oidc');
+  externalStrategies.set('oidc', createOidcStrategy);
 }
 
 if (process.env.AZURE_AD === 'true') {
   const { AZURE_AD_CLIENT_ID, AZURE_AD_CLIENT_SECRET, AZURE_AD_TENANT_ID } = process.env;
   invariant(AZURE_AD_CLIENT_ID && AZURE_AD_CLIENT_SECRET && AZURE_AD_TENANT_ID);
-  const microsoftStrategy = new MicrosoftStrategy<string>(
+  const createMicrosoftStrategy: ExternalStrategyFactory = (redirectURI) => new MicrosoftStrategy<string>(
     {
       clientId: AZURE_AD_CLIENT_ID,
       clientSecret: AZURE_AD_CLIENT_SECRET,
       tenantId: AZURE_AD_TENANT_ID,
-      redirectURI: '/login/azure-ad/callback',
+      redirectURI,
       prompt: 'consent',
     },
     async ({ tokens }) => {
@@ -162,5 +176,5 @@ if (process.env.AZURE_AD === 'true') {
       return profile.id;
     },
   );
-  authenticator.use(microsoftStrategy, 'azure-ad');
+  externalStrategies.set('azure-ad', createMicrosoftStrategy);
 }

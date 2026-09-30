@@ -1,6 +1,6 @@
 import { redirect, type LoaderFunction } from 'react-router';
 import invariant from 'tiny-invariant';
-import { authenticator, commitUserSession } from '~/services/authentication.server';
+import { authenticateExternal, commitUserSession } from '~/services/authentication.server';
 import { redirectToCookie } from '~/services/cookie.server';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
@@ -8,7 +8,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const redirectTo = (await redirectToCookie.parse(request.headers.get('Cookie'))) ?? '/';
 
   try {
-    const userId = await authenticator.authenticate(params.authStrategy, request);
+    const userId = await authenticateExternal(params.authStrategy, request);
     return redirect(redirectTo, { headers: { 'Set-Cookie': await commitUserSession(request, userId) } });
   } catch (error) {
     if (error instanceof Response) {
