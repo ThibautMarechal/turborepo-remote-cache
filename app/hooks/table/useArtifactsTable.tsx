@@ -1,7 +1,7 @@
 import TrashIcon from '@heroicons/react/24/outline/TrashIcon';
 import ArrowDownTrayIcon from '@heroicons/react/24/outline/ArrowDownTrayIcon';
 import type { Artifact, Team, User } from '@prisma/client';
-import { Form, useNavigation } from '@remix-run/react';
+import { Form, useNavigation } from 'react-router';
 import DateCell from '~/component/DateCell';
 import TeamCell from '~/component/TeamCell';
 import UserCell from '~/component/UserCell';

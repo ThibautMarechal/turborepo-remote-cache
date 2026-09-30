@@ -1,4 +1,4 @@
-import type { LoaderFunction } from '@remix-run/node';
+import type { LoaderFunction } from 'react-router';
 import NoSsr from '~/component/NoSsr';
 import StorageStats from '~/component/StorageStats';
 import TimeSavedStats from '~/component/TimeSavedStats';

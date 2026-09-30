@@ -1,8 +1,8 @@
-import type { DataFunctionArgs } from '@remix-run/server-runtime';
+import type { LoaderFunctionArgs } from 'react-router';
 import type { TurboContext } from '~/types/TurboContext';
 import type { Team, User } from '@prisma/client';
 
-export function getTurboContext({ request, params }: DataFunctionArgs, user: User, team: Team | null): TurboContext {
+export function getTurboContext({ request, params }: Pick<LoaderFunctionArgs, 'request' | 'params' | 'context'>, user: User, team: Team | null): TurboContext {
   const { hash } = params;
   const durationString = request.headers.get(DURATION_HEADER);
   return {

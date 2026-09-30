@@ -1,6 +1,6 @@
-import type { ActionFunction, LoaderFunction } from '@remix-run/node';
+import type { ActionFunction, LoaderFunction } from 'react-router';
 
-import { useActionData } from '@remix-run/react';
+import { useActionData } from 'react-router';
 import { formAction } from '~/formAction';
 import copy from 'copy-to-clipboard';
 import { z } from 'zod';
@@ -33,7 +33,9 @@ export const action: ActionFunction = async ({ request }) => {
 };
 
 export default function New() {
-  const data = useActionData<string>();
+  const actionData = useActionData<{ success: true; data: string } | { success: false }>();
+  // remix-forms returns { success, data } on success, or the validation errors
+  const data = actionData?.success ? actionData.data : undefined;
   return (
     <div className="flex justify-center">
       {data ? (

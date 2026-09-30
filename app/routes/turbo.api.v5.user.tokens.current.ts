@@ -1,4 +1,4 @@
-import { json, type LoaderFunction } from '@remix-run/node';
+import { type LoaderFunction } from 'react-router';
 import { ToVercelToken } from '~/mapper/token';
 import { getToken } from '~/services/tokens.server';
 import { allowMethods, METHOD } from '~/utils/method';
@@ -8,12 +8,12 @@ export const loader: LoaderFunction = async ({ request }) => {
   allowMethods(request, METHOD.GET);
   const bearer = request.headers.get('authorization')?.replace(/^Bearer\s/, '');
   if (!bearer) {
-    return json({ error: { code: 'forbidden', message: 'Not authorized', invalidToken: false } }, { status: 403 });
+    return Response.json({ error: { code: 'forbidden', message: 'Not authorized', invalidToken: false } }, { status: 403 });
   }
   try {
     const token = await getToken(bearer);
-    return json({ token: ToVercelToken(token) });
+    return Response.json({ token: ToVercelToken(token) });
   } catch (error) {
-    return json({ error: { code: 'forbidden', message: 'The token is invalid', invalidToken: true } }, { status: 403 });
+    return Response.json({ error: { code: 'forbidden', message: 'The token is invalid', invalidToken: true } }, { status: 403 });
   }
 };

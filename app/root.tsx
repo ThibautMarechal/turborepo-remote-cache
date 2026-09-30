@@ -1,14 +1,14 @@
-import type { LinksFunction, LoaderFunction, MetaFunction } from '@remix-run/node';
+import type { LinksFunction, LoaderFunction, MetaFunction } from 'react-router';
 
-import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, isRouteErrorResponse, useRouteError } from '@remix-run/react';
+import { Links, Meta, Outlet, Scripts, ScrollRestoration, isRouteErrorResponse, useRouteError } from 'react-router';
 
 import { getUserSession } from '~/services/authentication.server';
 import { getUserDetail } from '~/services/users.server';
 import { CurrentUserProvider } from '~/context/CurrentUser';
 import Navigation from '~/component/Navigation';
 import type { UserDetail } from '~/types/prisma';
-import tailwind from './tailwind.css';
-import fullturboStyle from '~/styles/fullturbo.css';
+import tailwind from './tailwind.css?url';
+import fullturboStyle from '~/styles/fullturbo.css?url';
 import { json, useLoaderData } from '~/utils/superjson';
 
 export const meta: MetaFunction = () => [
@@ -55,7 +55,6 @@ export default function Root() {
           <Outlet />
           <ScrollRestoration />
           <Scripts />
-          <LiveReload />
         </body>
       </html>
     </CurrentUserProvider>
@@ -78,7 +77,6 @@ export const ErrorBoundary = () => {
         <div className="m-0 text-lg text-center text-error">{JSON.stringify(data, null, 2)}</div>
         <ScrollRestoration />
         <Scripts />
-        <LiveReload />
       </body>
     </html>
   );

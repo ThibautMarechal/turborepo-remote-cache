@@ -1,5 +1,5 @@
 import type { User } from '@prisma/client';
-import type { ActionFunction, LoaderFunction } from '@remix-run/node';
+import type { ActionFunction, LoaderFunction } from 'react-router';
 
 import { makeDomainFunction, toComposable } from 'domain-functions';
 import { formAction } from '~/formAction';

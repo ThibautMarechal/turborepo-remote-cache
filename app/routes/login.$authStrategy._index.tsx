@@ -1,4 +1,4 @@
-import { redirect, type ActionFunction, type LoaderFunction } from '@remix-run/node';
+import { redirect, type ActionFunction, type LoaderFunction } from 'react-router';
 import { authenticator } from '~/services/authentication.server';
 
 import invariant from 'tiny-invariant';

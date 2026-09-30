@@ -1,6 +1,6 @@
 import TrashIcon from '@heroicons/react/24/outline/TrashIcon';
 import type { Team } from '@prisma/client';
-import { Form, Link } from '@remix-run/react';
+import { Form, Link } from 'react-router';
 import DateCell from '~/component/DateCell';
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table';
 import type { AppTableFeatures } from './tableFeatures';

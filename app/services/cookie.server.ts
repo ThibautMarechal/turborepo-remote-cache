@@ -1,4 +1,4 @@
-import { createCookie, createCookieSessionStorage } from '@remix-run/node';
+import { createCookie, createCookieSessionStorage } from 'react-router';
 
 const secureCookie = process.env.COOKIE_NOT_SECURE !== 'true' && process.env.NODE_ENV === 'production';
 

@@ -1,6 +1,6 @@
 # Turborepo Remote cache
 
-Self-host your [turborepo remote cache](https://turborepo.org/docs/features/remote-caching) powerred by [Remix](https://remix.run/)
+Self-host your [turborepo remote cache](https://turborepo.org/docs/features/remote-caching) powered by [React Router](https://reactrouter.com/)
 
 ## Features
 
@@ -14,7 +14,7 @@ Self-host your [turborepo remote cache](https://turborepo.org/docs/features/remo
 - See sessions globally, by user or by teams
 - See artifacts globally, by user or by teams
 - Display times saved by using the remote caching
-- Probably can be deployed anywhere that support Remix ([How top deploy a Remix app?](https://remix.run/docs/en/v1/guides/deployment))
+- Probably can be deployed anywhere that supports a Node.js server ([Deploying a React Router app](https://reactrouter.com/start/framework/deploying))
 - Docker Image support [thibmarechal/turborepo-remote-cache](https://hub.docker.com/r/thibmarechal/turborepo-remote-cache)
 
 ## Configuration
@@ -88,7 +88,7 @@ yarn install
 docker-compose -f docker-compose.db.yml up -d
 ```
 
-- Launche the remix dev server
+- Launch the dev server
 
 ```sh
 yarn dev

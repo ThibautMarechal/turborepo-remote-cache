@@ -1,4 +1,4 @@
-import { useSearchParams } from '@remix-run/react';
+import { useSearchParams } from 'react-router';
 import { createSearchParams } from 'react-router-dom';
 import type { OrderBy } from '~/utils/sort';
 

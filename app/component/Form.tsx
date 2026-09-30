@@ -2,7 +2,7 @@ import * as React from 'react';
 import { SchemaForm, type FormSchema, type SchemaFormProps } from 'remix-forms';
 import cn from 'classnames';
 
-import { Form as FrameworkForm } from '@remix-run/react';
+import { Form as FrameworkForm } from 'react-router';
 
 export function Form<Schema extends FormSchema>(props: SchemaFormProps<Schema>) {
   return (

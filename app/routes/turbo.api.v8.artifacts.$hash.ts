@@ -1,4 +1,4 @@
-import type { ActionFunction, LoaderFunction } from '@remix-run/node';
+import type { ActionFunction, LoaderFunction } from 'react-router';
 import { Readable } from 'stream';
 import { CacheStorage } from '~/services/storage.server';
 import { DURATION_HEADER, getTurboContext } from '~/utils/turboContext';

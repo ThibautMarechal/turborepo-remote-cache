@@ -1,6 +1,6 @@
 import type { User } from '@prisma/client';
 import Gravatar from 'react-gravatar';
-import { Link } from '@remix-run/react';
+import { Link } from 'react-router';
 
 type Props = {
   user: User;

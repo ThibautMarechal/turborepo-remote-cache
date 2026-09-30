@@ -1,4 +1,4 @@
-import type { ActionFunction, LoaderFunction } from '@remix-run/node';
+import type { ActionFunction, LoaderFunction } from 'react-router';
 
 import { formAction } from '~/formAction';
 import { z } from 'zod';

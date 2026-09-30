@@ -1,6 +1,6 @@
 import PlusIcon from '@heroicons/react/24/outline/PlusIcon';
-import type { ActionFunction, LoaderFunction } from '@remix-run/node';
-import { Link } from '@remix-run/react';
+import type { ActionFunction, LoaderFunction } from 'react-router';
+import { Link } from 'react-router';
 import { TablePage } from '~/component/TablePage';
 import { useTokensTable } from '~/hooks/table/useTokensTable';
 import { useTablePageLoaderData } from '~/hooks/useTablePageLoaderData';

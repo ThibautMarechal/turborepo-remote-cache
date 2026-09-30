@@ -1,5 +1,5 @@
-import type { LoaderFunction } from '@remix-run/node';
-import { Link } from '@remix-run/react';
+import type { LoaderFunction } from 'react-router';
+import { Link } from 'react-router';
 import { requireCookieAuth } from '~/services/authentication.server';
 import PencilIcon from '@heroicons/react/24/outline/PencilIcon';
 import { getTeamDetailBySlug } from '~/services/teams.server';

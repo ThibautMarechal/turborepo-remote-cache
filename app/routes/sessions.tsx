@@ -1,4 +1,4 @@
-import type { LoaderFunction } from '@remix-run/node';
+import type { LoaderFunction } from 'react-router';
 import { useSessionsTable } from '~/hooks/table/useSessionsTable';
 import { requireCookieAuth } from '~/services/authentication.server';
 import { getSessions, getSessionsCount } from '~/services/session.server';

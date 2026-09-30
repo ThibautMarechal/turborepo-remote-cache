@@ -1,5 +1,5 @@
-import { redirect, type ActionFunction, type LoaderFunction } from '@remix-run/node';
-import { Form, useSearchParams } from '@remix-run/react';
+import { redirect, type ActionFunction, type LoaderFunction } from 'react-router';
+import { Form, useSearchParams } from 'react-router';
 import invariant from 'tiny-invariant';
 import { requireCookieAuth } from '~/services/authentication.server';
 import { generateToken } from '~/services/tokens.server';

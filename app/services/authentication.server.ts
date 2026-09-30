@@ -1,4 +1,4 @@
-import { redirect } from '@remix-run/node';
+import { redirect } from 'react-router';
 import { Authenticator } from 'remix-auth';
 import { FormStrategy } from 'remix-auth-form';
 import { OAuth2Strategy } from 'remix-auth-oauth2';
