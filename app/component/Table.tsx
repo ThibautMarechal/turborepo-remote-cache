@@ -12,7 +12,7 @@ export type TableProps<TableElement extends RowData> = TableInstance<TableElemen
 export function Table<TableElement extends RowData>({ getHeaderGroups, getRowModel, getFooterGroups, footer, onRowDoubleClick }: TableProps<TableElement>) {
   return (
     <div className="relative">
-      <table className="table table-compact table-zebra w-full flex-grow-5">
+      <table className="table table-sm table-zebra w-full flex-grow-5">
         <thead className="sticky top-0">
           {getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>

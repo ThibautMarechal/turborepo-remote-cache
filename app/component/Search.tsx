@@ -9,7 +9,7 @@ export const Search = () => {
 
   return (
     <Form action={action}>
-      <input name="q" type="text" placeholder="Search" className="input input-bordered input-sm" />
+      <input name="q" type="text" placeholder="Search" className="input input-sm" />
     </Form>
   );
 };

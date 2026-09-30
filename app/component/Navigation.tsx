@@ -71,7 +71,7 @@ export const Navigation = () => {
                 <Gravatar className="w-10 rounded-full" email={user.email} />
               </label>
               {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */}
-              <ul tabIndex={0} className="p-2 mt-3 shadow-2xl menu menu-compact dropdown-content bg-base-100 rounded-box w-52">
+              <ul tabIndex={0} className="p-2 mt-3 shadow-2xl menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
                 <li className="w-full">
                   <Link className="flex justify-between w-full" to="/profile">
                     Profile

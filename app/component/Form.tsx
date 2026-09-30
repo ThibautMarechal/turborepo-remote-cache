@@ -23,26 +23,26 @@ export function Form<Schema extends FormSchema>(props: SchemaFormProps<Schema>) 
   );
 }
 
-export const Field = ({ className, ...props }: React.JSX.IntrinsicElements['div']) => <div className={cn('form-control w-full', className)} {...props} />;
+export const Field = ({ className, ...props }: React.JSX.IntrinsicElements['div']) => <div className={cn('flex flex-col gap-1 w-full', className)} {...props} />;
 
 export const Label = ({ children, ...props }: React.JSX.IntrinsicElements['label']) => (
-  <label className="label" {...props}>
-    <span className="label-text">{children}</span>
+  <label className="label text-sm text-base-content py-1" {...props}>
+    {children}
   </label>
 );
 
 export const Input = React.forwardRef<HTMLInputElement, React.JSX.IntrinsicElements['input']>(({ className, ...props }, ref) => (
-  <input ref={ref} className={cn('input input-bordered w-full', className)} {...props} />
+  <input ref={ref} className={cn('input w-full', className)} {...props} />
 ));
 Input.displayName = 'Input';
 
 export const TextArea = React.forwardRef<HTMLTextAreaElement, React.JSX.IntrinsicElements['textarea']>(({ className, ...props }, ref) => (
-  <textarea ref={ref} className={cn('textarea textarea-bordered w-full', className)} rows={5} {...props} />
+  <textarea ref={ref} className={cn('textarea w-full', className)} rows={5} {...props} />
 ));
 TextArea.displayName = 'TextArea';
 
 export const Select = React.forwardRef<HTMLSelectElement, React.JSX.IntrinsicElements['select']>(({ className, ...props }, ref) => (
-  <select ref={ref} className={cn('select select-bordered w-full', className)} {...props} />
+  <select ref={ref} className={cn('select w-full', className)} {...props} />
 ));
 Select.displayName = 'Select';
 
@@ -52,7 +52,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, React.JSX.IntrinsicEl
 Checkbox.displayName = 'Checkbox';
 
 export const Button = ({ className, ...props }: React.JSX.IntrinsicElements['button']) => (
-  <div className="w-full mt-5 form-control">
+  <div className="w-full mt-5 flex flex-col">
     <button className={cn('btn btn-primary', className)} {...props} />
   </div>
 );
