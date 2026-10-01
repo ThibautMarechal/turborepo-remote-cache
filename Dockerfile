@@ -64,6 +64,9 @@ ENV COOKIE_SECRET=
 # Only use "true" when not deployed over https
 ENV COOKIE_NOT_SECURE=
 
+# Use "true" when running behind a reverse proxy (uses X-Forwarded-Proto / X-Forwarded-Host)
+ENV TRUST_PROXY=
+
 # Storage configuration
 ENV STORAGE_TYPE=
 # fs (File Storage)

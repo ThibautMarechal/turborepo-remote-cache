@@ -122,3 +122,10 @@ E.g. **Google CloudRun** will have a payload limit of 32MB if you use HTTP/1.1, 
 There is no limit when using HTTP/2.
 
 Make sure to set `--use-http2` on cloud run. See https://cloud.google.com/run/docs/configuring/http2
+
+## Behind a reverse proxy
+
+If the app runs behind a reverse proxy that terminates HTTPS (Traefik, nginx, a load balancer...), set the environment variable `TRUST_PROXY=true`.
+The app then uses the `X-Forwarded-Proto` and `X-Forwarded-Host` headers sent by the proxy, so that the OAuth `redirect_uri` (Azure AD / OIDC login) uses `https://` and your public host name.
+
+Only enable it when the app is reachable through the proxy only, since these headers are trusted as-is.
