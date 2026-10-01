@@ -67,7 +67,7 @@
     "tsconfig-paths": "4.2.0",
     "tsx": "^4.23.9",
     "typescript": "6.0.3",
-    "uuid": "14.0.1",
+    "uuid": "14.0.2",
     "zod": "4.4.3"
   },
   "devDependencies": {
