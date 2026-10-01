@@ -1,4 +1,12 @@
+import { randomBytes } from 'node:crypto';
 import { createCookie, createCookieSessionStorage } from 'react-router';
+
+// An empty COOKIE_SECRET (the Docker image declares it empty) counts as unset. Without a secret, use a random one:
+// sessions are then lost on restart, but cookies can't be forged with a guessable default secret.
+const cookieSecret = process.env.COOKIE_SECRET || randomBytes(32).toString('hex');
+if (!process.env.COOKIE_SECRET) {
+  console.warn('COOKIE_SECRET is not set: using a random secret, users will be logged out when the server restarts.');
+}
 
 const secureCookie = process.env.COOKIE_NOT_SECURE !== 'true' && process.env.NODE_ENV === 'production';
 
@@ -9,7 +17,7 @@ export const sessionStorage = createCookieSessionStorage({
     path: '/', // remember to add this so the cookie will work in all routes
     maxAge: 60 * 60 * 24 * 7,
     httpOnly: true, // for security reasons, make this cookie http only
-    secrets: [process.env.COOKIE_SECRET ?? 'COOKIE_SECRET'], // replace this with an actual secret
+    secrets: [cookieSecret],
     secure: secureCookie, // enable this in prod & https only
   },
 });

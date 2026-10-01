@@ -26,6 +26,11 @@ Self-host your [turborepo remote cache](https://turborepo.org/docs/features/remo
 - ADMIN_PASSWORD : turbo
 - ADMIN_EMAIL
 
+### Session configuration
+
+- COOKIE_SECRET : secret used to sign the session cookie. Set it to a long random value (e.g. `openssl rand -hex 32`): when it is not set, a random secret is generated at startup and users are logged out on every restart
+- COOKIE_NOT_SECURE : set to `true` only when the app is not served over https
+
 ### TURBO configuration
 
 ### Storage configuration
