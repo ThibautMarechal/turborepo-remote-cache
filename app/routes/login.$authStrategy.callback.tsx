@@ -14,6 +14,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     if (error instanceof Response) {
       throw error;
     }
+    console.error(`External login with ${params.authStrategy} failed:`, error);
     return redirect('/login');
   }
 };
