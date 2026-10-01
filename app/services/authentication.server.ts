@@ -35,7 +35,7 @@ export async function destroyUserSession(request: Request) {
 
 export async function requireCookieAuth(request: Request, redirectOnfail: boolean = true) {
   const url = new URL(request.url);
-  const failureRedirect = `/login?redirect_to=${encodeURI(url.pathname + url.search)}`;
+  const failureRedirect = `/login?redirect_to=${encodeURIComponent(url.pathname + url.search)}`;
   try {
     const session = await getUserSession(request);
     const userId = session.get(USER_SESSION_KEY);

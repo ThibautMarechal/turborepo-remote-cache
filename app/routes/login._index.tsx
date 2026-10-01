@@ -53,7 +53,7 @@ export const action: ActionFunction = async ({ request }) => {
     if (error instanceof Response) {
       throw error;
     }
-    return redirect(`/login?redirect_to=${redirectUri}`);
+    return redirect(`/login?redirect_to=${encodeURIComponent(redirectUri)}`);
   }
 };
 
@@ -84,7 +84,7 @@ export default function Login() {
         {authStrategies.map((startegy) => (
           <React.Fragment key={startegy.type}>
             <div className="divider" />
-            <RemixForm method="post" action={`/login/${startegy.type}?redirect_to=${redirectTo}`}>
+            <RemixForm method="post" action={`/login/${startegy.type}?redirect_to=${encodeURIComponent(redirectTo)}`}>
               <Button>{startegy.name}</Button>
             </RemixForm>
           </React.Fragment>

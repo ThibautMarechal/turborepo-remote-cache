@@ -22,6 +22,11 @@ export const action: ActionFunction = async ({ request, params, context }) => {
         const [newToken] = await generateToken(user.id);
         const redirectUrlWithToken = new URL(redirectUri);
         redirectUrlWithToken.searchParams.set('token', newToken);
+        // turbo >= 2.x sends a CSRF `state` that must be echoed back on the callback
+        const state = formData.get('state')?.toString();
+        if (state) {
+          redirectUrlWithToken.searchParams.set('state', state);
+        }
         return redirect(redirectUrlWithToken.toString());
       }
       case 'deny': {
@@ -36,6 +41,7 @@ export const action: ActionFunction = async ({ request, params, context }) => {
 export default function Index() {
   const [searchParams] = useSearchParams();
   const redirectUri = searchParams.get('redirect_uri');
+  const state = searchParams.get('state');
 
   return (
     <>
@@ -43,6 +49,7 @@ export default function Index() {
       <p className="text-center m-10">Please authorize to connect with Turborepo CLI</p>
       <Form method="post" className="flex w-full justify-center gap-10">
         <input type="hidden" name="redirect_uri" value={redirectUri ?? ''} />
+        {state ? <input type="hidden" name="state" value={state} /> : null}
         {/* eslint-disable-next-line jsx-a11y/no-autofocus -- intentional: default action on this authorization prompt */}
         <button name="_action" value="allow" autoFocus className="btn btn-primary">
           Allow
