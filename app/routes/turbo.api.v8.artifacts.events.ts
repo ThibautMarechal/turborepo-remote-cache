@@ -1,4 +1,4 @@
-import type { LoaderFunction, ActionFunction } from '@remix-run/node';
+import type { LoaderFunction, ActionFunction } from 'react-router';
 
 import { requireTokenAuth } from '~/services/authentication.server';
 import { insertEvents } from '~/services/events.server';

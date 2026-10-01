@@ -1,9 +1,9 @@
-import type { ActionFunction, LoaderFunction } from '@remix-run/node';
+import type { ActionFunction, LoaderFunction } from 'react-router';
 
 import { formAction } from '~/formAction';
 import { z } from 'zod';
 import { requireCookieAuth } from '~/services/authentication.server';
-import { makeDomainFunction } from 'domain-functions';
+import { makeDomainFunction, toComposable } from 'domain-functions';
 import { Form } from '~/component/Form';
 import { getTeamBySlug, updateTeam } from '~/services/teams.server';
 import { json, useLoaderData } from '~/utils/superjson';
@@ -22,7 +22,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 export const action: ActionFunction = async ({ request, params }) => {
   await requireCookieAuth(request);
   const team = await getTeamBySlug(params.teamSlug as string);
-  const mutation = makeDomainFunction(schema)(async ({ name }) => await updateTeam(team.id, { name }));
+  const mutation = toComposable(makeDomainFunction(schema)(async ({ name }) => await updateTeam(team.id, { name })));
   return formAction({
     request,
     schema,

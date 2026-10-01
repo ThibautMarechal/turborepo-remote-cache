@@ -1,4 +1,4 @@
-import type { LoaderFunction } from '@remix-run/node';
+import type { LoaderFunction } from 'react-router';
 import { requireCookieAuth } from '~/services/authentication.server';
 import { getUserDetailByUsername } from '~/services/users.server';
 import UserStats from '~/component/UserStats';

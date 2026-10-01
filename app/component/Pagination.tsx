@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Link, useLocation, useMatches } from '@remix-run/react';
+import { Link, useLocation, useMatches } from 'react-router';
 import cn from 'classnames';
 import { useInView } from 'react-intersection-observer';
 import NoSsr from './NoSsr';
@@ -51,7 +51,9 @@ export const Pagination = ({ count, getUrlAtPage, skip, take, currentPageCount, 
           // https://remix.run/docs/en/v1.5.1/guides/routing#what-is-the-index-query-param
           const remixRoutePath = `${match.pathname}${isIndexRoute ? '?index&' : ''}`;
           const fullpath = remixRoutePath + getUrlAtPage(currentPageCount / take).replace(/^\?/, isIndexRoute ? '?index&' : '?');
-          currentPageCount % take === 0 && onLoadMore?.(fullpath);
+          if (currentPageCount % take === 0) {
+            onLoadMore?.(fullpath);
+          }
         }
       }
     },
@@ -60,20 +62,20 @@ export const Pagination = ({ count, getUrlAtPage, skip, take, currentPageCount, 
     <>
       <noscript>
         <div className="flex justify-center m-5">
-          <div className="btn-group">
-            <Link className={cn('btn btn-sm', { 'btn-disabled': skip <= 0 })} to={getUrlAtPage(currentPage - 1)}>
+          <div className="join">
+            <Link className={cn('btn btn-sm join-item', { 'btn-disabled': skip <= 0 })} to={getUrlAtPage(currentPage - 1)}>
               Previous
             </Link>
             {createPagination(currentPage, numberOfPages).map((page, index) => (
               <Link
                 key={`${page}_${index}`}
-                className={cn('btn btn-sm', { 'btn-active': currentPage === page, 'btn-disabled': currentPage === page || isNaN(page) })}
+                className={cn('btn btn-sm join-item', { 'btn-active': currentPage === page, 'btn-disabled': currentPage === page || isNaN(page) })}
                 to={getUrlAtPage(page)}
               >
                 {isNaN(page) ? '...' : page + 1}
               </Link>
             ))}
-            <Link className={cn('btn btn-sm', { 'btn-disabled': currentPageCount < take })} to={getUrlAtPage(currentPage + 1)}>
+            <Link className={cn('btn btn-sm join-item', { 'btn-disabled': currentPageCount < take })} to={getUrlAtPage(currentPage + 1)}>
               Next
             </Link>
           </div>

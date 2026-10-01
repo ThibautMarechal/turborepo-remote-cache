@@ -1,4 +1,4 @@
-import { json, type LoaderFunction } from '@remix-run/node';
+import { type LoaderFunction } from 'react-router';
 import { ToVercelUser } from '~/mapper/user';
 import { requireTokenAuth } from '~/services/authentication.server';
 import { allowMethods, METHOD } from '~/utils/method';
@@ -6,5 +6,5 @@ import { allowMethods, METHOD } from '~/utils/method';
 export const loader: LoaderFunction = async ({ request }) => {
   allowMethods(request, METHOD.GET);
   const user = await requireTokenAuth(request);
-  return json({ user: ToVercelUser(user) });
+  return Response.json({ user: ToVercelUser(user) });
 };

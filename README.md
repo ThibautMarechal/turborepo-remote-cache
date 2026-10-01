@@ -1,6 +1,6 @@
 # Turborepo Remote cache
 
-Self-host your [turborepo remote cache](https://turborepo.org/docs/features/remote-caching) powerred by [Remix](https://remix.run/)
+Self-host your [turborepo remote cache](https://turborepo.org/docs/features/remote-caching) powered by [React Router](https://reactrouter.com/)
 
 ## Features
 
@@ -14,7 +14,7 @@ Self-host your [turborepo remote cache](https://turborepo.org/docs/features/remo
 - See sessions globally, by user or by teams
 - See artifacts globally, by user or by teams
 - Display times saved by using the remote caching
-- Probably can be deployed anywhere that support Remix ([How top deploy a Remix app?](https://remix.run/docs/en/v1/guides/deployment))
+- Probably can be deployed anywhere that supports a Node.js server ([Deploying a React Router app](https://reactrouter.com/start/framework/deploying))
 - Docker Image support [thibmarechal/turborepo-remote-cache](https://hub.docker.com/r/thibmarechal/turborepo-remote-cache)
 
 ## Configuration
@@ -25,6 +25,11 @@ Self-host your [turborepo remote cache](https://turborepo.org/docs/features/remo
 - ADMIN_NAME : Admin
 - ADMIN_PASSWORD : turbo
 - ADMIN_EMAIL
+
+### Session configuration
+
+- COOKIE_SECRET : secret used to sign the session cookie. Set it to a long random value (e.g. `openssl rand -hex 32`): when it is not set, a random secret is generated at startup and users are logged out on every restart
+- COOKIE_NOT_SECURE : set to `true` only when the app is not served over https
 
 ### TURBO configuration
 
@@ -88,7 +93,7 @@ yarn install
 docker-compose -f docker-compose.db.yml up -d
 ```
 
-- Launche the remix dev server
+- Launch the dev server
 
 ```sh
 yarn dev
@@ -122,3 +127,10 @@ E.g. **Google CloudRun** will have a payload limit of 32MB if you use HTTP/1.1, 
 There is no limit when using HTTP/2.
 
 Make sure to set `--use-http2` on cloud run. See https://cloud.google.com/run/docs/configuring/http2
+
+## Behind a reverse proxy
+
+If the app runs behind a reverse proxy that terminates HTTPS (Traefik, nginx, a load balancer...), set the environment variable `TRUST_PROXY=true`.
+The app then uses the `X-Forwarded-Proto` and `X-Forwarded-Host` headers sent by the proxy, so that the OAuth `redirect_uri` (Azure AD / OIDC login) uses `https://` and your public host name.
+
+Only enable it when the app is reachable through the proxy only, since these headers are trusted as-is.

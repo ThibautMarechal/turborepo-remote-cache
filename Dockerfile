@@ -1,5 +1,5 @@
 # base node image
-FROM node:20-bullseye-slim as base
+FROM node:22-bookworm-slim as base
 
 # set for base and all layer that inherit from it
 ENV NODE_ENV production
@@ -12,7 +12,9 @@ FROM base as deps
 
 WORKDIR /myapp
 
-ADD package.json yarn.lock ./
+# the postinstall script runs `prisma generate`, which needs the schema and config
+ADD package.json yarn.lock prisma.config.ts ./
+ADD prisma ./prisma
 RUN yarn install --production=false
 
 # Setup production node_modules
@@ -21,7 +23,8 @@ FROM base as production-deps
 WORKDIR /myapp
 
 COPY --from=deps /myapp/node_modules /myapp/node_modules
-ADD package.json yarn.lock ./
+ADD package.json yarn.lock prisma.config.ts ./
+ADD prisma ./prisma
 RUN yarn install --production
 
 # Build the app
@@ -30,9 +33,6 @@ FROM base as build
 WORKDIR /myapp
 
 COPY --from=deps /myapp/node_modules /myapp/node_modules
-
-ADD prisma .
-RUN npx prisma generate
 
 ADD . .
 RUN yarn build
@@ -63,6 +63,9 @@ ENV COOKIE_SECRET=
 
 # Only use "true" when not deployed over https
 ENV COOKIE_NOT_SECURE=
+
+# Use "true" when running behind a reverse proxy (uses X-Forwarded-Proto / X-Forwarded-Host)
+ENV TRUST_PROXY=
 
 # Storage configuration
 ENV STORAGE_TYPE=

@@ -1,5 +1,5 @@
-import { redirect, type ActionFunction, type LoaderFunction } from '@remix-run/node';
-import { Form, useSearchParams } from '@remix-run/react';
+import { redirect, type ActionFunction, type LoaderFunction } from 'react-router';
+import { Form, useSearchParams } from 'react-router';
 import invariant from 'tiny-invariant';
 import { requireCookieAuth } from '~/services/authentication.server';
 import { generateToken } from '~/services/tokens.server';
@@ -43,6 +43,7 @@ export default function Index() {
       <p className="text-center m-10">Please authorize to connect with Turborepo CLI</p>
       <Form method="post" className="flex w-full justify-center gap-10">
         <input type="hidden" name="redirect_uri" value={redirectUri ?? ''} />
+        {/* eslint-disable-next-line jsx-a11y/no-autofocus -- intentional: default action on this authorization prompt */}
         <button name="_action" value="allow" autoFocus className="btn btn-primary">
           Allow
         </button>

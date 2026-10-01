@@ -1,7 +1,7 @@
 import TrashIcon from '@heroicons/react/24/outline/TrashIcon';
 import type { Team } from '@prisma/client';
-import type { ActionFunction, LoaderFunction } from '@remix-run/node';
-import { Link } from '@remix-run/react';
+import type { ActionFunction, LoaderFunction } from 'react-router';
+import { Link } from 'react-router';
 import invariant from 'tiny-invariant';
 import { TablePage } from '~/component/TablePage';
 import { useArtifactsTable } from '~/hooks/table/useArtifactsTable';

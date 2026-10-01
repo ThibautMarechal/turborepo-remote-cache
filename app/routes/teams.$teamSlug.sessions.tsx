@@ -1,5 +1,5 @@
 import type { Team } from '@prisma/client';
-import type { LoaderFunction } from '@remix-run/node';
+import type { LoaderFunction } from 'react-router';
 import { TablePage } from '~/component/TablePage';
 import { useSessionsTable } from '~/hooks/table/useSessionsTable';
 import { useTablePageLoaderData } from '~/hooks/useTablePageLoaderData';

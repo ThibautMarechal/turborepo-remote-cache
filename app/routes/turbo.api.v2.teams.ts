@@ -1,4 +1,4 @@
-import { json, type LoaderFunction } from '@remix-run/node';
+import { type LoaderFunction } from 'react-router';
 import { addTeamUndescore } from '~/mapper/team';
 import { ServerRole } from '~/roles/ServerRole';
 import { TeamRole } from '~/roles/TeamRole';
@@ -10,7 +10,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   allowMethods(request, METHOD.GET);
   const user = await requireTokenAuth(request);
   const teams = user.role === ServerRole.ADMIN ? await getTeams(0, 100) : await getUserTeams(user.id, 100);
-  return json({
+  return Response.json({
     teams: teams.map((team) => ({
       id: addTeamUndescore(team.slug),
       name: team.name,

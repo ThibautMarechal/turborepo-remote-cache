@@ -1,5 +1,5 @@
 import Gravatar from 'react-gravatar';
-import { Form, Link, NavLink, useLocation } from '@remix-run/react';
+import { Form, Link, NavLink, useLocation } from 'react-router';
 import ArrowRightOnRectangleIcon from '@heroicons/react/24/outline/ArrowRightOnRectangleIcon';
 import UserIcon from '@heroicons/react/24/outline/UserIcon';
 import UsersIcon from '@heroicons/react/24/outline/UsersIcon';
@@ -27,7 +27,7 @@ export const Navigation = () => {
       </div>
       <div className="flex-none h-fit">
         {user && (
-          <ul className="gap-1 p-0 menu menu-horizontal">
+          <ul className="gap-1 p-0 menu menu-horizontal items-center">
             <li className="justify-center">
               <NavLink to="/users">
                 <UsersIcon className={cn('h-5', { 'text-primary': !pathname.startsWith('/users'), 'text-secondary': pathname.startsWith('/users') })} />
@@ -65,10 +65,13 @@ export const Navigation = () => {
               </li>
             </HasRights>
             <div className="dropdown dropdown-end">
-              <label tabIndex={0} className="m-2 btn btn-ghost btn-circle avatar">
-                <Gravatar className="w-10 rounded-full" email={user.email} />
+              {/* daisyUI dropdown trigger: tabIndex is required on the label for the CSS-only focus-triggered dropdown to work */}
+              {/* eslint-disable-next-line jsx-a11y/label-has-associated-control, jsx-a11y/no-noninteractive-tabindex */}
+              <label tabIndex={0} className="m-2 btn btn-ghost btn-circle btn-lg avatar">
+                <Gravatar className="w-10 h-10 rounded-full" email={user.email} />
               </label>
-              <ul tabIndex={0} className="p-2 mt-3 shadow-2xl menu menu-compact dropdown-content bg-base-100 rounded-box w-52">
+              {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */}
+              <ul tabIndex={0} className="p-2 mt-3 shadow-2xl menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
                 <li className="w-full">
                   <Link className="flex justify-between w-full" to="/profile">
                     Profile

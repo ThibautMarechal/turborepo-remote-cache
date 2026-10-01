@@ -1,3 +1,73 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@plugin '@tailwindcss/typography';
+
+@plugin 'daisyui' {
+  themes: false;
+}
+
+/* Colors derived the same way daisyUI 4 derived them from the original turbo palette */
+@plugin 'daisyui/theme' {
+  name: 'turbo';
+  default: true;
+  color-scheme: dark;
+  --color-base-100: oklch(30.86% 0.023 264.15);
+  --color-base-200: oklch(28.7% 0.022 264.15);
+  --color-base-300: oklch(26.69% 0.02 264.15);
+  --color-base-content: oklch(86.17% 0.005 264.15);
+  --color-primary: oklch(62.31% 0.188 259.81);
+  --color-primary-content: oklch(12.46% 0.038 259.81);
+  --color-secondary: oklch(63.68% 0.208 25.33);
+  --color-secondary-content: oklch(12.74% 0.042 25.33);
+  --color-accent: oklch(90.14% 0.055 230.9);
+  --color-accent-content: oklch(18.03% 0.011 230.9);
+  --color-neutral: oklch(22.98% 0.015 261.64);
+  --color-neutral-content: oklch(84.6% 0.003 261.64);
+  --color-info: oklch(71.48% 0.126 215.22);
+  --color-info-content: oklch(14.3% 0.025 215.22);
+  --color-success: oklch(76.81% 0.204 130.85);
+  --color-success-content: oklch(15.36% 0.041 130.85);
+  --color-warning: oklch(76.86% 0.165 70.08);
+  --color-warning-content: oklch(15.37% 0.033 70.08);
+  --color-error: oklch(63.68% 0.208 25.33);
+  --color-error-content: oklch(12.74% 0.042 25.33);
+  --radius-selector: 1rem;
+  --radius-field: 0.5rem;
+  --radius-box: 1rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
+}
+
+@theme {
+  --animate-appear: appear 2s ease forwards;
+
+  @keyframes appear {
+    0% {
+      opacity: 0%;
+    }
+    50% {
+      opacity: 0%;
+    }
+    100% {
+      opacity: 100%;
+    }
+  }
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}

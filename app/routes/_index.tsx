@@ -3,7 +3,7 @@ import FingerPrintIcon from '@heroicons/react/24/outline/FingerPrintIcon';
 import BoltIcon from '@heroicons/react/24/outline/BoltIcon';
 import UserGroupIcon from '@heroicons/react/24/outline/UserGroupIcon';
 import UsersIcon from '@heroicons/react/24/outline/UsersIcon';
-import type { LoaderFunction } from '@remix-run/node';
+import type { LoaderFunction } from 'react-router';
 import HasRights from '~/component/HasRights';
 import { Stat } from '~/component/Stat';
 import { Stats } from '~/component/Stats';

@@ -1,5 +1,5 @@
-import type { ActionFunction, LoaderFunction } from '@remix-run/node';
-import { Form, Link, useNavigate, useNavigation } from '@remix-run/react';
+import type { ActionFunction, LoaderFunction } from 'react-router';
+import { Form, Link, useNavigate, useNavigation } from 'react-router';
 import { requireCookieAuth } from '~/services/authentication.server';
 import { deleteUser, getUser, getUsers, getUsersCount } from '~/services/users.server';
 import type { User } from '@prisma/client';

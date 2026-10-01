@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Form, useLocation } from '@remix-run/react';
+import { Form, useLocation } from 'react-router';
 
 export const Search = () => {
   const location = useLocation();
@@ -9,7 +9,7 @@ export const Search = () => {
 
   return (
     <Form action={action}>
-      <input name="q" type="text" placeholder="Search" className="input input-bordered input-sm" />
+      <input name="q" type="text" placeholder="Search" className="input input-sm" />
     </Form>
   );
 };

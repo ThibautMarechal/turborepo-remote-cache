@@ -1,5 +1,5 @@
-import type { ActionFunction, LoaderFunction } from '@remix-run/node';
-import { Link, useNavigate } from '@remix-run/react';
+import type { ActionFunction, LoaderFunction } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { requireCookieAuth } from '~/services/authentication.server';
 import type { Team } from '@prisma/client';
 import { deleteTeam, getTeams, getTeamsCount } from '~/services/teams.server';

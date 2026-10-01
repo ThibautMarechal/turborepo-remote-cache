@@ -1,13 +1,11 @@
 node_modules
 
 /build
-/public/build
-
-/cypress/screenshots
-/cypress/videos
+/.react-router
 
 /data
 /.cache
 /coverage
 yarn-error.log
 .env.local
+*.tsbuildinfo

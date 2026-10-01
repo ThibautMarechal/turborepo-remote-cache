@@ -1,4 +1,4 @@
-import type { ActionFunction, LoaderFunction } from '@remix-run/node';
+import type { ActionFunction, LoaderFunction } from 'react-router';
 
 export const loader: LoaderFunction = ({ request, params, context }) => {
   return new Response(null, { status: 418 });
