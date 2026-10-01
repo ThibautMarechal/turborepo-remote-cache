@@ -87,7 +87,7 @@
     "@types/react": "19.2.18",
     "@types/react-dom": "19.2.4",
     "@types/react-gravatar": "2.6.14",
-    "@types/readable-stream": "4.0.24",
+    "@types/readable-stream": "4.0.25",
     "@types/uuid": "^11.0.0",
     "@vitejs/plugin-react": "^6.0.5",
     "@vitest/coverage-v8": "^4.1.10",
