@@ -7,7 +7,7 @@ import { makeDomainFunction, toComposable } from 'domain-functions';
 import { Form } from '~/component/Form';
 import { requireAdmin } from '~/roles/rights';
 import { CleanPeriod } from '~/clean/CleanPeriod';
-import { deleteArtifactByPeriod } from '~/services/artifact.server';
+import { startArtifactCleanup } from '~/services/artifact.server';
 import { getUserByUsername } from '~/services/users.server';
 
 const schema = z.object({
@@ -23,7 +23,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 export const action: ActionFunction = async ({ request, params }) => {
   const user = await getUserByUsername(params.username as string);
 
-  const mutation = toComposable(makeDomainFunction(schema)(({ period }) => deleteArtifactByPeriod(period, { userId: user.id })));
+  const mutation = toComposable(makeDomainFunction(schema)(async ({ period }) => startArtifactCleanup(period, { userId: user.id })));
 
   return formAction({
     request,

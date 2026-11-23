@@ -6,7 +6,7 @@ import { requireCookieAuth } from '~/services/authentication.server';
 import { makeDomainFunction, toComposable } from 'domain-functions';
 import { Form } from '~/component/Form';
 import { CleanPeriod } from '~/clean/CleanPeriod';
-import { deleteArtifactByPeriod } from '~/services/artifact.server';
+import { startArtifactCleanup } from '~/services/artifact.server';
 
 const schema = z.object({
   period: z.enum([CleanPeriod.DAY, CleanPeriod.WEEK, CleanPeriod.MONTH, CleanPeriod.YEAR]),
@@ -20,7 +20,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 export const action: ActionFunction = async ({ request, params }) => {
   const user = await requireCookieAuth(request);
 
-  const mutation = toComposable(makeDomainFunction(schema)(({ period }) => deleteArtifactByPeriod(period, { userId: user.id })));
+  const mutation = toComposable(makeDomainFunction(schema)(async ({ period }) => startArtifactCleanup(period, { userId: user.id })));
 
   return formAction({
     request,

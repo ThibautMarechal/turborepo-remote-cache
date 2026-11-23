@@ -7,7 +7,7 @@ import { makeDomainFunction, toComposable } from 'domain-functions';
 import { Form } from '~/component/Form';
 import { requireAdmin } from '~/roles/rights';
 import { CleanPeriod } from '~/clean/CleanPeriod';
-import { deleteArtifactByPeriod } from '~/services/artifact.server';
+import { startArtifactCleanup } from '~/services/artifact.server';
 import TrashIcon from '@heroicons/react/24/outline/TrashIcon';
 import classNames from 'classnames';
 import type { UserDetail } from '~/types/prisma';
@@ -16,7 +16,7 @@ const schema = z.object({
   period: z.enum([CleanPeriod.DAY, CleanPeriod.WEEK, CleanPeriod.MONTH, CleanPeriod.YEAR]),
 });
 
-const mutation = toComposable(makeDomainFunction(schema)(({ period }) => deleteArtifactByPeriod(period)));
+const mutation = toComposable(makeDomainFunction(schema)(async ({ period }) => startArtifactCleanup(period)));
 
 export const loader: LoaderFunction = async ({ request }) => {
   const user = await requireCookieAuth(request);
