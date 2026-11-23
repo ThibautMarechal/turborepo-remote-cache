@@ -1,18 +1,9 @@
 import type { ActionFunction, LoaderFunction } from 'react-router';
-
-import { formAction } from '~/formAction';
-import { z } from 'zod';
 import { requireCookieAuth } from '~/services/authentication.server';
-import { makeDomainFunction, toComposable } from 'domain-functions';
-import { Form } from '~/component/Form';
 import { requireTeamOwner } from '~/roles/rights';
-import { CleanPeriod } from '~/clean/CleanPeriod';
-import { startArtifactCleanup } from '~/services/artifact.server';
 import { getTeamBySlug } from '~/services/teams.server';
-
-const schema = z.object({
-  period: z.enum([CleanPeriod.DAY, CleanPeriod.WEEK, CleanPeriod.MONTH, CleanPeriod.YEAR]),
-});
+import { cleanAction } from '~/clean/cleanAction.server';
+import { CleanForm } from '~/clean/CleanForm';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const user = await requireCookieAuth(request);
@@ -25,28 +16,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   const user = await requireCookieAuth(request);
   const team = await getTeamBySlug(params.teamSlug as string);
   requireTeamOwner(user, team.id);
-
-  const mutation = toComposable(makeDomainFunction(schema)(async ({ period }) => startArtifactCleanup(period, { teamId: team.id })));
-
-  return formAction({
-    request,
-    schema,
-    mutation,
-    successPath: `/teams/${team.slug}/artifacts`,
-  });
+  return cleanAction(request, { teamId: team.id, successPath: `/teams/${team.slug}/artifacts` });
 };
 
-export default function New() {
-  return (
-    <div className="flex justify-center">
-      <Form schema={schema}>
-        {({ Field, Button }) => (
-          <>
-            <Field name="period" />
-            <Button>Clean</Button>
-          </>
-        )}
-      </Form>
-    </div>
-  );
-}
+export default CleanForm;

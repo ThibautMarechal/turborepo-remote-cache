@@ -1,18 +1,9 @@
 import type { ActionFunction, LoaderFunction } from 'react-router';
-
-import { formAction } from '~/formAction';
-import { z } from 'zod';
 import { requireCookieAuth } from '~/services/authentication.server';
-import { makeDomainFunction, toComposable } from 'domain-functions';
-import { Form } from '~/component/Form';
 import { requireAdmin } from '~/roles/rights';
-import { CleanPeriod } from '~/clean/CleanPeriod';
-import { startArtifactCleanup } from '~/services/artifact.server';
 import { getUserByUsername } from '~/services/users.server';
-
-const schema = z.object({
-  period: z.enum([CleanPeriod.DAY, CleanPeriod.WEEK, CleanPeriod.MONTH, CleanPeriod.YEAR]),
-});
+import { cleanAction } from '~/clean/cleanAction.server';
+import { CleanForm } from '~/clean/CleanForm';
 
 export const loader: LoaderFunction = async ({ request }) => {
   const user = await requireCookieAuth(request);
@@ -22,28 +13,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export const action: ActionFunction = async ({ request, params }) => {
   const user = await getUserByUsername(params.username as string);
-
-  const mutation = toComposable(makeDomainFunction(schema)(async ({ period }) => startArtifactCleanup(period, { userId: user.id })));
-
-  return formAction({
-    request,
-    schema,
-    mutation,
-    successPath: `/users/${user.username}/artifacts`,
-  });
+  return cleanAction(request, { userId: user.id, successPath: `/users/${user.username}/artifacts` });
 };
 
-export default function New() {
-  return (
-    <div className="flex justify-center">
-      <Form schema={schema}>
-        {({ Field, Button }) => (
-          <>
-            <Field name="period" />
-            <Button>Clean</Button>
-          </>
-        )}
-      </Form>
-    </div>
-  );
-}
+export default CleanForm;
