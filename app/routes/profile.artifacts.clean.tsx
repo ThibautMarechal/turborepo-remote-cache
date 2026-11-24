@@ -1,46 +1,16 @@
 import type { ActionFunction, LoaderFunction } from 'react-router';
-
-import { formAction } from '~/formAction';
-import { z } from 'zod';
 import { requireCookieAuth } from '~/services/authentication.server';
-import { makeDomainFunction, toComposable } from 'domain-functions';
-import { Form } from '~/component/Form';
-import { CleanPeriod } from '~/clean/CleanPeriod';
-import { deleteArtifactByPeriod } from '~/services/artifact.server';
-
-const schema = z.object({
-  period: z.enum([CleanPeriod.DAY, CleanPeriod.WEEK, CleanPeriod.MONTH, CleanPeriod.YEAR]),
-});
+import { cleanAction } from '~/clean/cleanAction.server';
+import { CleanForm } from '~/clean/CleanForm';
 
 export const loader: LoaderFunction = async ({ request }) => {
   await requireCookieAuth(request);
   return null;
 };
 
-export const action: ActionFunction = async ({ request, params }) => {
+export const action: ActionFunction = async ({ request }) => {
   const user = await requireCookieAuth(request);
-
-  const mutation = toComposable(makeDomainFunction(schema)(({ period }) => deleteArtifactByPeriod(period, { userId: user.id })));
-
-  return formAction({
-    request,
-    schema,
-    mutation,
-    successPath: '/profile/artifacts',
-  });
+  return cleanAction(request, { userId: user.id, successPath: '/profile/artifacts' });
 };
 
-export default function New() {
-  return (
-    <div className="flex justify-center">
-      <Form schema={schema}>
-        {({ Field, Button }) => (
-          <>
-            <Field name="period" />
-            <Button>Clean</Button>
-          </>
-        )}
-      </Form>
-    </div>
-  );
-}
+export default CleanForm;

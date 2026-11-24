@@ -1,22 +1,9 @@
 import type { ActionFunction, LoaderFunction } from 'react-router';
-
-import { formAction } from '~/formAction';
-import { z } from 'zod';
 import { requireCookieAuth, requireTokenAuth } from '~/services/authentication.server';
-import { makeDomainFunction, toComposable } from 'domain-functions';
-import { Form } from '~/component/Form';
 import { requireAdmin } from '~/roles/rights';
-import { CleanPeriod } from '~/clean/CleanPeriod';
-import { deleteArtifactByPeriod } from '~/services/artifact.server';
-import TrashIcon from '@heroicons/react/24/outline/TrashIcon';
-import classNames from 'classnames';
 import type { UserDetail } from '~/types/prisma';
-
-const schema = z.object({
-  period: z.enum([CleanPeriod.DAY, CleanPeriod.WEEK, CleanPeriod.MONTH, CleanPeriod.YEAR]),
-});
-
-const mutation = toComposable(makeDomainFunction(schema)(({ period }) => deleteArtifactByPeriod(period)));
+import { cleanAction } from '~/clean/cleanAction.server';
+import { CleanForm } from '~/clean/CleanForm';
 
 export const loader: LoaderFunction = async ({ request }) => {
   const user = await requireCookieAuth(request);
@@ -28,32 +15,11 @@ export const action: ActionFunction = async ({ request }) => {
   let user: UserDetail;
   try {
     user = await requireTokenAuth(request);
-  } catch (e) {
+  } catch {
     user = await requireCookieAuth(request, false);
   }
   requireAdmin(user);
-  return formAction({
-    request,
-    schema,
-    mutation,
-    successPath: '/artifacts',
-  });
+  return cleanAction(request, { successPath: '/artifacts' });
 };
 
-export default function New() {
-  return (
-    <div className="flex justify-center">
-      <Form schema={schema}>
-        {({ Field, Button, formState }) => (
-          <>
-            <Field name="period" />
-            <Button>
-              <TrashIcon className={classNames('w-4 mr-2', { 'animate-spin': formState.isSubmitted })} />
-              Clean
-            </Button>
-          </>
-        )}
-      </Form>
-    </div>
-  );
-}
+export default CleanForm;
