@@ -1624,10 +1624,10 @@
   dependencies:
     csstype "^3.2.2"
 
-"@types/readable-stream@4.0.24":
-  version "4.0.24"
-  resolved "https://registry.yarnpkg.com/@types/readable-stream/-/readable-stream-4.0.24.tgz#7b2431bfc1367d05c53598ad36094b044726d442"
-  integrity sha512-NRvUNC/JFGPJvqdAfEve8oginbM6V08u5NzLWpG8MwA2kTPOLnqk+wpwuPT+mp3aUsxyuT6m2gnrPuHYCruzEg==
+"@types/readable-stream@4.0.25":
+  version "4.0.25"
+  resolved "https://registry.yarnpkg.com/@types/readable-stream/-/readable-stream-4.0.25.tgz#2987b68f413ca24ad151f644cf6545277bd87338"
+  integrity sha512-7GsxL8Wd5X3jh73/qgW7WCnbBvGSdD8U3E4Jiuus3/8I+PN20DtlkJtwFhr/sImXfDDQ2Z03i/9wNiIF3TVSsw==
   dependencies:
     "@types/node" "*"
 
