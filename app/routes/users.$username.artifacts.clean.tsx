@@ -12,6 +12,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
+  requireAdmin(await requireCookieAuth(request));
   const user = await getUserByUsername(params.username as string);
   return cleanAction(request, { userId: user.id, successPath: `/users/${user.username}/artifacts` });
 };
